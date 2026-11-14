@@ -1,28 +1,18 @@
-# Guía rápida en español — ARES Health AI
+# Guía rápida — ARES Health AI v0.5
 
-**Estado del paquete:** planificación y estructura inicial, sin código de análisis médico ni prototipo definitivo.
+Prototipo local con cuatro escenarios sintéticos, gráficos, controles de calidad, explicaciones de cambios y Mission Review Center con exportación JSON y CSV.
 
-## Primero: abrir en Windows
+## Linux / entorno en la nube
 
-1. Descomprime el ZIP en una carpeta de tu equipo.
-2. Abre esa carpeta en VS Code.
-3. Abre Terminal > New Terminal.
-4. Ejecuta los comandos de `README.md` para crear el entorno, instalar dependencias y abrir la pantalla vacía.
+```sh
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m pytest -q
+.venv/bin/python -m streamlit run app.py
+```
 
-## Qué preparar antes del 14 de noviembre
+Para Windows/PowerShell consulta `README.md`. No se requieren claves API ni servicios externos.
 
-- Revisar `docs/PROJECT_CHARTER.md` y confirmar qué problema específico abordar.
-- Revisar fuentes NASA y registrar toda afirmación verificable en `docs/RESEARCH_LOG.md`.
-- Definir roles y coordinar participantes con `docs/TEAM_BRIEF.md`.
-- Decidir si el panel será únicamente una demostración local con datos sintéticos.
-- Confirmar reglas de predesarrollo vigentes con organizadores si hay dudas.
+Selecciona **Stable observations**, **Resting heart rate shift**, **Shortened sleep** o **Incomplete records**. Los fallos de calidad bloquean la interpretación de tendencias. Los cambios se calculan con siete días iniciales y cuatro recientes, sin modificar los umbrales ilustrativos de 12 bpm y 1.5 horas. Puedes registrar una revisión ficticia y descargar el informe JSON o las observaciones CSV.
 
-## Qué construir durante el hackatón
-
-Usa `docs/PROJECT_BACKLOG.md` como lista de tareas. El desarrollo empezará con una carga sencilla de CSV sintético y visualizaciones básicas; después se implementarán alertas explicables, validaciones y pruebas.
-
-## Resultado mínimo deseado
-
-Un panel local funcional con datos simulados, gráfico de tendencia, bandera de calidad de datos, explicación textual de cada alerta, registro de escenarios y enlace público al repositorio para la entrega.
-
-**Importante:** ninguna alerta debe presentarse como diagnóstico, predicción clínica validada o recomendación de tratamiento.
+No uses información personal o médica real. El prototipo no diagnostica ni cuenta con validación médica o aprobación de NASA. La arquitectura y los límites implementados se documentan en inglés en `docs/ARCHITECTURE.md`.

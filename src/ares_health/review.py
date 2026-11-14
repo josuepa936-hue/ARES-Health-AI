@@ -9,7 +9,8 @@ from typing import Any
 
 import pandas as pd
 
-from src.ares_health.analysis import ReviewFlag
+from src.ares_health.analysis import ReviewFlag, review_changes
+from src.ares_health.validation import parse_timestamps, quality_issues
 
 VALID_STATES = frozenset({"Pending review", "Reviewed in demo"})
 DISCLAIMER = (
@@ -28,11 +29,21 @@ def build_review_report(
     review_state: str = "Pending review",
     reviewer_note: str = "",
 ) -> dict[str, Any]:
-    """Return a JSON-serializable and deterministic simulation review record."""
+    """Return a deterministic report, independently validating its source records.
+
+    ``flags`` is retained for caller compatibility; export uses recomputed flags.
+    Supplied issues/limitations may block interpretation but cannot bypass checks.
+    """
     if review_state not in VALID_STATES:
         raise ValueError("Unexpected review state")
     if len(reviewer_note) > 500:
         raise ValueError("Reviewer note must be at most 500 characters")
+    # Revalidate at the export boundary, including callers supplying stale flags.
+    actual_issues = quality_issues(frame)
+    actual_flags, actual_blocked = review_changes(frame)
+    issues = list(dict.fromkeys([*actual_issues, *issues]))
+    blocked = list(dict.fromkeys([*(actual_blocked if not actual_issues else ()), *blocked]))
+    flags = [] if issues or blocked else actual_flags
     if issues:
         assessment = "DATA_QUALITY_BLOCKED"
     elif blocked:
@@ -43,13 +54,14 @@ def build_review_report(
         assessment = "NO_DEMO_RULE_TRIGGERED"
 
     date_value = None
-    if "timestamp_utc" in frame.columns and not frame.empty:
-        valid_dates = pd.to_datetime(frame["timestamp_utc"], utc=True, errors="coerce").dropna()
+    if frame.columns.is_unique and "timestamp_utc" in frame.columns and not frame.empty:
+        valid_dates = parse_timestamps(frame["timestamp_utc"]).dropna()
         if not valid_dates.empty:
             date_value = valid_dates.max().isoformat()
 
     return {
         "schema_version": "1.0-demo",
+        "application_version": "0.5",
         "application": "ARES Health AI",
         "project": "NASA Space Apps Challenge 2026 — prototype",
         "scenario": scenario,

@@ -3,7 +3,7 @@
 **Astronaut Risk Evaluation System**  
 **Track:** Create Health Monitoring Software for Astronauts on Space Missions  
 **Event:** Universal Event · November 14–15, 2026  
-**Stage:** Hackathon prototype v0.4 — enhanced dashboard, simulated monitoring and review reporting, **not** clinically validated.
+**Stage:** Hackathon prototype v0.5 — enhanced dashboard, simulated monitoring and review reporting, **not** clinically validated.
 
 ## Mission
 
@@ -39,6 +39,25 @@ streamlit run app.py
 ```
 
 If PowerShell blocks activation, use `.venv\Scripts\python.exe -m pip install -r requirements.txt` and `.venv\Scripts\python.exe -m streamlit run app.py`.
+
+## Implemented in v0.5
+
+Shared validation blocks trend interpretation for missing or invalid measurements, invalid or duplicate UTC timestamps, out-of-order records, gaps in daily sampling, invalid schema, blank/mixed profiles and unsupported provenance. Measurements must be finite numeric values (numeric strings accepted, booleans rejected) within illustrative input sanity bounds; see `docs/ARCHITECTURE.md`.
+
+Trend rules require at least 11 consecutive daily observations: the first 7 form the reference and the last 4 form the comparison. Longer series omit intervening days from these means. Absolute changes **at or above 12 bpm or 1.5 hours** trigger review flags in either direction. Explanations include means, direction, units and UTC intervals. These thresholds are unchanged engineering demonstration settings.
+
+Quality failures block interpretation; short valid series report insufficient data. JSON export revalidates records and recomputes flags so stale caller flags cannot produce a misleading report. Charts, Mission Review Center, CSV and JSON downloads remain available. CSV import, real telemetry, database persistence and clinical prediction are not implemented.
+
+## Linux / cloud development
+
+```sh
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m pytest -q
+.venv/bin/python -m streamlit run app.py --server.headless=true --browser.gatherUsageStats=false
+```
+
+Python 3.12 is verified. Dependencies use version ranges rather than a lockfile. No API credentials or external services are required. Tests cover quality failures, inclusive rule boundaries, report safeguards and all four dashboard scenarios. See `docs/VALIDATION_PLAN.md` for scope and limits.
 
 ## Key decisions
 

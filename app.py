@@ -31,7 +31,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 st.markdown("""
 <div class="ares-hero">
-  <div class="ares-eyebrow">Mission control · Prototype v0.4</div>
+  <div class="ares-eyebrow">Mission control · Prototype v0.5</div>
   <h1>ARES Health AI</h1>
   <p>Astronaut Risk Evaluation System · NASA Space Apps Challenge 2026</p>
   <span class="ares-pill">LOCAL DEMONSTRATION · SYNTHETIC DATA ONLY</span>
@@ -167,4 +167,4 @@ with st.expander("Explore and export synthetic records"):
                        file_name=f"ares_{SCENARIOS[selected]}_synthetic.csv", mime="text/csv")
 
 st.divider()
-st.caption("ARES Health AI v0.4 · Synthetic engineering demonstration · Not NASA-approved or medically validated")
+st.caption("ARES Health AI v0.5 · Synthetic engineering demonstration · Not NASA-approved or medically validated")
