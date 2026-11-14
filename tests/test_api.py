@@ -182,3 +182,45 @@ def test_browser_cors_allows_only_local_dev_origins():
         "Access-Control-Request-Method": "GET",
     })
     assert remote.headers.get("access-control-allow-origin") is None
+
+
+@pytest.mark.parametrize('scenario', ['stable', 'heart_rate_shift', 'sleep_shift', 'incomplete'])
+def test_timeline_api_matches_domain_and_is_deterministic(scenario):
+    from src.ares_health.timeline import build_timeline
+
+    query = {'scenario': scenario, 'seed': 42, 'days': 21}
+    response = client.get('/api/timeline', params=query)
+    assert response.status_code == 200
+    assert response.json() == build_timeline(generate_scenario(scenario, seed=42), scenario=scenario)
+    assert response.content == client.get('/api/timeline', params=query).content
+    json.loads(response.text, parse_constant=lambda value: pytest.fail(f'nonfinite {value}'))
+    assert len([e for e in response.json()['events'] if e['type'] == 'observation']) == 21
+
+
+@pytest.mark.parametrize('query', [
+    {'scenario': 'patient'}, {'seed': -1}, {'seed': 1000000}, {'seed': 'invalid'},
+    {'days': 11}, {'days': 367}, {'days': 'invalid'},
+])
+def test_timeline_parameter_validation(query):
+    assert client.get('/api/timeline', params=query).status_code == 422
+
+
+def test_timeline_default_and_openapi_contract():
+    default = client.get('/api/timeline')
+    assert default.status_code == 200
+    assert default.json()['scenario'] == 'stable'
+    assert default.json()['observation_count'] == 21
+    spec = client.get('/openapi.json').json()
+    assert '/api/timeline' in spec['paths']
+    params = {item['name']: item['schema'] for item in spec['paths']['/api/timeline']['get']['parameters']}
+    assert params['days']['minimum'] == 12
+    assert params['days']['maximum'] == 366
+    assert params['seed']['default'] == 2026
+
+
+@pytest.mark.parametrize('days,seed', [(12, 0), (366, 999999)])
+def test_timeline_parameter_endpoints(days, seed):
+    response = client.get('/api/timeline', params={'days': days, 'seed': seed})
+    assert response.status_code == 200
+    assert response.json()['observation_count'] == days
+    json.dumps(response.json(), allow_nan=False)
