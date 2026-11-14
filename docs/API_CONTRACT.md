@@ -36,6 +36,7 @@ The JSON snapshot contains:
 - `assessment` and `summary` (days, completeness %, issue/flag counts, fictional crew ID).
 - `observations[]` with the exact six existing fields: `timestamp_utc`, `crew_id`, `resting_hr_bpm`, `sleep_hours`, `activity_minutes`, `source_type`. UTC timestamps are ISO 8601 strings ending `Z`; missing measurements become JSON `null`, not `NaN`.
 - `quality_issues[]`, `analysis_limitations[]`, `review_flags[]`, `guidance`, `methodology`, `disclaimer`.
+- `descriptive_signals[]`: three SciPy statistical summaries (means, median, Gaussian-scaled MAD and Theil–Sen slope per day), **empty when data are invalid or insufficient**. These are descriptive and do not generate additional alerts. `descriptive_statistics_notice` explains the limitation.
 - `review_report` when using `POST /api/synthetic-csv` (also returned on `POST /api/review` as the full body).
 
 ### Scenario example
