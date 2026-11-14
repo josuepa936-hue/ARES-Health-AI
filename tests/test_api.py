@@ -61,6 +61,8 @@ def test_synthetic_scenarios_match_existing_rules(scenario, expected_state):
     assert data["summary"]["crew_id"] == "SIM-001"
     assert data["simulation_only"] is True
     assert data["guidance"]["state"] == expected_state
+    assert len(data["descriptive_signals"]) == (0 if scenario == "incomplete" else 3)
+    assert "not a medical alert" in data["descriptive_statistics_notice"]
 
 
 def test_malformed_or_unsupported_scenario_is_rejected():
