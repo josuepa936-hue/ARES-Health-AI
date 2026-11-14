@@ -9,3 +9,7 @@ At submission, review and expand this disclosure to reflect actual tools and mat
 ## Version 0.5 implementation
 
 OpenAI Codex assisted with repository inspection, the shared synthetic-data validation module, trend explanations, defensive report generation, dashboard regression checks, automated tests and documentation. Validation used deterministic fictional fixtures and the repository's pytest suite, including Streamlit AppTest. No real patient or astronaut information was used. Human reviewers remain responsible for approving the implementation and checking its limitations before merging; test results establish software behavior only.
+
+## Version 0.6 implementation
+
+OpenAI ChatGPT assisted with the strict synthetic CSV ingestion module, validation tests, UI integration, and documentation. The importer deliberately rejects data lacking a fictional identifier, explicit synthetic provenance, valid UTC dates, or complete measurements. Each uploaded file also requires a human attestation. This is a software proof of concept rather than an independent verification of the synthetic provenance or clinical usefulness.

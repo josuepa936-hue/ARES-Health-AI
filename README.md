@@ -3,7 +3,7 @@
 **Astronaut Risk Evaluation System**  
 **Track:** Create Health Monitoring Software for Astronauts on Space Missions  
 **Event:** Universal Event · November 14–15, 2026  
-**Stage:** Hackathon prototype v0.5 — enhanced dashboard, simulated monitoring and review reporting, **not** clinically validated.
+**Stage:** Hackathon prototype v0.6 — synthetic CSV import, validation, monitoring and review reporting, **not** clinically validated.
 
 ## Mission
 
@@ -25,6 +25,8 @@ The challenge asks for software that gathers health indicators and enables astro
 - `app.py` — running Streamlit prototype with a mission-status overview, synthetic physiological trends (heart rate, sleep and activity), quality alerts, data provenance and a mission review center.
 - `src/ares_health/synthetic.py` — deterministic sample scenarios with fictional profiles.
 - `src/ares_health/analysis.py` — non-clinical data quality checks and transparent change rules.
+- `src/ares_health/import_csv.py` — local synthetic-only CSV import with strict validation and explicit user attestation in the app.
+- `docs/CSV_IMPORT.md` — accepted CSV contract and how to test accepted/rejected uploads.
 - `src/ares_health/review.py` — exportable JSON review report with explicit provenance and limitations.
 - `tests/` — unit tests for simulation, trend flags, and review report behavior.
 - `docs/AI_USAGE.md` — AI assistance disclosure to expand before submission.
@@ -40,13 +42,13 @@ streamlit run app.py
 
 If PowerShell blocks activation, use `.venv\Scripts\python.exe -m pip install -r requirements.txt` and `.venv\Scripts\python.exe -m streamlit run app.py`.
 
-## Implemented in v0.5
+## Implemented through v0.6
 
 Shared validation blocks trend interpretation for missing or invalid measurements, invalid or duplicate UTC timestamps, out-of-order records, gaps in daily sampling, invalid schema, blank/mixed profiles and unsupported provenance. Measurements must be finite numeric values (numeric strings accepted, booleans rejected) within illustrative input sanity bounds; see `docs/ARCHITECTURE.md`.
 
 Trend rules require at least 11 consecutive daily observations: the first 7 form the reference and the last 4 form the comparison. Longer series omit intervening days from these means. Absolute changes **at or above 12 bpm or 1.5 hours** trigger review flags in either direction. Explanations include means, direction, units and UTC intervals. These thresholds are unchanged engineering demonstration settings.
 
-Quality failures block interpretation; short valid series report insufficient data. JSON export revalidates records and recomputes flags so stale caller flags cannot produce a misleading report. Charts, Mission Review Center, CSV and JSON downloads remain available. CSV import, real telemetry, database persistence and clinical prediction are not implemented.
+Quality failures block interpretation; short valid series report insufficient data. JSON export revalidates records and recomputes flags so stale caller flags cannot produce a misleading report. Charts, Mission Review Center, CSV and JSON downloads remain available. **v0.6 adds strict local synthetic CSV import** (UTF-8; six required columns; fictional SIM- identifier; explicit UTC; one-day spacing; max 1 MB/366 rows), a downloadable synthetic example, safe rejection of invalid files, and a separate selection from the built-in demo scenarios. Real telemetry, database persistence and clinical prediction are not implemented. See `docs/CSV_IMPORT.md`.
 
 ## Linux / cloud development
 
@@ -74,7 +76,7 @@ python -m pytest -q
 python -m streamlit run app.py
 ```
 
-Try **Stable observations**, **Resting heart rate shift**, **Shortened sleep**, and **Incomplete records**. Open **Mission review center** to export a JSON record of the simulated review. This is a software demonstration, not validation of medical efficacy.
+Try **Stable observations**, **Resting heart rate shift**, **Shortened sleep**, and **Incomplete records**. For CSV ingestion, select **Upload synthetic CSV** in the sidebar, download the synthetic template, upload it and attest that no real health records are included. Open **Mission review center** to export a JSON record of the simulated review. This is a software demonstration, not validation of medical efficacy.
 
 ## Hackathon timing
 
