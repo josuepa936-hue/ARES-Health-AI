@@ -1,27 +1,51 @@
-# Architecture — implemented v0.5
+# ARES Health AI Architecture — 0.9 API foundation
 
-ARES is a local Streamlit application using in-memory Pandas dataframes. It generates deterministic fictional daily records; it does not import CSV, connect telemetry, persist reviews in a database, or use machine learning.
+## Mission
+
+ARES is an **independent, synthetic, non-clinical prototype** developed for the NASA Space Apps Challenge 2026. It is not NASA-approved medical software. There are currently no live astronaut sensors, wearable streams, authentic medical records, spacecraft operations interfaces, or clinical validations.
+
+## Logical components
 
 ```mermaid
-flowchart TD
-    A[Seeded synthetic generator] --> B[Daily dataframe]
-    B --> C[Shared validation]
-    C --> D[Explainable mean comparisons]
-    B --> E[Streamlit charts and CSV export]
-    C --> F[Quality and availability status]
-    D --> G[Mission Review Center]
-    F --> G
-    G --> H[Revalidated JSON report]
+flowchart LR
+  subgraph Presentations
+    A[Streamlit v0.7: tested fallback]
+    B[Future React + Figma UI]
+  end
+  A --> E[Shared domain modules]
+  B --> C[Local FastAPI: api.py]
+  C --> D[Snapshot service: service.py]
+  D --> E
+  E --> S[Seeded synthetic generator]
+  E --> V[Strict validation & CSV importer]
+  E --> T[Transparent mean comparisons]
+  E --> R[Revalidated mission review JSON]
+  E --> P[Reference-only NASA / CSA links]
 ```
 
-- `synthetic.py`: four reproducible scenarios, seed and fictional profile.
-- `validation.py`: schema, timestamps, ordering, daily cadence, single nonblank profile, synthetic provenance and measurement sanity checks. Findings block interpretation; inputs are never filled, reordered or changed.
-- `analysis.py`: first seven daily observations versus the last four, requiring at least eleven valid consecutive daily observations. Intermediate days in longer series are not included in either mean. Absolute mean differences at or above 12 bpm or 1.5 hours trigger review flags. Activity is visualized and validated but has no change rule.
-- `review.py`: deterministic JSON report with input revalidation and recomputed flags. Quality failures take precedence over insufficient data, which takes precedence over change flags. Caller findings can conservatively block a report but cannot override actual input failures. Exported flags are empty whenever interpretation is blocked. Existing schema fields are retained, with additive `application_version` metadata.
-- `app.py`: dashboard, Plotly trends, quality warnings, Mission Review Center with review state and a bounded fictional note, CSV and JSON downloads. The selected synthetic data are displayed even when quality blocks interpretation; charts do not establish that analysis is available.
+**The dependency direction is intentional**: interfaces consume the Python engine, not vice versa. `src/ares_health/service.py` composes existing domain functions into one JSON-safe response. `src/ares_health/api.py` only translates local HTTP requests and responses; it should not contain clinical logic or separate threshold decisions.
 
-Timestamps are normalized to UTC for validation and explanations. Naive datetime strings are interpreted as UTC; numeric epoch inputs are unsupported. Mixed ISO strings and offset-aware datetimes are supported. Duplicate instants, nonchronological input, and deviations from exactly 24-hour sampling are blocked rather than silently sorted or resampled. This conservative daily-demo contract does not support irregular real-world telemetry.
+## Data flow
 
-Measurement bounds are input sanity checks only: resting heart rate `(0, 250]` bpm, sleep `[0, 24]` hours, activity `[0, 1440]` minutes. Numeric strings are accepted; booleans, missing/nonnumeric values, infinity and out-of-range values are blocked. Units are assumed from column names; incorrectly labeled but in-range values cannot be detected automatically.
+1. User selects a **fictional** scenario and deterministic seed, or explicitly attests a small CSV contains only fictional observations.
+2. `generate_scenario()` or `load_synthetic_csv()` produces an in-memory dataframe. The CSV importer accepts UTF-8, exactly six fields, explicit UTC, one synthetic SIM profile, strict daily spacing and numeric sanity ranges, max 366 rows, max 1 MB.
+3. `quality_issues()` checks required fields, timestamp integrity, daily regularity, provenance, completeness and sanity bounds. Nothing is interpolated, silently reordered or filled.
+4. `review_changes()` compares the **first seven daily means** and **last four** using demonstration-only absolute differences: 12 bpm resting heart rate and 1.5 hours sleep. Activity is shown but has **no review rule**.
+5. `build_review_report()` revalidates at the export boundary; incomplete/invalid observations prevent clinical-sounding interpretations and suppress demo flags. `get_crew_guidance()` provides explanatory verification steps, not medical action or prescriptions.
+6. `build_snapshot()` assembles canonical JSON using these functions: missing values as `null`, UTC ISO 8601 strings, and explicit source and limitation labels.
+7. The Streamlit app or a future React interface presents these results without making up new health readings.
 
-No external API or credential is required. These rules and tests do not establish clinical validity, medical efficacy, or spaceflight suitability.
+## Security and privacy scope
+
+- Local in-memory processing only. No external storage, credentials, personal/real medical data, NASA telemetry, or databases.
+- Uvicorn must listen on `127.0.0.1`. The service does **not** implement authentication and must never be publicly hosted as-is.
+- Only `localhost:5173`, `127.0.0.1:5173`, `localhost:3000` and `127.0.0.1:3000` can make cross-origin browser requests through the current CORS policy. This is an origin restriction, not authorization.
+- The CSV endpoint enforces a streaming 1,000,000-byte cap and requires `X-Synthetic-Attestation: true`. This header is human attestation, not proof. Do not send real, identifiable or sensitive health information.
+- The full Streamlit v0.7 interface in `main` remains the stable demonstration path until the new interface and API have passed local review.
+
+## Quality assurance
+
+- Python deterministic domain unit tests + Streamlit AppTest; FastAPI TestClient verifies HTTP scenarios, data protection rules, strict JSON, review export and CORS.
+- GitHub Actions runs on Python 3.12 and 3.13 for every PR. These are code-level functional tests, not clinical validation.
+
+See `docs/API_CONTRACT.md` for exact HTTP paths, JSON fields and examples. The previously generated Claude HTML and Figma Make previews are **design concepts only** and are not connected to the backend.
