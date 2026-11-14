@@ -3,7 +3,7 @@
 **Astronaut Risk Evaluation System**  
 **Track:** Create Health Monitoring Software for Astronauts on Space Missions  
 **Event:** Universal Event · November 14–15, 2026  
-**Stage:** Pre-hackathon planning scaffold — **not** a finished prototype.
+**Stage:** Hackathon prototype v0.3 — simulated monitoring and review reporting, **not** clinically validated.
 
 ## Mission
 
@@ -22,7 +22,12 @@ The challenge asks for software that gathers health indicators and enables astro
 - `docs/RESEARCH_LOG.md` — evidence table to fill in.
 - `docs/SUBMISSION_CHECKLIST.md` — project-page and delivery checklist.
 - `docs/TEAM_BRIEF.md` — roles and collaboration conventions.
-- `app.py` — **placeholder only**, not the challenge solution.
+- `app.py` — running Streamlit prototype with synthetic physiological trends and a mission review center.
+- `src/ares_health/synthetic.py` — deterministic sample scenarios with fictional profiles.
+- `src/ares_health/analysis.py` — non-clinical data quality checks and transparent change rules.
+- `src/ares_health/review.py` — exportable JSON review report with explicit provenance and limitations.
+- `tests/` — unit tests for simulation, trend flags, and review report behavior.
+- `docs/AI_USAGE.md` — AI assistance disclosure to expand before submission.
 
 ## Get started (Windows / PowerShell)
 
@@ -43,9 +48,18 @@ If PowerShell blocks activation, use `.venv\Scripts\python.exe -m pip install -r
 4. Maintain documentation and final submission materials in **English**, with Spanish as the working language when appropriate.
 5. Do not confuse a successful synthetic test with clinical validation or spaceflight qualification.
 
+## Verify prototype
+
+```powershell
+python -m pytest -q
+python -m streamlit run app.py
+```
+
+Try **Stable observations**, **Resting heart rate shift**, **Shortened sleep**, and **Incomplete records**. Open **Mission review center** to export a JSON record of the simulated review. This is a software demonstration, not validation of medical efficacy.
+
 ## Hackathon timing
 
-NASA Space Apps 2026 project-submission window is listed as **November 14, 9:00 AM to November 15, 11:59 PM local time**. Historical Space Apps guidance asks teams to begin building their actual solutions when the hackathon starts. This starter kit therefore sets up **planning documents and an empty interface shell only**. Confirm any 2026 organizer clarifications before coding your competitive solution early.
+NASA Space Apps 2026 project-submission window is listed as **November 14, 9:00 AM to November 15, 11:59 PM local time**. Historical Space Apps guidance asks teams to begin building their actual solutions when the hackathon starts. The initial planning scaffold was created before the event; subsequent functional prototype code was developed during the hackathon. Confirm the organizer instructions and deadline before submission.
 
 ## Roles & contact
 
