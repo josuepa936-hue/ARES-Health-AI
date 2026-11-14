@@ -1,7 +1,6 @@
 """CSV importer security, schema, and deterministic integration tests."""
 from __future__ import annotations
 
-import pandas as pd
 import pytest
 
 from src.ares_health.analysis import review_changes
