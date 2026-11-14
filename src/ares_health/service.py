@@ -12,6 +12,7 @@ from typing import Any
 import pandas as pd
 
 from src.ares_health.analysis import METRICS, review_changes
+from src.ares_health.advanced_stats import describe_signals, signal_records
 from src.ares_health.evidence import get_crew_guidance
 from src.ares_health.review import build_review_report
 from src.ares_health.validation import REQUIRED, parse_timestamps, quality_issues
@@ -89,6 +90,11 @@ def build_snapshot(
         "quality_issues": issues,
         "analysis_limitations": limitations,
         "review_flags": report["review_flags"],
+        "descriptive_signals": signal_records(describe_signals(frame)),
+        "descriptive_statistics_notice": (
+            "Exploratory statistics only; not clinically validated, not a medical alert, "
+            "and never computed when data quality blocks interpretation."
+        ),
         "guidance": asdict(guidance),
         "methodology": {
             "reference_days": 7,
