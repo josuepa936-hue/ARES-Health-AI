@@ -61,7 +61,7 @@ def build_review_report(
 
     return {
         "schema_version": "1.0-demo",
-        "application_version": "0.5",
+        "application_version": "0.9-dev",
         "application": "ARES Health AI",
         "project": "NASA Space Apps Challenge 2026 — prototype",
         "scenario": scenario,

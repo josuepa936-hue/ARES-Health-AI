@@ -1,6 +1,14 @@
-# Dependencies reserved for the November 14–15 implementation.
+# ARES prototype: Python 3.12+ (local-only synthetic demo)
 streamlit>=1.37,<3
 pandas>=2.1,<3
 numpy>=1.26,<3
+scipy>=1.14,<2
 plotly>=5.20,<7
+
+# Local HTTP API for a future React/Codex interface
+fastapi>=0.115,<1
+uvicorn>=0.30,<1
+
+# Test framework and FastAPI in-process HTTP client
 pytest>=8,<10
+httpx>=0.27,<1
