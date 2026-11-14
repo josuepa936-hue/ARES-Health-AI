@@ -3,9 +3,9 @@
 **Astronaut Risk Evaluation System**  
 **Track:** Create Health Monitoring Software for Astronauts on Space Missions  
 **Event:** Universal Event · November 14–15, 2026  
-**Stage:** Stable demonstration v0.7 with an experimental v0.9 local API branch — scientific evidence, plain-language guidance, synthetic CSV import, monitoring and review reporting, **not** clinically validated.
+**Stage:** Stable Streamlit demonstration v0.7 with a v1.0 local API and mission timeline — scientific evidence, plain-language guidance, synthetic CSV import, monitoring and review reporting, **not** clinically validated.
 
-## API foundation (experimental v0.9 branch)
+## Local API foundation
 
 The current **Streamlit v0.7** interface remains the reliable standalone demo.
 This branch adds `src/ares_health/service.py` (a canonical, strict-JSON domain
@@ -25,6 +25,17 @@ Open `http://127.0.0.1:8000/docs` to inspect and test API endpoints in your brow
 The API only accepts synthetic data, limits CSV uploads and has no authentication;
 **do not host it publicly**. See [API contract](docs/API_CONTRACT.md) and
 [architecture](docs/ARCHITECTURE.md).
+
+## Mission Timeline & Explainability (v1.0 backend)
+
+`GET /api/timeline` adds a deterministic history of fictional observations,
+dataset quality findings and explained daily trend comparisons. Query parameters
+match `/api/demo` (`scenario`, `seed`, `days`). Existing validation and the
+illustrative 12 bpm / 1.5 hour rules are reused; any quality failure suppresses
+all trend interpretations. Events do not estimate clinical onset or diagnose
+health conditions. The Streamlit interface and CSV/report workflows are unchanged.
+See [timeline API contract](docs/API_CONTRACT.md#mission-timeline--explainability--v10)
+for event fields, ordering, blocking and reproducibility guarantees.
 
 ## Mission
 

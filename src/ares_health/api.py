@@ -15,6 +15,7 @@ from src.ares_health.evidence import EVIDENCE
 from src.ares_health.import_csv import MAX_CSV_BYTES, load_synthetic_csv
 from src.ares_health.service import build_snapshot
 from src.ares_health.synthetic import SCENARIOS, generate_scenario
+from src.ares_health.timeline import build_timeline
 
 ScenarioId = Literal["stable", "heart_rate_shift", "sleep_shift", "incomplete"]
 ReviewState = Literal["Pending review", "Reviewed in demo"]
@@ -25,7 +26,7 @@ app = FastAPI(
         "Local educational software demo. Only fictional daily observations. "
         "No diagnosis, flight-medicine authorization, or NASA operational data."
     ),
-    version="0.9.0-dev",
+    version="1.0.0",
     docs_url="/docs",
     redoc_url=None,
 )
@@ -94,6 +95,21 @@ def get_demo(
 ) -> dict:
     records = generate_scenario(scenario, seed=seed, days=days)
     return build_snapshot(records, scenario=scenario)
+
+
+@app.get("/api/timeline")
+def get_timeline(
+    scenario: ScenarioId = "stable",
+    seed: int = Query(default=2026, ge=0, le=999999),
+    days: int = Query(default=21, ge=12, le=366),
+) -> dict:
+    """Return deterministic fictional observations and explainable demo events.
+
+    Reuses domain validation and unchanged first-seven/latest-four rules.
+    Quality failures suppress all trend interpretations; no clinical inference.
+    """
+    records = generate_scenario(scenario, seed=seed, days=days)
+    return build_timeline(records, scenario=scenario)
 
 
 @app.post("/api/review")

@@ -23,3 +23,14 @@ OpenAI ChatGPT was used to help summarize and structure official publicly availa
 OpenAI ChatGPT helped organize a domain-service-API split, write a local FastAPI HTTP adapter, design strict synthetic CSV upload checks, prepare API regression tests and create architectural documentation. GitHub Actions was configured to test Python 3.12 and 3.13. Figma Make and Claude were explored for visual interface concepts, but **their designs have not been integrated into this software release**. All code and medical claims require human review. No new medical algorithms, real astronaut records or medical treatment recommendations are implemented.
 
 The v0.9 backend additionally reuses a previously developed and tested SciPy descriptive-statistics module from the unmerged v0.8 visual prototype. The unapproved v0.8 UI is **not** included. These statistical summaries do not alter the domain review thresholds or provide clinical prediction.
+
+## Version 1.0 Mission Timeline & Explainability
+
+OpenAI Codex assisted with inspecting the v0.9 backend, implementing the pure
+synthetic mission timeline module and GET /api/timeline adapter, writing regression
+tests, and documenting the API contract. The implementation delegates validation,
+illustrative trend rules and final assessments to the existing domain modules.
+Tests use deterministic fictional observations only; no patient or astronaut
+records, new clinical thresholds, diagnoses, or external medical evidence were
+introduced. No Streamlit UI changes were made. Human review remains required
+before merge; passing software tests is not medical validation.

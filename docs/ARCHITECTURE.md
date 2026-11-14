@@ -50,3 +50,14 @@ flowchart LR
 - GitHub Actions runs on Python 3.12 and 3.13 for every PR. These are code-level functional tests, not clinical validation.
 
 See `docs/API_CONTRACT.md` for exact HTTP paths, JSON fields and examples. The previously generated Claude HTML and Figma Make previews are **design concepts only** and are not connected to the backend.
+
+## v1.0 mission timeline
+
+`timeline.py` adds a pure, deterministic event projection over synthetic frames.
+It delegates whole-frame quality checks and prefix comparisons to the existing
+validation/analysis modules, final assessment to the defensive report, and record
+formatting to the canonical service serializer. Quality failures suppress all
+interpretations; source rows remain unchanged. `GET /api/timeline` generates a
+bounded fictional scenario and invokes this projection. No UI, CSV ingestion,
+review, persistence or scientific-rule behavior is changed. See `API_CONTRACT.md`
+for historical evaluation semantics, event ordering and strict JSON guarantees.
