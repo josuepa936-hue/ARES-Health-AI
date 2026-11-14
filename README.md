@@ -3,7 +3,7 @@
 **Astronaut Risk Evaluation System**  
 **Track:** Create Health Monitoring Software for Astronauts on Space Missions  
 **Event:** Universal Event · November 14–15, 2026  
-**Stage:** Hackathon prototype v0.3 — simulated monitoring and review reporting, **not** clinically validated.
+**Stage:** Hackathon prototype v0.4 — enhanced dashboard, simulated monitoring and review reporting, **not** clinically validated.
 
 ## Mission
 
@@ -22,7 +22,7 @@ The challenge asks for software that gathers health indicators and enables astro
 - `docs/RESEARCH_LOG.md` — evidence table to fill in.
 - `docs/SUBMISSION_CHECKLIST.md` — project-page and delivery checklist.
 - `docs/TEAM_BRIEF.md` — roles and collaboration conventions.
-- `app.py` — running Streamlit prototype with synthetic physiological trends and a mission review center.
+- `app.py` — running Streamlit prototype with a mission-status overview, synthetic physiological trends (heart rate, sleep and activity), quality alerts, data provenance and a mission review center.
 - `src/ares_health/synthetic.py` — deterministic sample scenarios with fictional profiles.
 - `src/ares_health/analysis.py` — non-clinical data quality checks and transparent change rules.
 - `src/ares_health/review.py` — exportable JSON review report with explicit provenance and limitations.
