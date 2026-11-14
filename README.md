@@ -10,7 +10,9 @@
 The current **Streamlit v0.7** interface remains the reliable standalone demo.
 This branch adds `src/ares_health/service.py` (a canonical, strict-JSON domain
 snapshot) and `src/ares_health/api.py` (local FastAPI endpoints) to prepare
-integration with a future approved Figma + React frontend. **The new visual
+integration with a future approved Figma + React frontend. The backend also
+includes **SciPy descriptive statistics** (median, robust MAD and Theil–Sen
+slope) for valid fictional records only. This is not medical risk scoring. **The new visual
 design is not integrated yet.**
 
 ```powershell
