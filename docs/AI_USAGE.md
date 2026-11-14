@@ -17,3 +17,7 @@ OpenAI ChatGPT assisted with the strict synthetic CSV ingestion module, validati
 ## Version 0.7 implementation
 
 OpenAI ChatGPT was used to help summarize and structure official publicly available NASA/Canadian Space Agency research context, draft conservative non-clinical explanatory text, create new UI sections, write automated checks and prepare a narration script. The included links are official organizational sources, not data ingested or validated by NASA on behalf of this prototype. Human project authors must confirm source alignment, run the tests and approve the text before submission.
+
+## Version 0.9 API foundation (experimental branch)
+
+OpenAI ChatGPT helped organize a domain-service-API split, write a local FastAPI HTTP adapter, design strict synthetic CSV upload checks, prepare API regression tests and create architectural documentation. GitHub Actions was configured to test Python 3.12 and 3.13. Figma Make and Claude were explored for visual interface concepts, but **their designs have not been integrated into this software release**. All code and medical claims require human review. No new medical algorithms, real astronaut records or medical treatment recommendations are implemented.
