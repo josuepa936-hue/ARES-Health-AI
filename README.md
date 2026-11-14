@@ -3,7 +3,7 @@
 **Astronaut Risk Evaluation System**  
 **Track:** Create Health Monitoring Software for Astronauts on Space Missions  
 **Event:** Universal Event · November 14–15, 2026  
-**Stage:** Hackathon prototype v0.6 — synthetic CSV import, validation, monitoring and review reporting, **not** clinically validated.
+**Stage:** Hackathon prototype v0.7 — scientific evidence, plain-language guidance, synthetic CSV import, monitoring and review reporting, **not** clinically validated.
 
 ## Mission
 
@@ -30,6 +30,9 @@ The challenge asks for software that gathers health indicators and enables astro
 - `src/ares_health/review.py` — exportable JSON review report with explicit provenance and limitations.
 - `tests/` — unit tests for simulation, trend flags, and review report behavior.
 - `docs/AI_USAGE.md` — AI assistance disclosure to expand before submission.
+- `src/ares_health/evidence.py` — curated NASA/CSA references and non-clinical review explanations.
+- `docs/SCIENTIFIC_EVIDENCE.md` — claims, research context and limitations with official source URLs.
+- `docs/DEMO_SCRIPT.md` — 2–3-minute English demonstration narration.
 
 ## Get started (Windows / PowerShell)
 
@@ -60,6 +63,12 @@ python3 -m venv .venv
 ```
 
 Python 3.12 is verified. Dependencies use version ranges rather than a lockfile. No API credentials or external services are required. Tests cover quality failures, inclusive rule boundaries, report safeguards and all four dashboard scenarios. See `docs/VALIDATION_PLAN.md` for scope and limits.
+
+## New in v0.7
+
+The Streamlit dashboard includes **What should I review?** guidance for four mutually exclusive states: data quality blocked, insufficient data, simulated change for review, and no demo rule triggered. A **NASA / CSA research** tab lists official research links for the three illustrative indicators and selected spaceflight hazards. This is an educational context layer, not NASA health data or a medically validated decision system. All instructions emphasize verifying data and consulting authorized procedures rather than advising treatment.
+
+The new tests are in `tests/test_evidence.py`. Run the complete suite locally before merging this branch or publishing the final version.
 
 ## Key decisions
 

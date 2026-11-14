@@ -9,6 +9,7 @@ import plotly.express as px
 from src.ares_health.analysis import quality_issues, review_changes
 from src.ares_health.synthetic import SCENARIOS, generate_scenario
 from src.ares_health.review import build_review_report
+from src.ares_health.evidence import EVIDENCE, get_crew_guidance
 from src.ares_health.import_csv import load_synthetic_csv
 
 st.set_page_config(page_title="ARES Health AI | Mission Control", page_icon="🛰️", layout="wide")
@@ -32,7 +33,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 st.markdown("""
 <div class="ares-hero">
-  <div class="ares-eyebrow">Mission control · Prototype v0.6</div>
+  <div class="ares-eyebrow">Mission control · Prototype v0.7</div>
   <h1>ARES Health AI</h1>
   <p>Astronaut Risk Evaluation System · NASA Space Apps Challenge 2026</p>
   <span class="ares-pill">LOCAL DEMONSTRATION · SYNTHETIC DATA ONLY</span>
@@ -146,6 +147,35 @@ st.caption(
     "Reference = first 7 simulated days; comparison = latest 4 simulated days. "
     "Thresholds are software demonstration settings, not NASA standards or clinical limits."
 )
+st.subheader("Crew guidance and scientific evidence")
+st.caption(
+    "Educational research context and non-clinical review steps. "
+    "The linked NASA/CSA publications are background references, not telemetry feeds."
+)
+guidance_tab, evidence_tab = st.tabs(["What should I review?", "NASA / CSA research"])
+guidance = get_crew_guidance(issues, blocked, flags)
+
+with guidance_tab:
+    st.markdown(f"**{guidance.heading}**")
+    st.write(guidance.meaning)
+    st.markdown("**Suggested verification steps (demo only):**")
+    for number, step in enumerate(guidance.review_steps, start=1):
+        st.write(f"{number}. {step}")
+    st.caption(
+        "ARES cannot diagnose, prescribe treatment, issue medical clearance or "
+        "replace authorized flight medical procedures."
+    )
+
+with evidence_tab:
+    st.info("Research background, NOT real NASA health data. These sources do not "
+            "validate ARES thresholds or its accuracy.")
+    for item in EVIDENCE:
+        st.markdown(f"**{item.title}** · {item.organization}")
+        st.write(item.summary)
+        st.caption(f"ARES limitation: {item.limitation}")
+        st.markdown(f"[Read official source]({item.url})")
+        st.divider()
+
 st.subheader("Mission review center")
 st.caption("Document a demonstration review. This is not a medical assessment or onboard protocol.")
 if issues:
@@ -203,4 +233,4 @@ with st.expander("Explore and export synthetic records"):
                        file_name=f"ares_{scenario_id}.csv", mime="text/csv")
 
 st.divider()
-st.caption("ARES Health AI v0.6 · Synthetic engineering demonstration · Not NASA-approved or medically validated")
+st.caption("ARES Health AI v0.7 · Synthetic engineering demonstration · Not NASA-approved or medically validated")
