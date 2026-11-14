@@ -35,6 +35,7 @@ def test_summary_and_units_are_stable():
         "timestamp_utc", "crew_id", "resting_hr_bpm",
         "sleep_hours", "activity_minutes", "source_type"
     }
+    assert len(snapshot["descriptive_signals"]) == 3
     assert snapshot["methodology"]["reference_days"] == 7
     assert snapshot["methodology"]["recent_days"] == 4
     assert "activity_minutes" not in snapshot["methodology"]["illustrative_rules"]
@@ -46,6 +47,7 @@ def test_missing_measurements_reduces_completeness_without_mean():
     assert snapshot["summary"]["review_flags"] == 0
     assert snapshot["quality_issues"]
     assert snapshot["analysis_limitations"] == []
+    assert snapshot["descriptive_signals"] == []
 
 
 def test_report_review_state_and_note_preserved():
