@@ -23,6 +23,30 @@ Create an original, polished, high-fidelity, interactive **space mission health 
 - States must use text + icon + color, never color alone.
 - Never use green as a claim that an astronaut is medically healthy.
 
+### User-approved visual direction — reference images supplied 14 November 2026
+
+The user supplied two visual references directly in the ChatGPT design discussion:
+- **Reference A — tactical biometrics control panel:** dark teal military/aerospace telemetry grid; center-left full-body human silhouette with highlighted sensor hotspots; dense, modular edge-aligned signal panels, fine grid lines, small uppercase UI labels, contrasting amber/cyan/red caution accents.
+- **Reference B — cinematic space EVA monitoring:** a wide space-station/EVA scene surrounded by translucent glassy telemetric cards, strong typography and readable values, crew information panels, sophisticated dark-blue atmosphere and clear visual depth.
+
+**Blend the two aesthetics, rather than copying either composition.**
+Build a professional, distinctive **ARES Mission Bio-Telemetry Console** with:
+1. A large, central **stylized anatomical figure/astronaut silhouette** (prefer an original SVG schematic, not a real person's likeness), with visually connected hotspots.
+2. Compact, highly legible health telemetry around the silhouette and a coherent responsive grid. Use real existing metrics only: **synthetic resting heart rate (bpm), sleep duration (hours), and daily activity (minutes)**. Each card shows a sparkline, last observation, and explicit `SIMULATED` label. No fake blood oxygen, body temperature, blood pressure, nitrogen, suit pressure, radiation dose or bone mass values.
+3. A dramatic **mission environment visual** as a secondary panel/section, using custom abstract vector artwork or licensed imagery only with verifiable rights; the image must never imply NASA endorsement or actual live streaming.
+4. Distinct alert states with short text: `REVIEW DEMO CHANGE`, `DATA QUALITY BLOCKED`, `INSUFFICIENT DATA`, `NO RULE TRIGGERED`. Do not label a person medically `normal`, `healthy`, `critical`, or `safe`.
+5. Visible scan/grid/target motifs used sparingly, precision borders, small section identifiers, 24h/UTC date labels for data, restrained animation, and operator-grade legibility.
+6. On-click hotspot detail opens the related trend and brief NASA/CSA research context. Keyboard accessible alternate controls must always exist.
+7. A fictional crew profile, e.g. `SIM-001` with avatar illustration or initials — **never real astronaut identities or photos**. The application must not present a real astronaut as monitored.
+8. A one-click switch between `TACTICAL / Body Telemetry` and `MISSION / Overview` views, both powered by exactly the same validated synthetic dataset and existing safety state.
+9. Responsive: desktop 1440px can use central silhouette + cards; mobile must stack panels logically and preserve readable content, avoiding minuscule text.
+
+**Visual quality bar:** original premium UX; more like a credible aerospace operations interface than a typical Streamlit metrics dashboard. Avoid excessive glowing neon, misleading ECG traces generated from mere daily averages, and pseudo-real-time sensor pulses unless conspicuously labeled decorative simulation.
+
+#### Claude first deliverable — revised
+
+**Start with ONE interactive high-fidelity Mission Bio-Telemetry screen** combining the best qualities of Reference A and Reference B. Ask the designer to attach the two user-supplied screenshots in Claude; the brief URL alone does not embed the images. The first deliverable should show a coherent composition with a body-map and telemetric cards using the *actual* three available data fields. Request a preview at 1440×900 and a responsive mobile state. Design direction must be reviewed before implementing React/FastAPI integration.
+
 ### Primary screens
 
 1. **Mission Command** — top navigation, scenario and crew selection, explicit DEMO/SYNTHETIC label, recency and data provenance, four concise KPI panels; two focused charts; review findings queue with clear descriptions; sidebar where useful.
@@ -55,7 +79,7 @@ The Python prototype on `main` already:
 
 ### Claude deliverables
 
-**First, produce two visually distinct design directions for the same Mission Command screen**, compare them on clarity, originality, hierarchy, and feasibility for a two-day hackathon. Recommend one; do not build a huge backend.
+**First, show one cohesive high-fidelity interactive screen following the user-provided tactical biometrics and cinematic EVA references.** The user has now chosen the visual direction. Explore alternatives only if needed to solve a concrete usability problem. Do not build a new backend until the design is approved.
 
 Then produce:
 1. A high-fidelity **interactive React/TypeScript prototype** using Tailwind and accessible UI components, with a runnable preview (Artifact if supported).
