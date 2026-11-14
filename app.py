@@ -9,7 +9,7 @@ import plotly.express as px
 from src.ares_health.analysis import quality_issues, review_changes
 from src.ares_health.synthetic import SCENARIOS, generate_scenario
 from src.ares_health.review import build_review_report
-from src.ares_health.import_csv import load_synthetic_csv, MAX_CSV_BYTES
+from src.ares_health.import_csv import load_synthetic_csv
 
 st.set_page_config(page_title="ARES Health AI | Mission Control", page_icon="🛰️", layout="wide")
 st.markdown("""
