@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.streamlit/secrets.toml
+.env
+.DS_Store
+.idea/
+.vscode/
+data/private/
+data/real/
+*.db
+*.sqlite
+*.sqlite3

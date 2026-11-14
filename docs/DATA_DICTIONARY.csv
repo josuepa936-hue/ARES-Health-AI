@@ -1,0 +1,10 @@
+﻿field,type_or_unit,required,planned_initial_source,notes
+timestamp_utc,ISO 8601 UTC datetime,required,synthetic,Daily observation event time; explicit UTC offset or Z
+crew_id,str (pseudonymous),required,synthetic,Example SIM-001; never real identifier
+resting_hr_bpm,integer bpm,optional,synthetic,Resting HR context required; no medical bounds assumed
+sleep_hours,float hours/day,optional,synthetic,Self-reported or simulated; measurement source explicit
+activity_minutes,integer min/day,optional,synthetic,Definition and units to be stated
+sleep_quality_1to5,integer 1–5,optional,synthetic,Self-report scale defined as demo-only
+symptoms_report,string / categorical,optional,synthetic,Free text sanitized; no diagnosis inference
+source_type,synthetic | verified_open,required,synthetic,Every row names provenance category
+quality_notes,string,optional,synthetic,Missingness/errors; never suppress
