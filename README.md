@@ -5,6 +5,20 @@
 **Event:** Universal Event · November 14–15, 2026  
 **Stage:** Hackathon prototype v0.7 — scientific evidence, plain-language guidance, synthetic CSV import, monitoring and review reporting, **not** clinically validated.
 
+## New in v0.8 — Advanced Mission Control
+
+The app is now organized into five navigable areas: Mission Overview, Signals Lab, Body Systems, Scientific Evidence and Mission Review. SciPy provides robust descriptive statistics (median absolute deviation and Theil–Sen slope), while Plotly presents an original synthetic body-system explorer and detailed metric trends. **These statistics do not classify medical risks or alter the established review thresholds.**
+
+See [docs/ADVANCED_CONSOLE.md](docs/ADVANCED_CONSOLE.md) for scientific and technical boundaries. The existing CSV importer, synthetic scenarios, review JSON exports and NASA/CSA reference links remain available. The repo includes a GitHub Actions test workflow for continuous integration.
+
+To install the new dependency before launching:
+
+```powershell
+python -m pip install -r requirements.txt
+python -m pytest -q
+python -m streamlit run app.py
+```
+
 ## Mission
 
 Design a local-first, explainable astronaut health-monitoring prototype that supports the collection of wellness indicators, visualizes time trends, checks data quality, and helps crew members review meaningful changes and consult relevant procedures. It does **not** diagnose disease or replace flight surgeons, medical protocols, or mission operations.

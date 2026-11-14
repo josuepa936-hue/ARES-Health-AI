@@ -17,3 +17,8 @@ OpenAI ChatGPT assisted with the strict synthetic CSV ingestion module, validati
 ## Version 0.7 implementation
 
 OpenAI ChatGPT was used to help summarize and structure official publicly available NASA/Canadian Space Agency research context, draft conservative non-clinical explanatory text, create new UI sections, write automated checks and prepare a narration script. The included links are official organizational sources, not data ingested or validated by NASA on behalf of this prototype. Human project authors must confirm source alignment, run the tests and approve the text before submission.
+
+
+## Version 0.8 implementation
+
+OpenAI ChatGPT assisted with the mission-oriented Streamlit UI redesign, Plotly figure generation and non-diagnostic body-system schematic, SciPy descriptive statistics, unit-test fixtures, technical documentation, and the CI workflow. Human participants remain responsible for verifying the implementation, academic claims, any graphics rights, and the software tests. All included data remain fictional; robust statistics are exploratory and are not clinical predictions.
