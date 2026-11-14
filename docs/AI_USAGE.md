@@ -13,3 +13,7 @@ OpenAI Codex assisted with repository inspection, the shared synthetic-data vali
 ## Version 0.6 implementation
 
 OpenAI ChatGPT assisted with the strict synthetic CSV ingestion module, validation tests, UI integration, and documentation. The importer deliberately rejects data lacking a fictional identifier, explicit synthetic provenance, valid UTC dates, or complete measurements. Each uploaded file also requires a human attestation. This is a software proof of concept rather than an independent verification of the synthetic provenance or clinical usefulness.
+
+## Version 0.7 implementation
+
+OpenAI ChatGPT was used to help summarize and structure official publicly available NASA/Canadian Space Agency research context, draft conservative non-clinical explanatory text, create new UI sections, write automated checks and prepare a narration script. The included links are official organizational sources, not data ingested or validated by NASA on behalf of this prototype. Human project authors must confirm source alignment, run the tests and approve the text before submission.
