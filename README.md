@@ -3,7 +3,26 @@
 **Astronaut Risk Evaluation System**  
 **Track:** Create Health Monitoring Software for Astronauts on Space Missions  
 **Event:** Universal Event · November 14–15, 2026  
-**Stage:** Hackathon prototype v0.7 — scientific evidence, plain-language guidance, synthetic CSV import, monitoring and review reporting, **not** clinically validated.
+**Stage:** Stable demonstration v0.7 with an experimental v0.9 local API branch — scientific evidence, plain-language guidance, synthetic CSV import, monitoring and review reporting, **not** clinically validated.
+
+## API foundation (experimental v0.9 branch)
+
+The current **Streamlit v0.7** interface remains the reliable standalone demo.
+This branch adds `src/ares_health/service.py` (a canonical, strict-JSON domain
+snapshot) and `src/ares_health/api.py` (local FastAPI endpoints) to prepare
+integration with a future approved Figma + React frontend. **The new visual
+design is not integrated yet.**
+
+```powershell
+python -m pip install -r requirements.txt
+python -m pytest -q
+python -m uvicorn src.ares_health.api:app --host 127.0.0.1 --port 8000
+```
+
+Open `http://127.0.0.1:8000/docs` to inspect and test API endpoints in your browser.
+The API only accepts synthetic data, limits CSV uploads and has no authentication;
+**do not host it publicly**. See [API contract](docs/API_CONTRACT.md) and
+[architecture](docs/ARCHITECTURE.md).
 
 ## Mission
 
