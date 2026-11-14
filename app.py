@@ -9,6 +9,7 @@ import plotly.express as px
 from src.ares_health.analysis import quality_issues, review_changes
 from src.ares_health.synthetic import SCENARIOS, generate_scenario
 from src.ares_health.review import build_review_report
+from src.ares_health.import_csv import load_synthetic_csv, MAX_CSV_BYTES
 
 st.set_page_config(page_title="ARES Health AI | Mission Control", page_icon="🛰️", layout="wide")
 st.markdown("""
@@ -31,7 +32,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 st.markdown("""
 <div class="ares-hero">
-  <div class="ares-eyebrow">Mission control · Prototype v0.5</div>
+  <div class="ares-eyebrow">Mission control · Prototype v0.6</div>
   <h1>ARES Health AI</h1>
   <p>Astronaut Risk Evaluation System · NASA Space Apps Challenge 2026</p>
   <span class="ares-pill">LOCAL DEMONSTRATION · SYNTHETIC DATA ONLY</span>
@@ -44,17 +45,50 @@ st.warning(
 
 with st.sidebar:
     st.header("Mission simulation")
-    selected = st.selectbox("Demo scenario", options=list(SCENARIOS))
-    seed = st.number_input("Reproducibility seed", min_value=0, max_value=999999, value=2026, step=1)
+    mode = st.radio("Data source", ["Built-in simulation", "Upload synthetic CSV"])
+    if mode == "Built-in simulation":
+        selected = st.selectbox("Demo scenario", options=list(SCENARIOS))
+        seed = st.number_input("Reproducibility seed", min_value=0, max_value=999999, value=2026, step=1)
+        scenario_id = SCENARIOS[selected]
+        records = generate_scenario(scenario_id, seed=int(seed))
+    else:
+        scenario_id = "uploaded_synthetic_csv"
+        st.caption("Local upload only, at most 1 MB and 366 daily rows. CSV must contain only fictional data.")
+        st.download_button(
+            "Download sample synthetic CSV",
+            generate_scenario("stable").to_csv(index=False).encode("utf-8"),
+            file_name="ares_synthetic_template.csv",
+            mime="text/csv",
+        )
+        uploaded = st.file_uploader("Upload synthetic CSV", type=["csv"])
+        attested = st.checkbox(
+            "I confirm this CSV contains only fictional data, not real health records.",
+            value=False,
+        )
+        if uploaded is None:
+            st.info("Choose a synthetic CSV to continue.")
+            st.stop()
+        if not attested:
+            st.warning("Confirm the data are fictional before processing this CSV.")
+            st.stop()
+        records, upload_errors = load_synthetic_csv(uploaded.getvalue())
+        if upload_errors:
+            st.error("CSV rejected. No measurements or trends were evaluated.")
+            for error in upload_errors:
+                st.write("- " + error)
+            st.stop()
+        st.success("Synthetic CSV validated locally.")
     st.divider()
-    st.caption("Profile: SIM-001 · Local simulation")
-    st.caption("No external API or real NASA telemetry is connected.")
+    st.caption("Profile: synthetic demonstration · No real biosensors or NASA telemetry")
+    st.caption("Uploaded files are validated in memory by ARES; no external ARES API is used.")
 
-records = generate_scenario(SCENARIOS[selected], seed=int(seed))
 flags, blocked = review_changes(records)
 issues = quality_issues(records)
 
-st.subheader("Mission status — SIM-001")
+crew_label = str(records["crew_id"].iloc[0])
+st.subheader(f"Mission status — {crew_label}")
+if mode == "Upload synthetic CSV":
+    st.info("Source: user-provided synthetic CSV (self-attested). Provenance is not independently verified.")
 tracked = ["resting_hr_bpm", "sleep_hours", "activity_minutes"]
 missing_cells = int(records[tracked].isna().sum().sum())
 completeness = 100.0 * (1 - missing_cells / records[tracked].size)
@@ -136,20 +170,22 @@ with st.expander("Review workflow and exportable report", expanded=True):
         help="Do not enter actual personal or medical information.",
     )
     report = build_review_report(
-        records, scenario=SCENARIOS[selected], flags=flags,
+        records, scenario=scenario_id, flags=flags,
         issues=issues, blocked=blocked, review_state=review_state, reviewer_note=note,
     )
     st.download_button(
         "Download review report (JSON)",
         data=json.dumps(report, ensure_ascii=False, indent=2).encode("utf-8"),
-        file_name=f"ares_review_{SCENARIOS[selected]}.json",
+        file_name=f"ares_review_{scenario_id}.json",
         mime="application/json",
     )
 
 with st.expander("Data provenance and methodology"):
     st.markdown("""
-**Source:** deterministic Python-generated synthetic records, not observations
-from NASA astronauts, hospitals, or wearable devices.
+**Source:** built-in scenarios are deterministic Python-generated synthetic records.
+Uploaded CSV files are self-labeled and user-attested as synthetic, with strict
+format and quality checks. ARES cannot independently verify their provenance.
+No NASA, hospital or wearable telemetry is included in the supplied examples.
 
 **Demonstration method:** the first seven simulated days serve as the
 illustrative reference, while the latest four days form the comparison.
@@ -164,7 +200,7 @@ qualified for use in spaceflight.
 with st.expander("Explore and export synthetic records"):
     st.dataframe(records, use_container_width=True, hide_index=True)
     st.download_button("Download demonstration CSV", records.to_csv(index=False).encode("utf-8"),
-                       file_name=f"ares_{SCENARIOS[selected]}_synthetic.csv", mime="text/csv")
+                       file_name=f"ares_{scenario_id}.csv", mime="text/csv")
 
 st.divider()
-st.caption("ARES Health AI v0.5 · Synthetic engineering demonstration · Not NASA-approved or medically validated")
+st.caption("ARES Health AI v0.6 · Synthetic engineering demonstration · Not NASA-approved or medically validated")
