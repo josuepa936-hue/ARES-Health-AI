@@ -1,0 +1,156 @@
+"""Local-only HTTP interface for the already-tested synthetic ARES engine.
+
+Run with: python -m uvicorn src.ares_health.api:app --host 127.0.0.1 --port 8000
+This service is NOT a medical API, an astronaut data feed, or a cloud service.
+"""
+from __future__ import annotations
+
+from typing import Literal
+
+from fastapi import FastAPI, Header, HTTPException, Query, Request
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
+
+from src.ares_health.evidence import EVIDENCE
+from src.ares_health.import_csv import MAX_CSV_BYTES, load_synthetic_csv
+from src.ares_health.service import build_snapshot
+from src.ares_health.synthetic import SCENARIOS, generate_scenario
+
+ScenarioId = Literal["stable", "heart_rate_shift", "sleep_shift", "incomplete"]
+ReviewState = Literal["Pending review", "Reviewed in demo"]
+
+app = FastAPI(
+    title="ARES Health AI — Synthetic Mission API",
+    description=(
+        "Local educational software demo. Only fictional daily observations. "
+        "No diagnosis, flight-medicine authorization, or NASA operational data."
+    ),
+    version="0.9.0-dev",
+    docs_url="/docs",
+    redoc_url=None,
+)
+
+# Local development UI only, not public internet or arbitrary hosted origins.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173", "http://127.0.0.1:5173",
+        "http://localhost:3000", "http://127.0.0.1:3000",
+    ],
+    allow_credentials=False,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type", "X-Synthetic-Attestation"],
+)
+
+
+class ReviewRequest(BaseModel):
+    """A fictional scenario reference, not an arbitrary health-data upload."""
+
+    scenario: ScenarioId = "stable"
+    seed: int = Field(default=2026, ge=0, le=999999)
+    days: int = Field(default=21, ge=12, le=366)
+    review_state: ReviewState = "Pending review"
+    reviewer_note: str = Field(default="", max_length=500)
+
+
+@app.get("/api/status")
+def get_service_status() -> dict:
+    """Service liveness, NOT a human-health assessment."""
+    return {
+        "status": "ready",
+        "mode": "local-development",
+        "data_provenance": "synthetic-only",
+        "clinical_validation": False,
+        "nasa_approved": False,
+    }
+
+
+@app.get("/api/scenarios")
+def list_scenarios() -> dict:
+    return {
+        "scenarios": [
+            {"id": scenario_id, "label": label}
+            for label, scenario_id in SCENARIOS.items()
+        ],
+        "data_provenance": "synthetic",
+        "simulation_only": True,
+    }
+
+
+@app.get("/api/evidence")
+def list_evidence() -> dict:
+    from dataclasses import asdict
+    return {
+        "references": [asdict(item) for item in EVIDENCE],
+        "usage": "Background research links only, not imported NASA/CSA health data.",
+    }
+
+
+@app.get("/api/demo")
+def get_demo(
+    scenario: ScenarioId = "stable",
+    seed: int = Query(default=2026, ge=0, le=999999),
+    days: int = Query(default=21, ge=12, le=366),
+) -> dict:
+    records = generate_scenario(scenario, seed=seed, days=days)
+    return build_snapshot(records, scenario=scenario)
+
+
+@app.post("/api/review")
+def export_fictional_review(request: ReviewRequest) -> dict:
+    """Produce a report using the canonical engine and a fictional scenario."""
+    records = generate_scenario(request.scenario, seed=request.seed, days=request.days)
+    result = build_snapshot(
+        records,
+        scenario=request.scenario,
+        include_report=True,
+        review_state=request.review_state,
+        reviewer_note=request.reviewer_note,
+    )
+    return result["review_report"]
+
+
+@app.post("/api/synthetic-csv")
+async def analyze_synthetic_csv(
+    request: Request,
+    x_synthetic_attestation: str | None = Header(
+        default=None, alias="X-Synthetic-Attestation"
+    ),
+) -> dict:
+    """Ingest a raw text/csv request, in memory, with a hard 1 MB stream limit.
+
+    The required attestation is a user statement, never independent proof
+    of synthetic provenance. No cloud transmission or filesystem storage.
+    """
+    if x_synthetic_attestation != "true":
+        raise HTTPException(
+            status_code=400,
+            detail="A true X-Synthetic-Attestation header is required; never upload real medical data.",
+        )
+    media_type = request.headers.get("content-type", "").split(";", 1)[0].strip().lower()
+    if media_type != "text/csv":
+        raise HTTPException(status_code=415, detail="Expected Content-Type: text/csv.")
+
+    length = request.headers.get("content-length")
+    if length is not None:
+        try:
+            if int(length) > MAX_CSV_BYTES:
+                raise HTTPException(status_code=413, detail="Synthetic CSV is larger than 1 MB.")
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail="Invalid Content-Length header.") from exc
+
+    payload = bytearray()
+    async for chunk in request.stream():
+        if len(payload) + len(chunk) > MAX_CSV_BYTES:
+            raise HTTPException(status_code=413, detail="Synthetic CSV is larger than 1 MB.")
+        payload.extend(chunk)
+
+    records, errors = load_synthetic_csv(bytes(payload))
+    if errors or records is None:
+        raise HTTPException(
+            status_code=422,
+            detail={"status": "CSV_REJECTED", "errors": errors},
+        )
+    return build_snapshot(
+        records, scenario="uploaded_synthetic_csv", include_report=True
+    )
