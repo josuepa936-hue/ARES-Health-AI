@@ -1,11 +1,8 @@
-# Implementation modules to add during the hackathon
+# ARES Health AI modules — v0.5
 
-Plan these modules but do not represent them as implemented:
+- `synthetic.py`: deterministic fictional daily scenarios.
+- `validation.py`: shared schema, provenance, identity, UTC chronology, daily cadence and measurement sanity checks.
+- `analysis.py`: validated reference/recent comparisons and explainable review flags; re-exports `quality_issues` for compatibility.
+- `review.py`: revalidated deterministic JSON reports, review state and fictional notes.
 
-- `ingestion.py`: read and validate data + provenance labels.
-- `analysis.py`: trends against person-specific baseline with a transparent method.
-- `alerts.py`: plain-language review flags + reason and limitations.
-- `storage.py`: local-only storage/export; no cloud dependence.
-- `evaluation.py`: scenario tests and diagnostics.
-
-Keep functions independently testable and document any units/thresholds.
+No CSV ingestion, database, real telemetry or clinical prediction is implemented. See `docs/ARCHITECTURE.md` for contracts, units, unchanged demonstration thresholds and limitations.

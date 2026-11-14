@@ -1,41 +1,31 @@
-# Validation plan — non-clinical prototype
+# Software validation — v0.5
 
-## Objectives
+All fixtures are synthetic. Tests assess software behavior, not medical accuracy or astronaut health outcomes.
 
-Evaluate software behavior, robustness, and explainability using synthetic fixtures. Do **not** treat synthetic test results as estimates of sensitivity, specificity, prediction accuracy, or health outcomes in astronauts.
+Run from the repository root:
 
-## Scenario matrix (fixtures to create during the event)
+```sh
+python -m pytest -q
+```
 
-| ID | Synthetic scenario | Expected software behavior |
-|---|---|---|
-| S1 | Stable, complete observations | show charts, explain no rule-based changes; not 'medically healthy' |
-| S2 | Consistent shift from that profile's illustrative heart-rate baseline | flag deviation for *review* with the actual comparison shown |
-| S3 | Multi-day shortened sleep relative to an illustrative baseline | explain sleep trend with reference interval and uncertainty |
-| S4 | Missing data + duplicated timestamps | conspicuous data-quality warning; never silently fill with reassuring values |
-| S5 | Physically impossible value / incorrect unit | reject or quarantine record and explain data issue |
-| S6 | Insufficient baseline observations | mark baseline unavailable and withhold trend-based alert |
+## Implemented automated checks
 
-## Test categories
+- Stable observations produce no demonstration flags; seeded generation is repeatable.
+- Heart-rate and sleep changes produce explanations containing means, direction, UTC comparison intervals, units and the inclusive illustrative threshold.
+- Both directions and values below, exactly at and above the 12 bpm / 1.5 hour thresholds are covered.
+- Empty dataframes, missing or duplicate columns, invalid/missing/numeric timestamps, duplicate instants, reversed chronology, daily gaps and intraday observations block interpretation.
+- Missing, nonnumeric, boolean, infinite, negative and out-of-range measurements block interpretation.
+- Blank, missing or mixed crew identities and unsupported/missing provenance block interpretation.
+- Valid numeric strings, supported sanity-bound endpoints and UTC-normalized ISO timestamps are accepted.
+- Short valid series cannot form overlapping baseline/recent windows: reports indicate insufficient data and contain no flags.
+- Validation and analysis preserve source dataframes.
+- JSON reports independently revalidate input, suppress stale caller flags, remain deterministic and serializable, and validate review-state/note constraints.
+- Streamlit AppTest exercises all four scenarios, quality/flag counts, Mission Review Center inputs and both export controls.
 
-**Unit tests:** parsing, required columns, duplicates, missingness, time ordering, baseline availability, rule explanations.
+## Limits and further checks
 
-**Integration tests:** input CSV -> validated records -> visualization -> report.
+The application exports CSV; CSV import and an ingestion pipeline are not implemented. Export-control presence is automated; browser download interaction and visual layout remain manual checks. The software does not infer physical units from values or validate the authenticity of a synthetic source label. Offline browser behavior and real telemetry are outside this automated suite. No clinical evidence or medical performance measures are claimed.
 
-**Manual UX tests:** a reviewer can tell whether data are synthetic, what triggered a flag, and what the software cannot infer.
+## v0.5 verification result
 
-**Offline test:** app runs on localhost after dependencies are installed, with internet disabled; no external APIs are needed.
-
-## Acceptance thresholds (engineering only)
-
-- All seeded fixtures have expected deterministic behavior (pass/fail).
-- No scenario with a missing baseline is given a falsely confident trend assessment.
-- Every review flag includes the metric, time, baseline or reference, and rationale.
-- No personal or human-derived confidential data enter the sample repository.
-- No false claim that tests establish medical efficacy or astronaut suitability.
-
-## Evidence to save
-
-- Local screenshots/video (captured during the event)
-- Reproducible fixture generator and tests
-- `pytest` test results
-- Known limitations and future validation needs
+On Python 3.12, `python -m pytest -q` completed with **64 passed**. Dependency consistency (`python -m pip check`) and `git diff --check` also passed. These are software checks using fictional records only.
