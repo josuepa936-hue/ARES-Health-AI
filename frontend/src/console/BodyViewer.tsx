@@ -62,6 +62,7 @@ export function BodyViewer({
             <b>Not monitored</b>
           </button>
         </div>
+        <span className="anatomy-ai-watermark" aria-label="AI-generated anatomical illustration">AI-GENERATED IMAGE</span>
         <span className="body-coordinate">ANTERIOR / ILLUSTRATIVE</span>
         <span className="body-coordinate right">{crewId}</span>
       </div>

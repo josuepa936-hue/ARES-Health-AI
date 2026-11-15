@@ -29,7 +29,7 @@ export default function Workspace() {
           <span className="brand-wordmark">
             <span className="brand-mark">ARES</span>
             <span className="brand-subtitle">HEALTH AI / MISSION SYSTEMS</span>
-            <span className="brand-ai-disclosure">AI-GENERATED LOGO</span>
+            <span className="brand-ai-disclosure">AI-GENERATED IMAGE</span>
           </span>
         </div>
         <span className="global-status">INDEPENDENT DEMONSTRATION</span>
