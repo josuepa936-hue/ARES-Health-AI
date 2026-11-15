@@ -383,13 +383,24 @@ def test_stream_limit_and_mime():
 
 
 def test_core_never_uses_external_network(monkeypatch):
+    """Run the actual offline domain core, not TestClient's event-loop transport.
+
+    On Windows, asyncio's ProactorEventLoop can use a localhost socketpair for
+    its internal wake-up pipe. Blocking *every* socket.connect during a
+    TestClient request rejects that loopback IPC, even if ARES never attempts
+    an external connection. Test the pure engine directly instead.
+    """
     import socket
 
     def forbidden(*args, **kwargs):
         raise AssertionError("network forbidden")
 
+    context = ScenarioContext(kind="scenario", scenario="stable")
     monkeypatch.setattr(socket.socket, "connect", forbidden)
-    assert briefing()["engine"] == "deterministic-offline"
+    response = answer(canonical_context(context))
+    assert response["engine"] == "deterministic-offline"
+    assert response["provenance"] == "synthetic"
+    assert response["assessment"] == "NO_DEMO_RULE_TRIGGERED"
 
 
 def test_question_claims_cannot_fabricate_values_or_move_review_state():
