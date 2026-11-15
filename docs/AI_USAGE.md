@@ -74,3 +74,5 @@ data were accessed, and PhysioNet record 100 has **not** been successfully
 downloaded and evaluated in the Codex environment. NASA OSD-87 is a mouse
 retina study, not human mission monitoring. The team must independently
 verify scientific and data license claims before publication.
+
+A subsequent integration change added an explicit public AWS source for MIT-BIH that PhysioNet documents on its official dataset page. Acquisition remains opt-in and subject to the same SHA-256 manifest and waveform checks; no public-record benchmark score is claimed without a successful verified run.
