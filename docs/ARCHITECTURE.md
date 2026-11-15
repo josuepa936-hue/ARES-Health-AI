@@ -1,4 +1,4 @@
-# ARES Health AI Architecture — v1.1 functional integration
+# ARES Health AI Architecture — current main v1.5
 
 ## Mission
 
@@ -10,7 +10,7 @@ ARES is an **independent, synthetic, non-clinical prototype** developed for the 
 flowchart LR
   subgraph Presentations
     A[Streamlit v0.7: tested fallback]
-    B[React v1.1 functional client]
+    B[React v1.5 mission console]
   end
   A --> E[Shared domain modules]
   B --> C[Local FastAPI: api.py]
@@ -42,7 +42,7 @@ flowchart LR
 - Uvicorn must listen on `127.0.0.1`. The service does **not** implement authentication and must never be publicly hosted as-is.
 - Only `localhost:5173`, `127.0.0.1:5173`, `localhost:3000` and `127.0.0.1:3000` can make cross-origin browser requests through the current CORS policy. This is an origin restriction, not authorization.
 - The CSV endpoint enforces a streaming 1,000,000-byte cap and requires `X-Synthetic-Attestation: true`. This header is human attestation, not proof. Do not send real, identifiable or sensitive health information.
-- The full Streamlit v0.7 interface in `main` remains the stable demonstration path until the new interface and API have passed local review.
+- The compiled React v1.5 console is served by FastAPI on loopback port 8000; Streamlit remains an independent fallback.
 
 ## Quality assurance
 
@@ -50,6 +50,21 @@ flowchart LR
 - GitHub Actions runs on Python 3.12 and 3.13 for every PR. These are code-level functional tests, not clinical validation.
 
 See `docs/API_CONTRACT.md` for exact HTTP paths, JSON fields and examples. The previously generated Claude HTML and Figma Make previews are **design concepts only** and are not connected to the backend.
+
+## Current integrated architecture and historical milestones
+
+Canonical software version is `APP_VERSION = "1.5"` in `version.py`. FastAPI
+serves frontend/dist and the synthetic CSV alongside /api. The current console
+includes deterministic offline Copilot, manual four-state review/audit, Wellness
+research context and a decorative generated 2D illustration with navigation
+overlays; the illustration is not a validated organ model or 3D asset.
+Separate opt-in MIT ECG and NASA OSD-87 mouse-study adapters never feed mission
+analysis. NASA reads public metadata/small samples on demand; the MIT endpoint
+reads a prepared local artifact. No public research availability is assumed.
+
+The versioned notes below record when components were introduced. Earlier
+references to a basic UI or excluded anatomy describe those milestones, not
+current main. API/schema versions are independent of application version.
 
 ## v1.0 mission timeline
 
@@ -80,7 +95,7 @@ backend persistence or new Python functionality is introduced. This basic UI is
 a functional integration milestone; final Figma styling, anatomy and 3D remain
 out of scope. CI runs component/adapter tests plus live HTTP checks through Vite.
 
-## v1.2 future research isolation
+## v1.2 optional research isolation (integrated on main)
 
 The optional `research.py` domain module and explicit
 `scripts.prepare_research_ecg` command own bounded official-file verification,
@@ -93,9 +108,9 @@ Existing synthetic endpoints and mission modules remain unchanged.
 React `Workspace` defaults to the existing mission app, preserving its state.
 The separate lazy research view requests only the new namespace and labels the
 provenance as public terrestrial research, with no upload or clinical inference.
-No research result is converted into synthetic observations. The source/license
-and official measured-case checks remain unresolved; keep this draft branch as
-future work rather than changing the submission fallback. See `RESEARCH_LAB.md`.
+No research result is converted into synthetic observations. These optional modes
+are present on main, while source/license and official measured-case verification
+remain separate unresolved checks. See `RESEARCH_LAB.md`.
 
 ## v1.4 presentation layer
 

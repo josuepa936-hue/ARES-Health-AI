@@ -1,18 +1,21 @@
-# Guía rápida — ARES Health AI v0.5
+# Guía rápida — ARES Health AI v1.5
 
-Prototipo local con cuatro escenarios sintéticos, gráficos, controles de calidad, explicaciones de cambios y Mission Review Center con exportación JSON y CSV.
+El flujo principal es la consola React + FastAPI en un solo servidor local.
+Consulta [README](README.md) para instalación limpia en Windows o Linux: Python
+3.12+, Node >=22.12 (24 verificado), entorno virtual, `pip install -r requirements.txt`,
+`npm ci` y compilación. En Windows ejecuta `.\start-ares.cmd` desde la raíz;
+si PowerShell bloquea `.ps1`, usa `.cmd` sin cambiar la política de ejecución.
+La consola está en `http://127.0.0.1:8000/`. Streamlit sigue disponible como alternativa.
 
-## Linux / entorno en la nube
+Las pruebas HTTP requieren FastAPI en 8000 **y** Vite en 5173. Las de navegador
+usan la aplicación compilada en 8014 por defecto, o `ARES_E2E_ORIGIN` explícito.
+Consulta [validación](docs/VALIDATION_PLAN.md) antes de ejecutarlas.
 
-```sh
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
-.venv/bin/python -m pytest -q
-.venv/bin/python -m streamlit run app.py
-```
+Solo datos ficticios: las fechas son simuladas y los umbrales de 12 bpm / 1.5
+horas son ejemplos de ingeniería, no criterios clínicos. Copilot es determinista,
+local y no usa un LLM. Las vistas opcionales MIT/NASA son investigación separada;
+no proporcionan telemetría de astronautas ni validan el motor.
 
-Para Windows/PowerShell consulta `README.md`. No se requieren claves API ni servicios externos.
-
-Selecciona **Stable observations**, **Resting heart rate shift**, **Shortened sleep** o **Incomplete records**. Los fallos de calidad bloquean la interpretación de tendencias. Los cambios se calculan con siete días iniciales y cuatro recientes, sin modificar los umbrales ilustrativos de 12 bpm y 1.5 horas. Puedes registrar una revisión ficticia y descargar el informe JSON o las observaciones CSV.
-
-No uses información personal o médica real. El prototipo no diagnostica ni cuenta con validación médica o aprobación de NASA. La arquitectura y los límites implementados se documentan en inglés en `docs/ARCHITECTURE.md`.
+El [guion oficial](docs/DEMO_SCRIPT.md) prepara un video inferior a 30 segundos.
+La [lista de entrega](docs/SUBMISSION_CHECKLIST.md) requiere revisión humana.
+No se afirma envío a NASA Space Apps, validación médica ni aprobación de NASA.

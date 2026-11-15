@@ -1,6 +1,10 @@
-# ARES Health AI — Local API Contract (v1.0)
+# ARES Health AI — Local API Contract (application v1.5)
 
-**Purpose:** Expose the existing synthetic, explainable Python domain engine to the functional React client and future Figma-designed interface without changing the stable Streamlit app.
+**Purpose:** Expose the shared synthetic Python engine to the current React v1.5 console. FastAPI also serves the compiled UI; Streamlit remains a standalone fallback.
+
+Canonical `application_version` is `1.5` from `version.py`. Existing document
+schemas (including `1.0-demo`, `1.0-timeline` and `1.5-demo`) are independent
+format identifiers; this documentation correction changes no JSON contract.
 
 **Not production-ready medical infrastructure.** This is a laptop-local, fictional-data-only service. It has no authorization, rate limiter, persistent data store, clinical validation, onboard sensor integrations, NASA telemetry, or medical treatment recommendations. **Never expose Uvicorn to a public network**.
 
@@ -80,18 +84,20 @@ HTTP failures:
 ### Frontend workflow
 
 ```text
-Figma visual design (future, not integrated)
+React v1.5 console + decorative 2D navigation illustration
         |
-     React v1.1 functional UI    ← only controlled synthetic files and demo scenarios
+     Typed functional UI    ← only controlled synthetic files and demo scenarios
         |
-  local FastAPI /api/* (v1.0)
+  local FastAPI /api/* (application v1.5)
         |
     service.py : canonical snapshot, strict JSON conversion
         |
     Existing domain: synthetic, validation, analysis, evidence, review
 ```
 
-The current Streamlit app uses these same domain modules directly; `main` remains the working fallback. The Figma design is **not** connected yet. This API does not generate a medical diagnosis, determine astronaut fitness or provide real-time data.
+The Streamlit fallback uses these same domain modules directly. The compiled
+React console is the current main presentation; no validated 3D organ model
+is implemented. This API does not generate a medical diagnosis, determine astronaut fitness or provide real-time data.
 
 ## Verification
 
@@ -215,7 +221,7 @@ Review notes and returned reports remain in memory only. No endpoint or existing
 Python report schema changes were required. See `frontend/README.md` for startup,
 proxy configuration, errors, regression tests and limitations.
 
-## v1.2 optional research namespace (future research)
+## v1.2 optional research namespace (present on main)
 
 Existing synthetic routes and their accepted provenance remain unchanged.
 `GET /api/research/ecg/demo?record=100` serves a separately prepared terrestrial
@@ -261,8 +267,10 @@ original `/api/demo`, `/api/timeline`, `/api/synthetic-csv` or medical disclaime
   the small OSD-87 microarray sample table, fetched **only if** the current
   official NASA catalog confirms that file is visible and unrestricted.
 
-NASA requests are HTTPS-only, limited in size and time, refuse redirects and do
-not permit arbitrary file names/URLs, inaccessible human datasets, bulk raw omics
+NASA requests are HTTPS-only and bounded: 12 seconds for the catalog, 30 seconds
+for the sample. Redirects are limited to two hops and approved NASA/public S3
+routes, including the exact OSD-87 GeneLab sample object. They do not permit
+arbitrary file names/URLs, inaccessible human datasets, bulk raw omics
 data or open access from outside loopback. Connectivity, file changes and
 unverified data yield HTTP 503 with no invented results. See
 [docs/MIT_NASA_RESEARCH.md](MIT_NASA_RESEARCH.md).

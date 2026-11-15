@@ -11,17 +11,19 @@ its state. Focus mode keeps the single conversation scroll surface. See
 [current layout, tradeoffs and browser verification](../docs/COCKPIT_BALANCE.md).
 
 This standalone Vite + React + TypeScript client consumes the existing FastAPI
-v1.0 API. Python remains the only source of physiological values, validation,
+API in application v1.5. Python remains the only source of physiological values, validation,
 trend rules, statistics, assessments, guidance and reports. The integrated high-contrast operations console is a usable demonstration
 interface, **not the final Figma anatomical or 3D design**.
-There is no anatomical model, 3D, authentication, database or external telemetry.
+The console has a decorative generated 2D anatomical illustration with interactive
+navigation overlays. It is not a validated organ model or 3D anatomy. There is
+no authentication, database or external telemetry.
 
 ## Single-server production demonstration
 
 From the repository root, **after installing Python requirements**, run:
 
 ```powershell
-.\\start-ares.ps1
+.\start-ares.ps1
 ```
 
 The launcher compiles React and serves the UI, `/api/*`, static assets
@@ -127,6 +129,44 @@ external data fetch, service worker or automatic data persistence. A selected
 local file and notes are sent only on explicit upload/review submission. Downloads
 are user initiated. Reloading the page discards active data and starts a demo.
 
+## Current version and browser prerequisites
+
+Canonical application version is Python `APP_VERSION = "1.5"`; the private npm
+package version `1.1.0` identifies frontend tooling and is not the displayed app
+version. See [current validation evidence](../docs/VALIDATION_PLAN.md).
+
+`test:integration` needs **both** FastAPI on 8000 and Vite on 5173. These are
+prerequisites; running it with either stopped produces connection failures.
+`test:browser` instead targets the **compiled** application on port **8014** by
+default. Build first, then from the repository root start:
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn src.ares_health.api:app --host 127.0.0.1 --port 8014
+```
+
+In another PowerShell terminal, from frontend/:
+
+```powershell
+npx playwright install chromium
+npm run test:browser
+```
+
+If the compiled app is already running on 8000, use instead:
+
+```powershell
+$env:ARES_E2E_ORIGIN="http://127.0.0.1:8000"
+npm run test:browser
+```
+
+Linux: `ARES_E2E_ORIGIN=http://127.0.0.1:8000 npm run test:browser`.
+Playwright uses `/usr/bin/chromium` when present, or an `ARES_CHROMIUM` override,
+or its installed browser. Linux may require browser system dependencies.
+Some suites intentionally capture tracked screenshots; inspect `git diff` after
+running them and preserve existing user work. The focused console/copilot suites
+write ignored `screenshots/issue-19-regression/` captures.
+Windows commands are documented from launcher/config inspection; this audit ran
+on Linux, not on a fresh Windows machine.
+
 ## Tests and build
 
 From `frontend/`:
@@ -173,7 +213,7 @@ from mission data. Cancellation ignores late responses even if a transport does
 not honor abort immediately. No medical thresholds or new statistics are defined
 in this project; all clinical interpretations are outside scope.
 
-### Verified implementation results
+### Historical v1.1 verification (recorded before v1.5)
 
 Local verification on Node 24 / Python 3.12: **177 Python tests**, **32 frontend
 unit/component tests**, and **8 live HTTP integration tests** passed. The
@@ -182,7 +222,7 @@ deprecation warning. CI configuration is included; these results describe local
 runs, not a completed GitHub Actions run. Final visual design and full browser
 visual testing remain outside this integration milestone.
 
-## Optional v1.2 research tab (future research)
+## Optional research tab (introduced in v1.2, present on main)
 
 The default mission app and its state remain unchanged. **Optional research lab**
 lazily loads a separate view labelled PUBLIC TERRESTRIAL RESEARCH ECG. It reads
@@ -195,11 +235,12 @@ markers and a discrepancy table. It does no beat detection or scoring in React.
 See `docs/RESEARCH_LAB.md` from the repository root for separate optional install,
 official-file acquisition, license review, quality protocol and enablement. The
 public-case benchmark is currently blocked, so this work stays future research;
-the synthetic mission app remains the hackathon fallback. No final Figma/anatomy/
-3D design is part of this view.
+the synthetic mission console remains the primary demonstration. The decorative
+2D mission illustration is separate from this view; no validated anatomy or 3D
+model is included.
 
 
-## Experimental NASA OSDR view (research branch only)
+## Optional NASA OSDR view (present on main)
 
 The third workspace mode, **NASA space biology**, provides a separate
 on-demand read-only explorer of the public OSD-87 (STS-135 mouse retina)

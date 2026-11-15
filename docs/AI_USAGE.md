@@ -1,10 +1,27 @@
 # AI usage disclosure — ARES Health AI
 
-OpenAI ChatGPT was used to assist with software architecture, generating and revising prototype code, and writing technical explanations. The team is responsible for reviewing, testing, attributing, and validating all code and scientific claims. Sample datasets were generated with deterministic Python code; they are entirely synthetic and do not represent measurements from astronauts or NASA systems.
+OpenAI ChatGPT was used to assist with software architecture, generating and revising prototype code, and writing technical explanations. The team is responsible for reviewing, testing, attributing, and validating all code and scientific claims. Mission sample datasets were generated with deterministic Python code; they are entirely synthetic and do not represent measurements from astronauts or NASA systems.
 
 All thresholds used by the demonstration are illustrative engineering parameters, not evidence-based clinical or aerospace medical cutoffs. The system does not diagnose conditions or replace medical protocols.
 
-At submission, review and expand this disclosure to reflect actual tools and materials used.
+## Current disclosure status — main v1.5
+
+The versioned entries below preserve recorded assistance history. References to
+pending feature branches describe the review stage at the time; v1.5 features
+are now present on main at aadd798. Codex/ChatGPT assisted with code, tests and
+technical writing; OpenAI image generation supplied the decorative 2D anatomical
+navigation illustration as recorded below. Figma Make/Claude explorations are
+not evidence that those concepts or a 3D asset shipped. The deterministic runtime
+Copilot does not call a generative model. Human authors retain responsibility
+for requirements, final review, source attribution, asset rights and submission;
+this audit does not independently establish authorship beyond these records.
+
+For Issue #26, OpenAI Codex inspected main, organizer discussions and code,
+corrected documentation, drafted a short narration and ran software checks.
+No biomedical or frontend behavior was changed. The owner must verify this
+record and third-party credits/terms before publishing; no root license is assumed.
+
+## Historical implementation disclosures
 
 ## Version 0.5 implementation
 
@@ -110,8 +127,8 @@ anatomy and decorative colors have no measurement or diagnostic meaning. No exte
 anatomical model/license was represented as available. The task's referenced image
 attachments were not accessible, so Issue #13's written art direction was used.
 Python domain logic, biomedical benchmarks, source provenance, validations and
-report generation remain unchanged. Human visual/source review is required before
-merging this draft against the v1.3 branch. No merging or clinical claim is authorized.
+report generation remain unchanged. This presentation is now integrated on main; human visual/source review remains
+necessary for release. No clinical validation is implied.
 
 ## Version 1.5 deterministic mission copilot and fictional review
 
@@ -124,7 +141,7 @@ clinical authorization or validation claim was added. Existing anatomy artwork
 provenance and biomedical/research modules are preserved. Questions and notes are
 fictional-only, transient user text; notes cannot instruct the analysis engine.
 Codex implementation assistance must not be confused with a generative runtime
-model. Human review remains required before merging this draft against v1.4.
+model. This work is now integrated on main; human release review remains required.
 
 ## Issue #17 copilot reading and evidence presentation
 
@@ -138,7 +155,7 @@ anatomical image and public research provenance were preserved. Before/after
 screenshots are actual local Chromium renders of synthetic scenarios, not generated
 mockups. Browser checks run on Linux at the requested desktop/mobile viewports;
 they do not establish Windows execution, physical-device coverage or clinical
-validation. Human review is required before merging against the v1.5 branch.
+validation. This work is now integrated on main; human release review remains required.
 
 ## Issue #19 cockpit and conversation balance
 
@@ -151,7 +168,7 @@ at three desktop sizes and one mobile viewport. No new generated image, biomedic
 calculation, threshold, diagnosis, runtime generative model or research-data claim
 was introduced. The existing anatomical illustration and its attribution remain
 unchanged. Code assistance and software checks do not establish clinical validity;
-human review is required before merging this draft against the Issue #17 branch.
+this work is integrated on main and still requires human release review.
 
 
 ## Issue #21 — Integrity and audit metadata
@@ -162,10 +179,10 @@ compatibility labeling, a shared `APP_VERSION` constant, UTC device-clock action
 timestamps, strict backend timestamp validation, typed React contracts, and
 additional tests. This does **not** change the biomedical domain rules or
 constitute flight-qualified audit timestamps; existing user records remain
-fictional and ephemeral. Changes require CI and human review before merging.
+fictional and ephemeral. These changes are integrated on main; CI evidence and human release review remain distinct.
 
 
-## Mission Wellness & Procedures (post-v1.5, optional hackathon scope)
+## Mission Wellness & Procedures (included in main v1.5)
 
 ChatGPT assisted with the design and GitHub branch implementation of a small
 educational wellness extension using the existing deterministic Python engine.
@@ -177,6 +194,5 @@ into the existing Copilot, with user-controlled navigation to Review & Export.
 NASA published pages were checked for sleep/circadian schedules and exercise
 countermeasures; the new module does not infer treatment, risk scores, wellness
 fitness or medical clearance, nor claim NASA tested or endorsed ARES. The module
-does not implement scheduled reminders or gamification. A review branch/PR is
-required before integration; local test runs and visual verification are
-required and must not be reported as passed until executed.
+does not implement scheduled reminders or gamification. The extension is present on main. Local test evidence is recorded separately in
+[the validation plan](VALIDATION_PLAN.md); it is not clinical or NASA validation.

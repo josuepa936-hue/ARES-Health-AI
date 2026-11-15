@@ -1,121 +1,38 @@
-# ARES Health AI — Integrated Space Apps Demonstration Script
+# Official submission demo — ARES Health AI v1.5
 
-**Target duration:** 3–4 minutes, in English.
-**Software:** Local FastAPI + React v1.3 mission console, with independent optional
-MIT ECG and NASA space-biology research views.
-**Data policy:** Mission-mode readings are 100% fictional. Research-mode sources
-are public MIT-BIH terrestrial ECG and NASA OSDR OSD-87 mouse research.
-**Not:** diagnostic software, NASA endorsement, medical-device approval or
-flight-qualified astronaut monitoring.
+Target: **27 seconds total**, including titles, transitions and end card, in
+English. Organizer guidance requires **less than 30 seconds**, or alternatively
+a deck of at most 7 slides ([GO Team clarification](https://github.com/nasa/spaceapps/discussions/1991)).
+The [3–4 minute walkthrough](DEMO_WALKTHROUGH.md) is supplemental only.
 
-## Prepare the laptop
+## Spoken script
 
-1. `git status` clean and project on a verified submission branch/commit.
-2. Run `python -m pytest -q` and `cd frontend; npm test; npm run build`.
-3. Preferred production presentation: from repo root run `.\\start-ares.ps1` (or
-   `.\\start-ares.ps1 -SkipBuild` with a prebuilt `frontend/dist`).
-   This serves React and FastAPI together on `http://127.0.0.1:8000/`.
-4. Developer fallback: use separate `uvicorn` and `npm run dev` terminals
-   only if you specifically need Vite development mode.
-5. Open the local production address on port 8000. Do not expose browser personal info,
-   notifications, passwords, API keys or terminal accounts.
-6. The MIT/NASA tabs require optional research mode. Prepare these separately;
-   do **not** rely on NASA network availability for the core demonstration.
+> ARES reviews fictional astronaut observations locally. It explains changes,
+> blocks interpretation when data are incomplete, and exports an auditable JSON
+> report. Its offline Copilot and Wellness guide link to NASA research context.
+> This prototype is not clinically validated, NASA endorsed, or a medical device.
 
-## 0:00–0:25 — Mission context
+## Storyboard
 
-“Human space exploration creates operational and physiological challenges.
-Astronauts need understandable ways to review observations, spot data problems,
-and know which approved procedures to consult. ARES is an independent,
-local-first *research and demonstration prototype* for that workflow.”
+| Time | Screen / action |
+|---|---|
+| 0–6 s | Preloaded mission console; visible synthetic-only label and charts |
+| 6–12 s | Select Incomplete records; show DATA_QUALITY_BLOCKED and withheld interpretation |
+| 12–21 s | Show prepared Copilot explanation and Wellness source links; cut to an already exported fictional JSON report |
+| 21–27 s | End card: fictional data, no clinical validation or NASA endorsement; public project/demo links only after owner verification |
 
-## 0:25–0:50 — One integrated tool
+The narration has 44 words (about 22 seconds at 120 words/minute). This is a
+planning estimate, not a timed recording. Rehearse, record and measure the final
+clip; trim to **under 30 seconds** before sharing. Do not read URLs aloud.
+Use preloaded states and clean cuts rather than narrating every click. No live
+NASA/PhysioNet download is needed or claimed. Dates shown are simulated, not
+presentation-day measurements; review workflow status is not medical clearance.
 
-“This is the ARES mission console built with React and FastAPI. It provides one
-coherent sequence: choose a fictional crew scenario, submit a fictional check-in,
-inspect quality-gated charts and timelines, review procedure-oriented
-explanations, and export a JSON report. All mission-mode values are synthetic.”
+## Recording and handoff
 
-## 0:50–1:20 — Actual check-in and assessment
-
-“Here I select stable fictional observations. I enter a hypothetical latest-day
-resting heart rate of 140 bpm, seven hours of sleep and 45 minutes of activity.
-I explicitly certify these are *fictional* values. ARES uses the existing Python
-engine to recalculate the demonstration-only comparison and explain the change.
-These settings are not clinical danger thresholds and cannot diagnose disease.”
-
-## 1:20–1:45 — Verification and missing data
-
-“The underlying 21-day series, exact UTC dates and explainable events are visible.
-When I select the incomplete-records scenario instead, ARES blocks trend
-interpretation and preserves missing readings as gaps. It never fills in missing
-measurements or infers medical clearance.”
-
-## 1:45–2:05 — Local CSV and review report
-
-“We can also import a small fictional CSV with explicit source attestation.
-The actual data are validated by Python. Accepted files generate their own
-mission timeline and a JSON review report. Invalid uploads are rejected.”
-
-## 2:05–2:35 — NASA risk explorer and review
-
-“We connect the NASA Human Research Program's five spaceflight hazards to
-candidate observations, what this prototype can measure and what it cannot.
-ARES does not choose treatments or determine medical severity. A real crew
-must follow its mission's approved procedures and consult flight medical
-professionals.”
-
-## 2:35–3:20 — Research transparency (optional if demonstrable)
-
-“An independent research area measures ECG R-peak detection on MIT-BIH
-terrestrial research ECG and compares its output with expert annotations.
-A separate NASA OSDR explorer accesses published mouse-retina experiment
-metadata from the STS-135 study. These are **different sources and questions**;
-neither is live astronaut telemetry or a validation of our fictional mission
-alert thresholds.”
-
-Show only source access and benchmark results that are actually available
-and verified at presentation time. If NASA network access fails, skip the
-file download rather than replacing it with fictional research data.
-
-## 3:20–3:40 — Limitations and close
-
-“ARES offers an integrated, auditable prototype for *reviewing* fictional
-astronaut health observations and exploring public biomedical research.
-It is not a medical device, a diagnosis tool or a flight-qualified system.
-Clinical evaluation, validated sensors, mission-specific procedures and
-expert authorization are necessary before real-world use.”
-
-## Submission checklist
-
-- Record and link the *working* React application, not just a Figma mockup.
-- Credit NASA/CSA/PhysioNet sources and AI tool assistance.
-- Include stable GitHub commit, environment startup instructions, actual
-  automated test logs and precise limitations.
-- Confirm event instructions, submission fields, team requirements and deadline
-  through the official NASA Space Apps Challenge site.
-- **Do not** claim the prototype is medically precise on astronauts,
-  clinically validated or endorsed by NASA.
-
-## v1.5 offline review journey
-
-Keep the existing mission console visible. Open ARES Copilot and point out its
-DETERMINISTIC / OFFLINE / NOT AN LLM label. Ask "What changed?" and expand Why this
-response: show exact UTC observations, reference/recent windows, unchanged rule
-metadata and timeline IDs. Ask about NASA hazard background and show source links
-as research context, not individual astronaut evidence.
-
-Submit an explicitly fictional 140 bpm / 7 h / 45 min check-in, then inspect its
-new briefing/values/timeline. Do not recite a fixed delta: show the number actually
-computed by Python. Switch to incomplete records and show withheld interpretation,
-quality findings, no averages and no reassuring health status. Ask for treatment
-or an override to demonstrate refusal without modifying analysis.
-
-In Review & Export, manually choose IN_PROGRESS, AWAITING_AUTHORIZED_REVIEW and
-DOCUMENTED; show that the assessment never changes. Confirm fictional source/unit
-and timestamp actions, record a short fictional note, attest and download one
-comprehensive JSON. Show canonical observations, comparisons, rules, timeline,
-source citations, appropriate transcript and audit events. DOCUMENTED is not
-medical clearance and requested-review records do not contact real personnel.
-Change scenario or reload to demonstrate reset. No external model or patient data
-is used; MIT ECG and OSDR research stay separate from the mission conversation.
+Build and start the compiled console using [README](../README.md). Verify the
+scenario, Copilot, Wellness, quality blocking and JSON export before recording.
+Hide private notifications and accounts. The owner must host the demo and final
+project at separate public links, verify both without login, and complete the
+official Project Tab manually. No uploaded video, public links or completed
+submission is asserted here. See [delivery checklist](SUBMISSION_CHECKLIST.md).

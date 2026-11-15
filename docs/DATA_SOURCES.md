@@ -12,7 +12,7 @@
 
 ## Important dataset caveat
 
-OSDR is multi-modal, but much of its content is from organisms and biological experiments, not continuous wearable health monitoring from humans. Some human spaceflight data have controlled-access components. **Do not imply the proposed dashboard's sample heart-rate and sleep records come from NASA.** They will be synthetic unless an exact, accessible, appropriate public dataset is selected, cited, licensed, and documented.
+OSDR is multi-modal, but much of its content is from organisms and biological experiments, not continuous wearable health monitoring from humans. Some human spaceflight data have controlled-access components. **Do not imply the proposed dashboard's sample heart-rate and sleep records come from NASA.** Mission records remain synthetic. Separate opt-in research modes use the versioned MIT-BIH terrestrial ECG source and NASA OSD-87 mouse-study catalog/sample table; neither feeds the mission engine. See [scientific evidence](SCIENTIFIC_EVIDENCE.md) and [research access and limits](MIT_NASA_RESEARCH.md). Availability and dataset terms must be verified separately before demonstrating or redistributing research data.
 
 ## Provenance policy
 
