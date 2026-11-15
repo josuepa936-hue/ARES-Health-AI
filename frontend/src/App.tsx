@@ -1,14 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { api, message } from './api';
-import type { Evidence, ScenarioId, Snapshot, Timeline } from './contracts';
+import type { CheckInResult, Evidence, FictionalCheckInInput, ScenarioId, Snapshot, Timeline } from './contracts';
 import { CsvUpload } from './components/CsvUpload';
+import { FictionalCheckIn } from './components/FictionalCheckIn';
+import { SpaceRiskExplorer } from './components/SpaceRiskExplorer';
 import { Overview } from './components/Overview';
 import { Review } from './components/Review';
 import { TimelineView } from './components/TimelineView';
 type Mission = {
-  source: 'builtin' | 'csv';
+  source: 'builtin' | 'csv' | 'checkin';
   snapshot: Snapshot;
   timeline: Timeline | null;
+  checkIn?: CheckInResult['check_in'];
+  decisionSupport?: CheckInResult['decision_support'];
   key: number;
 };
 export default function App() {
@@ -86,9 +90,25 @@ export default function App() {
     try {
       const snapshot = await api.upload(file, true, controller.signal);
       if (!controller.signal.aborted && key === sequence.current)
-        setMission({ source: 'csv', snapshot, timeline: null, key });
+        setMission({ source: 'csv', snapshot, timeline: snapshot.mission_timeline, key });
     } catch (error) {
       if (!controller.signal.aborted && key === sequence.current) setError(message(error));
+    } finally {
+      if (!controller.signal.aborted && key === sequence.current) setBusy(false);
+    }
+  }
+  async function submitCheckIn(payload: FictionalCheckInInput) {
+    const { controller, key } = start();
+    try {
+      const result = await api.fictionalCheckIn(payload, controller.signal);
+      if (!controller.signal.aborted && key === sequence.current)
+        setMission({
+          source: 'checkin',
+          snapshot: result, timeline: result.mission_timeline, key,
+          checkIn: result.check_in, decisionSupport: result.decision_support,
+        });
+    } catch (cause) {
+      if (!controller.signal.aborted && key === sequence.current) setError(message(cause));
     } finally {
       if (!controller.signal.aborted && key === sequence.current) setBusy(false);
     }
@@ -96,7 +116,8 @@ export default function App() {
   return (
     <main>
       <header>
-        <h1>ARES Health AI v1.1</h1>
+        <p className="eyebrow">MISSION HEALTH CONSOLE / END-TO-END FICTIONAL DEMONSTRATION</p>
+        <h1>ARES Health AI v1.3</h1>
         <p role="note">
           <strong>SYNTHETIC DATA / NOT A MEDICAL DEVICE</strong>
         </p>
@@ -106,6 +127,7 @@ export default function App() {
         </p>
       </header>
       <section>
+        <p className="eyebrow">01 / SELECT SCENARIO</p>
         <h2>Mission simulation</h2>
         {catalogBusy && <p role="status">Loading scenarios…</p>}
         {catalogError && <p role="alert">{catalogError}</p>}
@@ -146,13 +168,38 @@ export default function App() {
       {error && (
         <p role="alert">{error} Retry with a scenario or upload a corrected fictional CSV.</p>
       )}
-      <CsvUpload onUpload={upload} busy={busy} />
+      <FictionalCheckIn
+        scenario={scenario || undefined}
+        busy={busy}
+        onSubmit={submitCheckIn}
+      />
+            <CsvUpload onUpload={upload} busy={busy} />
       {mission && (
         <div key={mission.key}>
-          <p>
+          <p className="source-banner">
             Active data source:{' '}
-            {mission.source === 'csv' ? 'Uploaded synthetic CSV' : 'Built-in synthetic scenario'}
+            {mission.source === 'csv'
+              ? 'Uploaded synthetic CSV'
+              : mission.source === 'checkin'
+                ? 'Attested fictional crew check-in'
+                : 'Built-in synthetic scenario'}
           </p>
+          {mission.checkIn && (
+            <section className="mission-card" aria-label="Check-in outcome">
+              <p className="eyebrow">03 / REVIEW CURRENT MISSION</p>
+              <h2>Check-in applied to fictional mission</h2>
+              <p>Evaluation date (UTC): {mission.checkIn.timestamp_utc}</p>
+              <p>{mission.checkIn.notice}</p>
+              {mission.decisionSupport && (
+                <>
+                  <h3>Procedure-oriented review</h3>
+                  <p>{mission.decisionSupport.review_action}</p>
+                  <p>{mission.decisionSupport.concerns_notice}</p>
+                  <p className="notice-neutral">{mission.decisionSupport.mission_procedures}</p>
+                </>
+              )}
+            </section>
+          )}
           <Overview snapshot={mission.snapshot} />
           <TimelineView
             timeline={mission.timeline}
@@ -164,7 +211,9 @@ export default function App() {
           />
         </div>
       )}
-      <section>
+      <SpaceRiskExplorer />
+      <section id="scientific-evidence">
+        <p className="eyebrow">05 / SCIENTIFIC REFERENCES</p>
         <h2>Scientific context</h2>
         <p>
           Research references are background, not NASA/CSA telemetry or clinical validation of this
