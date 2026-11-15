@@ -89,6 +89,31 @@ independent research evidence. Public terrestrial MIT-BIH beat-matching metrics
 and NASA OSD-87 mouse specimen metadata must never be combined into a single
 human medical accuracy number.
 
+## One-server hackathon mode
+
+This is the **recommended presentation mode**, requiring only one PowerShell
+terminal and one browser address after dependencies are installed:
+
+```powershell
+.\\start-ares.ps1
+```
+
+The launcher uses `npm.cmd` to build the React production assets, then
+starts the local FastAPI process on `127.0.0.1:8000`. Both the user
+interface and backend API are accessible at the same origin,
+`http://127.0.0.1:8000/`. The synthetic CSV template is served there,
+too. Research modules remain opt-in and unhosted publicly.
+
+For offline presentation with a previously generated `frontend/dist`:
+
+```powershell
+.\\start-ares.ps1 -SkipBuild
+```
+
+The source code and dependencies must already be present. The build output
+is not a separate executable and does **not** include live astronaut sensors
+or a hosted medical service.
+
 ## Start on Windows
 
 ```powershell
