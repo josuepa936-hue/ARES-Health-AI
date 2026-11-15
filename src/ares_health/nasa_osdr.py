@@ -37,6 +37,10 @@ NASA_S3_HOSTS = frozenset({
     "nasa-osdr.s3.amazonaws.com",
     "nasa-osdr.s3.us-west-2.amazonaws.com",
 })
+# Real OSD-87 redirect observed from the official NASA API on Nov 15, 2026.
+# Authorize exactly this small public sample file, not the entire S3 bucket.
+GENELAB_SAMPLE_HOST = "genelab-repo-prod.s3.amazonaws.com"
+GENELAB_SAMPLE_PATH = "/genelab-data/GLDS-87/array/GLDS-87_array_SampleTable_GLmicroarray.csv"
 MAX_REDIRECTS = 2
 
 
@@ -65,6 +69,8 @@ def _approved_research_url(url: str, *, sample: bool) -> bool:
             p.path.startswith("/nasa-osdr/OSD-87/")
             and p.path.rsplit("/", 1)[-1] == SAMPLE_FILENAME
         )
+    if p.hostname == GENELAB_SAMPLE_HOST:
+        return p.path == GENELAB_SAMPLE_PATH
     return False
 
 
