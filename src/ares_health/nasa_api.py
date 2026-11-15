@@ -21,10 +21,15 @@ def _research_gate(request: Request) -> None:
 
 def _unavailable(cause: Exception) -> HTTPException:
     """Give a safe failure category, not raw URLs or download data."""
-    if isinstance(cause, HTTPError):
+    if isinstance(cause, nasa_osdr.SampleDownloadTimeout):
+        reason = (
+            f"NASA public sample storage timed out after "
+            f"{nasa_osdr.SAMPLE_TIMEOUT_SECONDS} seconds."
+        )
+    elif isinstance(cause, HTTPError):
         reason = f"NASA download HTTP {cause.code}."
     elif isinstance(cause, TimeoutError):
-        reason = "NASA request timed out."
+        reason = "NASA catalog request timed out."
     elif isinstance(cause, URLError):
         reason = "NASA network connection failed."
     elif isinstance(cause, ValueError) and "redirect" in str(cause).lower():
