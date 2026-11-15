@@ -69,6 +69,35 @@ Or use the official files and checksum manifest you obtained yourself, as docume
 
 **No MIT-BIH record 100 performance scores have yet been independently confirmed.** The four offline optional WFDB/NeuroKit integration tests use synthetic fixtures, not the published MIT waveform.
 
+
+### OSDR small-table download troubleshooting
+
+The OSD-87 public catalog can succeed even when the small sample CSV request
+fails. The upstream `remote_url` is an official NASA file endpoint, but it may
+return a redirect rather than CSV bytes. This adapter **only** accepts HTTPS
+redirects into the official NASA `nasa-osdr` public S3 bucket and the same
+OSD-87 sample-table filename, with at most two hops. Unknown destinations,
+other studies, non-HTTPS URLs and oversized/malformed responses remain blocked.
+That support is a compatibility measure, **not proof** of access to a particular
+version of the file.
+
+On connection, click `NASA space biology` → `Load NASA mouse sample table`.
+If it fails, the 503 response now identifies one of these categories: external
+HTTP status, timeout, network failure, unauthorized redirect or invalid CSV.
+It never invents a sample table or silently removes origin restrictions.
+
+For direct local diagnosis (PowerShell), use:
+
+```powershell
+$url = 'https://osdr.nasa.gov/geode-py/ws/studies/OSD-87/download?source=datamanager&file=GLDS-87_array_SampleTable_GLmicroarray.csv'
+curl.exe -I "$url"
+```
+
+A HEAD request might be unsupported even if GET works. HTTP response headers
+and the final host, **without any signed query/token**, are adequate to assess
+whether the source redirected to an approved bucket. Do not disable TLS checks
+or copy a third-party CSV into ARES as if it came from NASA.
+
 ## Reproducible tests
 
 ```powershell
