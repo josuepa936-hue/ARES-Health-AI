@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import {
   responseSchema,
+  wellnessSchema,
   comprehensiveSchema,
   type CopilotContext,
   type Question,
@@ -95,6 +96,16 @@ export function createApi(baseUrl = import.meta.env.VITE_API_BASE_URL ?? '') {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ context, question, turn, expected_context_ref }),
+      }),
+    wellness: (
+      context: CopilotContext,
+      expected_context_ref: string,
+      signal: AbortSignal,
+    ) =>
+      request('/mission/wellness', wellnessSchema, signal, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ context, expected_context_ref }),
       }),
     comprehensiveReport: (
       context: CopilotContext,
