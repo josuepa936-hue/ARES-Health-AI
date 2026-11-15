@@ -110,7 +110,16 @@ export function useMissionCopilot(context: CopilotContext | undefined, scope: nu
     invalidateExport();
     setSession((state) => ({
       ...state,
-      audit: [...state.audit, { ...event, sequence: state.audit.length + 1 } as AuditEvent],
+      audit: [
+        ...state.audit,
+        {
+          ...event,
+          sequence: state.audit.length + 1,
+          // Capture the user's real click-time UTC, not the synthetic
+          // observation clock or an unverified server timestamp.
+          recorded_at_utc: new Date().toISOString(),
+        } as AuditEvent,
+      ],
       state: event.action === 'review_state' ? event.review_state : state.state,
       note: event.action === 'note' ? event.note : state.note,
     }));
