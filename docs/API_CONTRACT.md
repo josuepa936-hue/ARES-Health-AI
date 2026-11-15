@@ -266,3 +266,37 @@ not permit arbitrary file names/URLs, inaccessible human datasets, bulk raw omic
 data or open access from outside loopback. Connectivity, file changes and
 unverified data yield HTTP 503 with no invented results. See
 [docs/MIT_NASA_RESEARCH.md](MIT_NASA_RESEARCH.md).
+
+
+## Integrated mission console — v1.3
+
+The new capabilities remain **local, stateless, fictional and non-clinical**.
+All assessment, validation, statistical and trend functions continue to use
+the existing Python domain engine, never a React approximation.
+
+- `GET /api/mission/risk-guide` — five NASA Human Research Program hazards,
+  candidate research indicators, actual ARES coverage limitations, approved
+  procedure-review context and official research link. There are **no hazard
+  probability, severity or astronaut medical risk scores**.
+- `POST /api/mission/fictional-check-in` — explicitly attested fictional
+  last-day measurement override of a deterministic scenario, in memory.
+  Request JSON requires `fictional_attestation:true`, allowed scenario ID,
+  `seed`, `days`, `resting_hr_bpm`, `sleep_hours`,
+  `activity_minutes`, and optional `concerns` from the four hypothetical
+  labels `fatigue`, `headache`, `dizziness`, `sleepiness`.
+  Refuses extra patient identifiers, duplicate labels, nonfinite values,
+  unsupported ranges and missing attestation with HTTP 422.
+  Reply includes the canonical snapshot and `review_report` plus
+  `mission_timeline`, `check_in` and `decision_support`.
+  Concerns only influence a conservative procedure-review explanation;
+  no treatment/triage or new numeric medical thresholds are implemented.
+- `POST /api/synthetic-csv` — the previous strict raw CSV upload now
+  **also includes its dataset-specific `mission_timeline`**, consistent with
+  `assessment` and the embedded `review_report`. All existing validation
+  and 1MB restrictions stay unchanged.
+
+These additions replace the earlier limitation that imported CSV timelines
+were unavailable in the v1.1 client. A compatible v1.3 React client is required
+to display the new nested `mission_timeline`.
+
+See [integrated mission demo](INTEGRATED_MISSION_CONSOLE.md).
