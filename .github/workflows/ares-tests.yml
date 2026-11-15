@@ -57,6 +57,24 @@ jobs:
         run: npm run build
       - name: Run frontend unit and component tests
         run: npm test
+      - name: Verify one-server compiled React and API distribution
+        working-directory: .
+        shell: bash
+        run: |
+          python -m uvicorn src.ares_health.api:app --host 127.0.0.1 --port 8001 > /tmp/ares-standalone.log 2>&1 &
+          ARES_PID=$!
+          trap 'kill "$ARES_PID" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8001/api/status > /dev/null; then break; fi
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:8001/ > /tmp/ares-ui.html
+          grep -q '/assets/' /tmp/ares-ui.html
+          curl --fail --silent http://127.0.0.1:8001/api/mission/risk-guide > /dev/null
+          curl --fail --silent http://127.0.0.1:8001/synthetic-template.csv > /dev/null
+          ASSET=$(find frontend/dist/assets -type f -name '*.js' | head -n 1)
+          test -n "$ASSET"
+          curl --fail --silent "http://127.0.0.1:8001/assets/$(basename "$ASSET")" > /dev/null
       - name: Verify live Vite proxy and FastAPI integration
         working-directory: .
         shell: bash
