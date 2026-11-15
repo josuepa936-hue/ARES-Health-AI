@@ -54,6 +54,9 @@ it('uploads the local synthetic template as raw bytes and exports its embedded r
   expect(snapshot.scenario).toBe('uploaded_synthetic_csv');
   expect(snapshot.review_report.scenario).toBe('uploaded_synthetic_csv');
   expect(snapshot.review_report.assessment).toBe(snapshot.assessment);
+  expect(snapshot.mission_timeline.assessment).toBe(snapshot.assessment);
+  expect(snapshot.mission_timeline.scenario).toBe('uploaded_synthetic_csv');
+  expect(snapshot.mission_timeline.events.filter((event) => event.type === 'observation')).toHaveLength(21);
   expect(JSON.parse(JSON.stringify(snapshot.review_report))).toEqual(snapshot.review_report);
 });
 it('surfaces strict CSV validation failures from the real backend', async () => {
@@ -92,4 +95,45 @@ it('keeps the optional research namespace separate from synthetic mission data',
     if (research.status === 'abstained') expect(research.metrics).toBeNull();
   }
   expect((await api.demo('stable', signal())).data_provenance).toBe('synthetic');
+});
+
+
+it('performs the complete fictional crew input-to-evaluation-to-report flow through real FastAPI', async () => {
+  const result = await api.fictionalCheckIn({
+    fictional_attestation: true,
+    scenario: 'stable',
+    seed: 2026, days: 21,
+    resting_hr_bpm: 140, sleep_hours: 7,
+    activity_minutes: 45,
+    concerns: ['fatigue'],
+  }, signal());
+  expect(result.data_provenance).toBe('synthetic');
+  expect(result.assessment).toBe('CHANGE_FOR_REVIEW');
+  expect(result.mission_timeline.assessment).toBe(result.assessment);
+  expect(result.review_report.assessment).toBe(result.assessment);
+  expect(result.observations.at(-1)?.resting_hr_bpm).toBe(140);
+  expect(result.check_in.reported_concerns).toEqual(['fatigue']);
+  expect(result.decision_support.clinical_decision_support).toBe(false);
+  const unchanged = await api.demo('stable', signal());
+  expect(unchanged.assessment).toBe('NO_DEMO_RULE_TRIGGERED');
+});
+
+it('serves the five spaceflight hazards as documented context, not risk scores', async () => {
+  const guide = await api.riskGuide(signal());
+  expect(guide.risks).toHaveLength(5);
+  expect(guide.reference_url).toContain('nasa.gov');
+  expect(guide.risks.every((risk) => risk.ares_current_coverage.length > 0)).toBe(true);
+  expect(JSON.stringify(guide)).not.toMatch(/"risk_score"/);
+});
+
+it('refuses a fictional check-in without a true attestation', async () => {
+  const response = await fetch(origin + '/api/mission/fictional-check-in', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      scenario: 'stable', days: 21,
+      resting_hr_bpm: 64, sleep_hours: 7, activity_minutes: 45,
+    }),
+  });
+  expect(response.status).toBe(422);
 });
