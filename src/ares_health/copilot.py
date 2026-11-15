@@ -18,6 +18,7 @@ from src.ares_health.mission import fictional_checkin, risk_guide
 from src.ares_health.service import build_snapshot
 from src.ares_health.synthetic import generate_scenario
 from src.ares_health.timeline import build_timeline
+from src.ares_health.version import APP_VERSION
 
 ENGINE = "deterministic-offline"
 LIMITATIONS = [
@@ -373,15 +374,23 @@ def comprehensive_report(context: dict, payload: ComprehensiveRequest) -> dict:
             transcript.append(
                 {"turn": item.turn, "question": item.question, "response": response}
             )
-    # Preserve legacy report field semantics; the new four-state workflow is separate.
-    report["review_state"] = (
+    # Comprehensive reports have ONE canonical, explicit four-state review
+    # status at the root, matching the independently checked workflow object.
+    # Keep the old two-state representation clearly labeled for old readers.
+    # Standalone /api/review retains its original binary contract unchanged.
+    report["legacy_review_state"] = (
         "Reviewed in demo"
         if states["review_state"] == "DOCUMENTED"
         else "Pending review"
     )
+    report["review_state"] = states["review_state"]
+    report["legacy_review_state_semantics"] = (
+        "Compatibility-only binary summary, NOT the current workflow state. "
+        "Use review_state or fictional_review.review_state for the canonical status."
+    )
     report.update(
         copilot_schema_version="1.5-demo",
-        copilot_application_version="1.5",
+        copilot_application_version=APP_VERSION,
         context_ref=context["context_ref"],
         reviewer_note=states["note"],
         evaluated_observations=context["snapshot"]["observations"],
@@ -402,6 +411,13 @@ def comprehensive_report(context: dict, payload: ComprehensiveRequest) -> dict:
             "audit_log": [
                 event.model_dump(exclude_none=True) for event in payload.audit_log
             ],
+            "audit_timestamp_source": (
+                "User device UTC at action time; not independently authenticated "
+                "or supplied by the mission server."
+            ),
+            "audit_timestamps_complete": all(
+                event.recorded_at_utc is not None for event in payload.audit_log
+            ),
             "fictional_attestation": True,
             "storage": "ephemeral browser state; not saved on server",
             "clinical_authorization": False,
