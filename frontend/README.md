@@ -6,6 +6,20 @@ trend rules, statistics, assessments, guidance and reports. The integrated high-
 interface, **not the final Figma anatomical or 3D design**.
 There is no anatomical model, 3D, authentication, database or external telemetry.
 
+## Single-server production demonstration
+
+From the repository root, **after installing Python requirements**, run:
+
+```powershell
+.\\start-ares.ps1
+```
+
+The launcher compiles React and serves the UI, `/api/*`, static assets
+and the fictional CSV template from FastAPI on **127.0.0.1:8000**.
+Open http://127.0.0.1:8000/ in one browser window. The two-terminal
+Vite workflow below remains available for developers; it is **not** required
+for the presentation. Do not expose the unauthenticated service publicly.
+
 ## Start on Windows (PowerShell)
 
 Install Node.js 24 LTS (verified; minimum 22.12) and Python 3.12+. From the
