@@ -152,3 +152,14 @@ calculation, threshold, diagnosis, runtime generative model or research-data cla
 was introduced. The existing anatomical illustration and its attribution remain
 unchanged. Code assistance and software checks do not establish clinical validity;
 human review is required before merging this draft against the Issue #17 branch.
+
+
+## Issue #21 — Integrity and audit metadata
+
+ChatGPT implemented an auditable comprehensive report adjustment directly in
+GitHub: canonical root/nested four-state review statuses, legacy two-state
+compatibility labeling, a shared `APP_VERSION` constant, UTC device-clock action
+timestamps, strict backend timestamp validation, typed React contracts, and
+additional tests. This does **not** change the biomedical domain rules or
+constitute flight-qualified audit timestamps; existing user records remain
+fictional and ephemeral. Changes require CI and human review before merging.
