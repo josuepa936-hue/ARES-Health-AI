@@ -3,7 +3,25 @@
 **Astronaut Risk Evaluation System**  
 **Track:** Create Health Monitoring Software for Astronauts on Space Missions  
 **Event:** Universal Event · November 14–15, 2026  
-**Stage:** Functional React integration v1.1 with the stable Streamlit v0.7 fallback and v1.0 API — scientific evidence, plain-language guidance, synthetic CSV import, monitoring and review reporting, **not** clinically validated.
+**Stage:** Integrated v1.3 hackathon demonstration console (feature branch), plus read-only optional MIT/NASA research views, stable Streamlit fallback. **Not medically or spaceflight validated.**
+
+## Integrated mission workflow — v1.3
+
+**ARES now provides an end-to-end fictional mission interaction:** choose a
+scenario, enter an explicitly fictional last-day check-in or import a strict
+synthetic CSV, process it through the same guarded Python engine, inspect the
+measurements/charts, read its dataset-specific mission timeline and procedural
+explanation, explore NASA's five human-spaceflight hazards, and export a
+reproducible JSON review report.
+
+React now has a cohesive dark mission-console interface and mode navigation
+between **Mission**, **MIT-BIH ECG research** and **NASA space-biology research**.
+The latter are separate, real public research sources, **never joined into a
+fictional crew history or used as validated astronaut-health thresholds**.
+
+See [complete mission demonstration and walkthrough](docs/INTEGRATED_MISSION_CONSOLE.md).
+No real medical record intake, clinical treatment guidance, 3D anatomical
+Figma asset or NASA approval is claimed.
 
 ## Local API foundation
 
@@ -62,10 +80,10 @@ Two **independent, optional** research views are now prepared:
   from STS-135. NASA's file catalog and a small public sample CSV are loaded
   on demand with strict limits. **This is not astronaut health monitoring**.
 
-The original synthetic mission app stays fully separate. See
+The synthetic mission app remains separate from public research datasets. See
 [MIT + NASA research documentation](docs/MIT_NASA_RESEARCH.md) and
 [MIT benchmark protocol](docs/RESEARCH_LAB.md). The entire feature remains
-in a research branch until source access, CI and presentation checks pass.
+in its own research mode; source validation and local verification remain separately documented.
 
 ## Mission
 
