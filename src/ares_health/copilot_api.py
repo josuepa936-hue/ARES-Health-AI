@@ -8,7 +8,8 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.routing import APIRoute
 
 from src.ares_health.copilot import answer, canonical_context, comprehensive_report
-from src.ares_health.copilot_models import CopilotRequest, ComprehensiveRequest
+from src.ares_health.copilot_models import CopilotRequest, ComprehensiveRequest, WellnessRequest
+from src.ares_health.wellness import build_wellness
 
 MAX_BODY = 1_300_000
 
@@ -89,6 +90,12 @@ def checked_context(payload):
 @router.post("/api/mission/copilot")
 def mission_copilot(payload: CopilotRequest) -> dict:
     return answer(checked_context(payload), payload.question, payload.turn)
+
+
+@router.post("/api/mission/wellness")
+def mission_wellness(payload: WellnessRequest) -> dict:
+    """Educational NASA-linked context, NEVER treatment or a medical instruction."""
+    return build_wellness(checked_context(payload))
 
 
 @router.post("/api/mission/comprehensive-report")
