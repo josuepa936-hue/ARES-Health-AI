@@ -20,6 +20,22 @@ The latter are separate, real public research sources, **never joined into a
 fictional crew history or used as validated astronaut-health thresholds**.
 
 See [complete mission demonstration and walkthrough](docs/INTEGRATED_MISSION_CONSOLE.md).
+
+### Single-command Windows demonstration (React + FastAPI)
+
+Instead of starting two separate servers, run from repository root:
+
+```powershell
+.\\start-ares.ps1
+```
+
+The launcher builds the production React interface if dependencies are
+available, then serves both the React application and all local API routes
+at **http://127.0.0.1:8000/**. The synthetic sample CSV is available at
+the same address. Node.js 22.12+ and installed Python project dependencies
+are prerequisites. Use `.\\start-ares.ps1 -SkipBuild` when a matching
+`frontend/dist` has already been compiled and you are demonstrating
+offline. Do **not** deploy this unauthenticated demo to the public Internet.
 No real medical record intake, clinical treatment guidance, 3D anatomical
 Figma asset or NASA approval is claimed.
 
