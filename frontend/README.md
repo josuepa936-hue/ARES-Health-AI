@@ -161,3 +161,17 @@ official-file acquisition, license review, quality protocol and enablement. The
 public-case benchmark is currently blocked, so this work stays future research;
 the synthetic mission app remains the hackathon fallback. No final Figma/anatomy/
 3D design is part of this view.
+
+
+## Experimental NASA OSDR view (research branch only)
+
+The third workspace mode, **NASA space biology**, provides a separate
+on-demand read-only explorer of the public OSD-87 (STS-135 mouse retina)
+NASA study catalog and the explicitly authorized small sample table.
+Research needs `$env:ARES_RESEARCH_ENABLED="1"` in the backend terminal.
+The backend may return HTTP 503 when NASA cannot be contacted; no
+data are invented. No astronauts' medical data are acquired.
+
+The MIT ECG lab remains a distinct opt-in view; it does not merge MIT
+observations with spaceflight mouse study data. This is **not** the Figma
+interface redesign. See [study sources and caveats](../docs/MIT_NASA_RESEARCH.md).
