@@ -275,3 +275,21 @@ API and copilot application-version fields now come from the same Python
 `APP_VERSION` constant. Document schemas retain their independent versions.
 
 See [audit consistency and demonstration steps](docs/ISSUE21_RELEASE_AUDIT.md).
+
+
+### ARES Mission Wellness & Procedures (candidate feature)
+
+Within the existing **ARES Copilot** panel, an expandable guide now presents
+three educational spaceflight research topics: cardiovascular observation,
+sleep/circadian schedules, and movement/exercise. Each topic links an official
+NASA Human Research Program reference, explains an observation to review,
+provides a fictional routine example, and states its evidence limits.
+The guide is recalculated by the Python backend for the **active synthetic
+mission**, and refuses trend interpretation when data quality blocks it.
+
+A **Document a fictional review** button opens the **existing** user-controlled
+review/audit workflow; it never performs a real medical action or starts a
+scheduled reminder. This is not a treatment engine or an LLM.
+
+See [Mission Wellness & Procedures](docs/MISSION_WELLNESS.md) for scientific
+links, acceptance tests, provenance and limitations.
