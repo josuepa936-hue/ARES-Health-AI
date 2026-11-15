@@ -12,9 +12,12 @@ flight-qualified astronaut monitoring.
 
 1. `git status` clean and project on a verified submission branch/commit.
 2. Run `python -m pytest -q` and `cd frontend; npm test; npm run build`.
-3. Terminal 1 from repo root: `python -m uvicorn src.ares_health.api:app --host 127.0.0.1 --port 8000`.
-4. Terminal 2: `cd frontend; npm run dev`.
-5. Open local Vite URL on port 5173. Do not expose browser personal info,
+3. Preferred production presentation: from repo root run `.\\start-ares.ps1` (or
+   `.\\start-ares.ps1 -SkipBuild` with a prebuilt `frontend/dist`).
+   This serves React and FastAPI together on `http://127.0.0.1:8000/`.
+4. Developer fallback: use separate `uvicorn` and `npm run dev` terminals
+   only if you specifically need Vite development mode.
+5. Open the local production address on port 8000. Do not expose browser personal info,
    notifications, passwords, API keys or terminal accounts.
 6. The MIT/NASA tabs require optional research mode. Prepare these separately;
    do **not** rely on NASA network availability for the core demonstration.
