@@ -261,3 +261,17 @@ the workspace and returns to telemetry without discarding the conversation or
 draft. Focus reading, evidence and keyboard navigation remain available. This
 intentionally permits vertical page scrolling on short desktop windows. See
 [layout tradeoffs, four-viewport browser captures and verification](docs/COCKPIT_BALANCE.md).
+
+
+### Comprehensive report integrity — Issue #21
+
+The v1.5 comprehensive report now has **one canonical four-state review status**,
+consistent at the root and in `fictional_review`. The original binary status is
+clearly labeled `legacy_review_state` for compatibility; the separate old
+review endpoint remains unchanged. New fictitious actions include **UTC timestamps
+from the user's browser** (not independently verified); older clients may
+omit the timestamp and the report will disclose this gap. All report, timeline,
+API and copilot application-version fields now come from the same Python
+`APP_VERSION` constant. Document schemas retain their independent versions.
+
+See [audit consistency and demonstration steps](docs/ISSUE21_RELEASE_AUDIT.md).
