@@ -300,3 +300,31 @@ were unavailable in the v1.1 client. A compatible v1.3 React client is required
 to display the new nested `mission_timeline`.
 
 See [integrated mission demo](INTEGRATED_MISSION_CONSOLE.md).
+
+## v1.5 deterministic mission copilot and comprehensive review
+
+Two stateless offline POST routes extend the existing API without changing its
+analysis, CSV, research or legacy report endpoints:
+
+- `/api/mission/copilot`: controlled scenario/check-in or revalidated attested
+  synthetic CSV context, bounded question/turn and optional expected context hash.
+  Returns a deterministic briefing/answer with canonical assessment, exact
+  observation/rule/timeline references, official hazard citations, limitations,
+  suggestions and explicit `generative_model=false` identification.
+- `/api/mission/comprehensive-report`: recalculates the same context, checks its
+  expected hash, replays bounded user audit events and recomputes appropriate
+  transcript answers. Adds integrated observations/comparisons, timeline, rules,
+  citations, conversation and fictional review log to legacy report fields.
+
+Manual states `PENDING_REVIEW`, `IN_PROGRESS`, `AWAITING_AUTHORIZED_REVIEW`,
+`DOCUMENTED` do not change the analysis or authorize medical action. Their exact
+state is in `fictional_review`; the legacy two-state field retains compatibility.
+No review session is persisted. Source replacement/page reload resets browser
+state. No arbitrary client assessment or assistant answer is accepted.
+
+New route bounds: 1,300,000 body bytes, 1 MB CSV, 20 turns, 240-character questions,
+64 contiguous audit events and 500-character notes. Finite JSON and explicit
+boolean source/review attestations are enforced; errors are sanitized. 409 means
+context mismatch, 413 body too large, 415 media type, 422 validation/source failure.
+See `COPILOT_V15.md` for exact schemas, input examples, evidence semantics, audit
+payloads, state mapping, offline guarantees, abstention and reproducible tests.

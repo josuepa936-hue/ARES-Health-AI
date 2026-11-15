@@ -1,5 +1,6 @@
 import { vi } from 'vitest';
 import fixtures from './fixtures.json';
+import copilotFixtures from './copilot-fixtures.json';
 export { fixtures };
 export function respond(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -12,6 +13,37 @@ export function mockApi() {
     const url = new URL(String(input), 'http://localhost');
     const scenario = (url.searchParams.get('scenario') || 'stable') as 'stable';
     switch (url.pathname) {
+      case '/api/mission/copilot': {
+        const body = JSON.parse(String(init?.body));
+        const key = (
+          body.context.kind === 'synthetic_csv'
+            ? 'csv'
+            : body.context.check_in
+              ? 'checkin'
+              : body.context.scenario
+        ) as keyof typeof copilotFixtures;
+        const fixture = copilotFixtures[key];
+        const response = body.question
+          ? (fixture.answers[body.question as keyof typeof fixture.answers] ??
+            fixture.answers['Tell a story'])
+          : fixture.briefing;
+        return respond({ ...response, turn: body.turn });
+      }
+      case '/api/mission/comprehensive-report': {
+        const body = JSON.parse(String(init?.body));
+        const key = (
+          body.context.kind === 'synthetic_csv'
+            ? 'csv'
+            : body.context.check_in
+              ? 'checkin'
+              : body.context.scenario
+        ) as keyof typeof copilotFixtures;
+        const state = ([...body.audit_log]
+          .reverse()
+          .find((event) => event.action === 'review_state')?.review_state ??
+          'PENDING_REVIEW') as 'PENDING_REVIEW';
+        return respond({ ...copilotFixtures[key].report, ...copilotFixtures[key].reports[state] });
+      }
       case '/api/scenarios':
         return respond(fixtures.scenarios);
       case '/api/evidence':
@@ -20,15 +52,21 @@ export function mockApi() {
         return respond({
           source: 'NASA Human Research Program — Five Hazards of Human Spaceflight',
           reference_url: 'https://www.nasa.gov/hrp/hazards/',
-          disclaimer: 'Educational hazard context, not NASA operational health guidance or patient-specific recommendations.',
+          disclaimer:
+            'Educational hazard context, not NASA operational health guidance or patient-specific recommendations.',
           risks: [
             { id: 'radiation', title: 'Space radiation', body_region: 'whole_body' },
             { id: 'gravity', title: 'Altered gravity', body_region: 'musculoskeletal' },
             { id: 'isolation', title: 'Isolation and confinement', body_region: 'head' },
             { id: 'distance', title: 'Distance from Earth', body_region: 'whole_body' },
-            { id: 'environment', title: 'Hostile or closed environments', body_region: 'cardiovascular' },
+            {
+              id: 'environment',
+              title: 'Hostile or closed environments',
+              body_region: 'cardiovascular',
+            },
           ].map((item) => ({
-            ...item, spaceflight_context: 'NASA research background.',
+            ...item,
+            spaceflight_context: 'NASA research background.',
             candidate_observations: ['Research indicators'],
             ares_current_coverage: 'Fictional or unavailable.',
             crew_review: 'Review approved mission procedures.',
@@ -42,12 +80,18 @@ export function mockApi() {
         const snapshot = fixtures[id].demo;
         const observations = snapshot.observations.map((row, index) =>
           index === snapshot.observations.length - 1
-            ? { ...row, resting_hr_bpm: input.resting_hr_bpm,
-                sleep_hours: input.sleep_hours, activity_minutes: input.activity_minutes }
+            ? {
+                ...row,
+                resting_hr_bpm: input.resting_hr_bpm,
+                sleep_hours: input.sleep_hours,
+                activity_minutes: input.activity_minutes,
+              }
             : row,
         );
         return respond({
-          ...snapshot, scenario, observations,
+          ...snapshot,
+          scenario,
+          observations,
           mission_timeline: { ...fixtures[id].timeline, scenario },
           review_report: { ...fixtures[id].report, scenario },
           check_in: {

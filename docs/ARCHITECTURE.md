@@ -107,3 +107,19 @@ and evidence components. Research presenters retain separate provenance/state.
 Recharts is split into a vendor bundle; the original generated illustration is a
 local hashed asset, served by the unchanged FastAPI compiled-asset mount. New
 Playwright checks validate real compiled one-server rendering and workflows.
+
+## v1.5 explanatory copilot and audit boundary
+
+`copilot_models.py` defines bounded extra-forbidden source/question/audit contracts;
+`copilot.py` rebuilds canonical scenario/check-in/validated CSV contexts and explains
+existing output with a conservative intent parser. `copilot_api.py` bounds only
+the two new POST routes, sanitizes errors and rejects stale context hashes.
+No analysis, research, rule or report module is rewritten. Export copies legacy
+report fields and adds recomputed evidence/transcript plus user-declared review.
+
+React's `useMissionCopilot` scopes transient conversation, audit and report state
+to the current App mission key/source. `CopilotPanel` and `ReviewWorkflow` share
+that session in the existing dock; context replacement cancels requests and resets
+state. Four manual workflow states are independent of canonical assessment and
+always have `clinical_authorization=false`. There is no server case store, browser
+persistence, remote model or physiological calculation in React. See COPILOT_V15.md.

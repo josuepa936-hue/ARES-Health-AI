@@ -15,21 +15,27 @@ test('real one-server mission workflow and desktop capture', async ({ page }) =>
   await expect(page.getByRole('tab', { name: 'Check-in', exact: true })).toBeInViewport();
   await expect(page.getByTestId('latest-resting_hr_bpm')).not.toContainText('—');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.screenshot({ path: path.join(screenshots, 'mission-desktop.png'), fullPage: true });
+  await page.screenshot({
+    path: path.join(screenshots, 'mission-v15-desktop.png'),
+    fullPage: true,
+  });
   await page.getByRole('button', { name: 'Explore Sleep / neurobehavioral: Sleep' }).click();
   await expect(page.getByRole('heading', { name: 'Sleep duration', exact: true })).toBeVisible();
   await page.getByLabel('Demo scenario').selectOption('heart_rate_shift');
   await expect(page.locator('.assessment-chip')).toContainText('CHANGE_FOR_REVIEW');
   await page.getByRole('button', { name: /^Resting heart rate/ }).click();
   await expect(page.locator('.finding')).toContainText('Resting heart rate: recent');
-  await page.screenshot({ path: path.join(screenshots, 'mission-change.png'), fullPage: true });
+  await page.screenshot({ path: path.join(screenshots, 'mission-v15-change.png'), fullPage: true });
   await page.getByLabel('Demo scenario').selectOption('incomplete');
   await expect(page.locator('.assessment-chip')).toContainText('DATA_QUALITY_BLOCKED');
   await expect(page.locator('.finding')).toContainText('INTERPRETATION WITHHELD');
   await expect(page.locator('.comparison-grid')).not.toContainText('64');
   await page.getByRole('button', { name: 'Inspect quality events' }).click();
   await expect(page.getByRole('tabpanel')).toContainText('data_quality');
-  await page.screenshot({ path: path.join(screenshots, 'mission-blocked.png'), fullPage: true });
+  await page.screenshot({
+    path: path.join(screenshots, 'mission-v15-blocked.png'),
+    fullPage: true,
+  });
   await page.getByLabel('Demo scenario').selectOption('stable');
   await expect(page.locator('.assessment-chip')).toContainText('NO_DEMO_RULE_TRIGGERED');
   await page.getByRole('tab', { name: 'Check-in', exact: true }).click();
@@ -45,8 +51,10 @@ test('real one-server mission workflow and desktop capture', async ({ page }) =>
   await page.getByRole('tab', { name: 'Mission Timeline' }).click();
   await expect(page.getByRole('tabpanel')).toContainText('event-000001');
   await page.getByRole('tab', { name: 'Review & Export' }).click();
+  await page.getByRole('checkbox', { name: /I confirm these review actions/ }).check();
+  await page.getByRole('button', { name: 'Build comprehensive JSON report' }).click();
   const download = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Download review JSON' }).click();
+  await page.getByRole('button', { name: 'Download comprehensive JSON' }).click();
   const reportFile = await (await download).path();
   const fs = await import('node:fs/promises');
   const report = JSON.parse(await fs.readFile(reportFile!, 'utf8'));
@@ -72,8 +80,14 @@ test('mobile composition, keyboard navigation and real capture', async ({ page }
   await page.setViewportSize({ width: 390, height: 844 });
   await loaded(page);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.screenshot({ path: path.join(screenshots, 'mission-mobile.png'), fullPage: false });
-  await page.screenshot({path:path.join(screenshots,'mission-mobile-full.png'),fullPage:true});
+  await page.screenshot({
+    path: path.join(screenshots, 'mission-v15-mobile.png'),
+    fullPage: false,
+  });
+  await page.screenshot({
+    path: path.join(screenshots, 'mission-v15-mobile-full.png'),
+    fullPage: true,
+  });
   await page.getByRole('tab', { name: 'Check-in', exact: true }).focus();
   await page.keyboard.press('ArrowRight');
   await expect(page.getByRole('tab', { name: 'Mission Timeline' })).toBeFocused();
@@ -132,4 +146,10 @@ test('WCAG AA automated check on desktop console', async ({ page }) => {
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
     .analyze();
   expect(result.violations).toEqual([]);
+  await expect(page.locator('.copilot-launch')).toContainText('briefing ready');
+  for(const name of ['ARES Copilot','Review & Export']){
+    await page.getByRole('tab',{name,exact:true}).click();
+    const audited=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa']).analyze();
+    expect(audited.violations).toEqual([]);
+  }
 });

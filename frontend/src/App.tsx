@@ -18,7 +18,10 @@ import { MetricPanel } from './console/MetricPanel';
 import { ContextDock, type DockTab } from './console/ContextDock';
 import { metrics, type MetricKey } from './console/metrics';
 import { Activity, ArrowUpRight, FileUp, Radio, ShieldCheck } from 'lucide-react';
-import { Review } from './components/Review';
+import type { CopilotContext } from './copilot-contract';
+import { useMissionCopilot } from './copilot/useMissionCopilot';
+import { CopilotPanel } from './copilot/CopilotPanel';
+import { ReviewWorkflow } from './copilot/ReviewWorkflow';
 import { TimelineView } from './components/TimelineView';
 type Mission = {
   source: 'builtin' | 'csv' | 'checkin';
@@ -27,6 +30,7 @@ type Mission = {
   checkIn?: CheckInResult['check_in'];
   decisionSupport?: CheckInResult['decision_support'];
   key: number;
+  copilotContext: CopilotContext;
 };
 export default function App() {
   const [selectedMetric, setSelectedMetric] = useState<MetricKey>('resting_hr_bpm');
@@ -94,7 +98,13 @@ export default function App() {
     Promise.all([api.demo(scenario, controller.signal), api.timeline(scenario, controller.signal)])
       .then(([snapshot, timeline]) => {
         if (!controller.signal.aborted && key === sequence.current)
-          setMission({ source: 'builtin', snapshot, timeline, key });
+          setMission({
+            source: 'builtin',
+            snapshot,
+            timeline,
+            key,
+            copilotContext: { kind: 'scenario', scenario, seed: 2026, days: 21 },
+          });
       })
       .catch((error) => {
         if (!controller.signal.aborted && key === sequence.current) setError(message(error));
@@ -109,8 +119,15 @@ export default function App() {
     const { controller, key } = start();
     try {
       const snapshot = await api.upload(file, true, controller.signal);
+      const csv = new TextDecoder('utf-8', { fatal: true }).decode(await file.arrayBuffer());
       if (!controller.signal.aborted && key === sequence.current)
-        setMission({ source: 'csv', snapshot, timeline: snapshot.mission_timeline, key });
+        setMission({
+          source: 'csv',
+          snapshot,
+          timeline: snapshot.mission_timeline,
+          key,
+          copilotContext: { kind: 'synthetic_csv', fictional_attestation: true, csv },
+        });
     } catch (error) {
       if (!controller.signal.aborted && key === sequence.current) setError(message(error));
     } finally {
@@ -129,6 +146,19 @@ export default function App() {
           key,
           checkIn: result.check_in,
           decisionSupport: result.decision_support,
+          copilotContext: {
+            kind: 'scenario',
+            scenario: payload.scenario,
+            seed: payload.seed,
+            days: payload.days,
+            check_in: {
+              fictional_attestation: true,
+              resting_hr_bpm: payload.resting_hr_bpm,
+              sleep_hours: payload.sleep_hours,
+              activity_minutes: payload.activity_minutes,
+              concerns: payload.concerns,
+            },
+          },
         });
     } catch (cause) {
       if (!controller.signal.aborted && key === sequence.current) setError(message(cause));
@@ -136,6 +166,7 @@ export default function App() {
       if (!controller.signal.aborted && key === sequence.current) setBusy(false);
     }
   }
+  const copilot = useMissionCopilot(mission?.copilotContext, mission?.key);
   const snapshot = mission?.snapshot;
   const source =
     mission?.source === 'csv'
@@ -166,6 +197,14 @@ export default function App() {
             Biomedical mission control<span>01</span>
           </h1>
         </div>
+        <button className="copilot-launch" onClick={() => openDock('copilot')}>
+          ARES Copilot ·{' '}
+          {copilot.loading
+            ? 'briefing…'
+            : copilot.briefing
+              ? 'briefing ready'
+              : 'offline explanations'}
+        </button>
         <div className={`assessment-chip ${blocked ? 'blocked' : changed ? 'change' : ''}`}>
           <Radio size={13} />
           <strong>{snapshot?.assessment ?? (busy ? 'LOADING MISSION' : 'AWAITING DATA')}</strong>
@@ -230,13 +269,18 @@ export default function App() {
             </div>
           )}
         </aside>
-        <BodyViewer selected={selectedMetric} onSelect={setSelectedMetric} crewId={snapshot?.summary.crew_id} />
+        <BodyViewer
+          selected={selectedMetric}
+          onSelect={setSelectedMetric}
+          crewId={snapshot?.summary.crew_id}
+        />
         {snapshot ? (
           <MetricPanel
             snapshot={snapshot}
             selected={selectedMetric}
             onSelect={setSelectedMetric}
             onReview={() => openDock('review')}
+            onQualityInspect={() => openDock('timeline')}
           />
         ) : (
           <section className="metric-panel awaiting-data">
@@ -252,6 +296,11 @@ export default function App() {
         onSelect={openDock}
         onToggle={() => setDockOpen((value) => !value)}
         panels={{
+          copilot: mission ? (
+            <CopilotPanel key={mission.key} session={copilot} onReview={() => openDock('review')} />
+          ) : (
+            <p>Load a fictional mission for a grounded offline briefing.</p>
+          ),
           checkin: (
             <div className="drawer-split">
               <div>
@@ -282,28 +331,7 @@ export default function App() {
             <p>Load a mission to inspect its timeline.</p>
           ),
           review: mission ? (
-            <div className="review-drawer-layout">
-              <Review
-                key={mission.key}
-                scenario={mission.source === 'builtin' ? (scenario as ScenarioId) : undefined}
-                embedded={snapshot?.review_report}
-              />
-              <aside className="procedural-guidance">
-                <h3>{mission.snapshot.guidance.heading}</h3>
-                <p>{mission.snapshot.guidance.meaning}</p>
-                <ol>
-                  {mission.snapshot.guidance.review_steps.map((step) => (
-                    <li key={step}>{step}</li>
-                  ))}
-                </ol>
-                {mission.decisionSupport && (
-                  <>
-                    <p>{mission.decisionSupport.concerns_notice}</p>
-                    <p>{mission.decisionSupport.mission_procedures}</p>
-                  </>
-                )}
-              </aside>
-            </div>
+            <ReviewWorkflow key={mission.key} session={copilot} />
           ) : (
             <p>Load a mission to create a review.</p>
           ),
@@ -354,17 +382,8 @@ export default function App() {
           <span className="live-dot" /> SYNTHETIC DATA / NOT A MEDICAL DEVICE
         </span>
         <span>Active data source: {source}</span>
-        <span>PYTHON DOMAIN ENGINE · v1.4 UI</span>
+        <span>PYTHON DOMAIN ENGINE · v1.5 COPILOT</span>
       </footer>
-      {blocked && (
-        <div className="quality-banner" role="alert">
-          <strong>Data quality blocks interpretation.</strong>
-          {snapshot?.quality_issues.map((issue) => (
-            <span key={issue}>{issue}</span>
-          ))}
-          <button onClick={() => openDock('timeline')}>Inspect quality events</button>
-        </div>
-      )}
     </main>
   );
 }

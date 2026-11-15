@@ -37,7 +37,9 @@ it('lets a fictional astronaut submit one check-in and see backend report plus t
   expect(screen.getByText('event-000001')).toBeVisible();
   expect(screen.queryByRole('button', { name: 'Request review JSON' })).not.toBeInTheDocument();
   await user.click(screen.getByRole('tab', { name: 'Review & Export' }));
-  expect(screen.getByRole('button', { name: 'Download review JSON' })).toBeVisible();
+  await user.click(screen.getByRole('checkbox', { name: /I confirm these review actions/ }));
+  await user.click(screen.getByRole('button', { name: 'Build comprehensive JSON report' }));
+  expect(await screen.findByRole('button', { name: 'Download comprehensive JSON' })).toBeVisible();
 
   const entry = fetch.mock.calls.find(([url]) =>
     String(url).includes('/mission/fictional-check-in'),

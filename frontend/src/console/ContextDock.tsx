@@ -6,9 +6,11 @@ import {
   FileDown,
   Orbit,
   BookOpen,
+  MessagesSquare,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 export const dockTabs = [
+  { id: 'copilot', label: 'ARES Copilot', Icon: MessagesSquare },
   { id: 'checkin', label: 'Check-in', Icon: ClipboardCheck },
   { id: 'timeline', label: 'Mission Timeline', Icon: Clock3 },
   { id: 'review', label: 'Review & Export', Icon: FileDown },

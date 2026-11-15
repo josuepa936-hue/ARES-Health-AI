@@ -112,3 +112,16 @@ attachments were not accessible, so Issue #13's written art direction was used.
 Python domain logic, biomedical benchmarks, source provenance, validations and
 report generation remain unchanged. Human visual/source review is required before
 merging this draft against the v1.3 branch. No merging or clinical claim is authorized.
+
+## Version 1.5 deterministic mission copilot and fictional review
+
+OpenAI Codex assisted with implementing the bounded Python explanatory service,
+strict canonical-context API schemas, evidence references, manual four-state
+review/audit workflow, integrated JSON export, React dock integration and tests.
+The runtime copilot is **deterministic and offline, not an LLM or generative AI**.
+No generative model plugin, remote inference, diagnosis, medical triage, treatment,
+clinical authorization or validation claim was added. Existing anatomy artwork
+provenance and biomedical/research modules are preserved. Questions and notes are
+fictional-only, transient user text; notes cannot instruct the analysis engine.
+Codex implementation assistance must not be confused with a generative runtime
+model. Human review remains required before merging this draft against v1.4.

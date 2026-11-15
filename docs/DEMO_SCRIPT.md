@@ -96,3 +96,26 @@ expert authorization are necessary before real-world use.”
   through the official NASA Space Apps Challenge site.
 - **Do not** claim the prototype is medically precise on astronauts,
   clinically validated or endorsed by NASA.
+
+## v1.5 offline review journey
+
+Keep the existing mission console visible. Open ARES Copilot and point out its
+DETERMINISTIC / OFFLINE / NOT AN LLM label. Ask "What changed?" and expand Why this
+response: show exact UTC observations, reference/recent windows, unchanged rule
+metadata and timeline IDs. Ask about NASA hazard background and show source links
+as research context, not individual astronaut evidence.
+
+Submit an explicitly fictional 140 bpm / 7 h / 45 min check-in, then inspect its
+new briefing/values/timeline. Do not recite a fixed delta: show the number actually
+computed by Python. Switch to incomplete records and show withheld interpretation,
+quality findings, no averages and no reassuring health status. Ask for treatment
+or an override to demonstrate refusal without modifying analysis.
+
+In Review & Export, manually choose IN_PROGRESS, AWAITING_AUTHORIZED_REVIEW and
+DOCUMENTED; show that the assessment never changes. Confirm fictional source/unit
+and timestamp actions, record a short fictional note, attest and download one
+comprehensive JSON. Show canonical observations, comparisons, rules, timeline,
+source citations, appropriate transcript and audit events. DOCUMENTED is not
+medical clearance and requested-review records do not contact real personnel.
+Change scenario or reload to demonstrate reset. No external model or patient data
+is used; MIT ECG and OSDR research stay separate from the mission conversation.

@@ -23,6 +23,7 @@ from src.ares_health.mission import fictional_checkin, risk_guide
 from src.ares_health.serve_ui import install_compiled_frontend
 from src.ares_health.research_api import router as research_router
 from src.ares_health.nasa_api import router as nasa_router
+from src.ares_health.copilot_api import router as copilot_router
 
 ScenarioId = Literal["stable", "heart_rate_shift", "sleep_shift", "incomplete"]
 ReviewState = Literal["Pending review", "Reviewed in demo"]
@@ -257,6 +258,7 @@ async def analyze_synthetic_csv(
 # Optional, read-only research namespace. Existing synthetic routes are unchanged.
 app.include_router(research_router)
 app.include_router(nasa_router)
+app.include_router(copilot_router)
 
 # Production demo mode: same-origin React + API at 127.0.0.1:8000.
 # Dev mode still supports the independent Vite server on port 5173.

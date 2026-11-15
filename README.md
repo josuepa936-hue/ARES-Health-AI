@@ -222,3 +222,21 @@ After checkout, run `cd frontend`, `npm ci`, `cd ..`, then `start-ares.cmd` on W
 The one-server app remains on 127.0.0.1:8000. See [design, asset provenance, tests and
 real browser captures](docs/CONSOLE_V14.md). The anatomical art is an original
 AI-generated navigation illustration, not a clinically certified anatomy model.
+
+## v1.5 offline interactive mission copilot
+
+The existing console now includes **ARES Copilot**, a deterministic Python-grounded
+assistant (not an LLM). It briefs the active fictional mission, answers bounded
+review questions with observation/rule/timeline evidence and NASA source links,
+and refuses medical treatment/clearance or quality overrides. No external model,
+secret or network service is required for the core workflow.
+
+**Review & Export** records manual actions, fictional notes and four review states:
+PENDING_REVIEW, IN_PROGRESS, AWAITING_AUTHORIZED_REVIEW and DOCUMENTED. These never
+alter analysis or grant medical authorization. One integrated JSON export contains
+canonical measurements, comparisons, timeline, rules, citations, appropriate
+conversation and the user-recorded audit log. Everything stays in browser memory
+until explicit export; new missions/page reload reset it. The v1.4 anatomy and
+existing mission/research modules remain intact. See [v1.5 workflow, API, limits
+and screenshots](docs/COPILOT_V15.md). Startup remains `start-ares.cmd` after the
+existing Python setup and `cd frontend; npm ci; npm run build` steps.

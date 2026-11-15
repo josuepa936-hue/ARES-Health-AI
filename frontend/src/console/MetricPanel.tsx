@@ -16,11 +16,13 @@ export function MetricPanel({
   selected,
   onSelect,
   onReview,
+  onQualityInspect,
 }: {
   snapshot: Snapshot;
   selected: MetricKey;
   onSelect: (key: MetricKey) => void;
   onReview: () => void;
+  onQualityInspect?: () => void;
 }) {
   const [details, setDetails] = useState(false);
   const metric = metrics.find((item) => item.key === selected)!;
@@ -133,6 +135,13 @@ export function MetricPanel({
               ? 'ILLUSTRATIVE CHANGE'
               : 'OBSERVATION / DEMO RULE'}
         </span>
+        {snapshot.assessment === 'DATA_QUALITY_BLOCKED' && (
+          <div role="alert" className="quality-inline">
+            <strong>Data quality blocks interpretation.</strong>
+            <p>{snapshot.quality_issues.join(' ')}</p>
+            <button onClick={onQualityInspect}>Inspect quality events</button>
+          </div>
+        )}
         <p>
           {!available
             ? 'Missing or invalid records prevent a meaningful comparison. No health interpretation is available.'

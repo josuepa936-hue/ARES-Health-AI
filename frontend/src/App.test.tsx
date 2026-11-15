@@ -189,45 +189,65 @@ it('uses the embedded CSV report for export without submitting a built-in review
   expect(screen.getByText('event-000001')).toBeVisible();
   expect(screen.queryByRole('button', { name: 'Request review JSON' })).not.toBeInTheDocument();
   await user.click(screen.getByRole('tab', { name: 'Review & Export' }));
-  await user.click(screen.getByRole('button', { name: 'Download review JSON' }));
+  await user.click(screen.getByRole('checkbox', { name: /I confirm these review actions/ }));
+  await user.click(screen.getByRole('button', { name: 'Build comprehensive JSON report' }));
+  await user.click(await screen.findByRole('button', { name: 'Download comprehensive JSON' }));
   expect(download).toHaveBeenCalledWith(
-    expect.objectContaining({ scenario: 'uploaded_synthetic_csv' }),
+    expect.objectContaining({
+      scenario: 'uploaded_synthetic_csv',
+      copilot_schema_version: '1.5-demo',
+    }),
   );
   expect(fetchMock.mock.calls.some(([url]) => String(url).endsWith('/review'))).toBe(false);
 });
-it('exports the returned scenario review JSON and invalidates it after note edits', async () => {
+it('exports a manually documented comprehensive review and invalidates it after note edits', async () => {
   const download = vi.spyOn(downloads, 'downloadReport').mockImplementation(() => {});
   const user = userEvent.setup();
   await ready();
   await user.click(screen.getByRole('tab', { name: 'Review & Export' }));
-  await user.selectOptions(screen.getByLabelText('Review state'), 'Reviewed in demo');
-  await user.type(screen.getByLabelText('Reviewer note'), 'Fictional review only.');
-  expect(screen.getByLabelText('Reviewer note')).toHaveAttribute('maxlength', '500');
-  await user.click(screen.getByRole('tab', { name: 'Review & Export' }));
-  await user.click(screen.getByRole('button', { name: 'Request review JSON' }));
-  await user.click(await screen.findByRole('button', { name: 'Download review JSON' }));
+  await user.selectOptions(screen.getByLabelText('Fictional review state'), 'DOCUMENTED');
+  await user.type(screen.getByLabelText('Fictional review note'), 'Fictional review only.');
+  expect(screen.getByLabelText('Fictional review note')).toHaveAttribute('maxlength', '500');
+  await user.click(screen.getByRole('button', { name: 'Record fictional note' }));
+  await user.click(screen.getByRole('checkbox', { name: /I confirm these review actions/ }));
+  await user.click(screen.getByRole('button', { name: 'Build comprehensive JSON report' }));
+  await user.click(await screen.findByRole('button', { name: 'Download comprehensive JSON' }));
   expect(download).toHaveBeenCalledWith(
     expect.objectContaining({
-      review_state: 'Reviewed in demo',
-      reviewer_note: 'Fictional review only.',
+      copilot_schema_version: '1.5-demo',
+      fictional_review: expect.objectContaining({
+        review_state: 'DOCUMENTED',
+        clinical_authorization: false,
+      }),
     }),
   );
-  await user.type(screen.getByLabelText('Reviewer note'), ' Updated.');
-  expect(screen.queryByRole('button', { name: 'Download review JSON' })).not.toBeInTheDocument();
+  const request = fetchMock.mock.calls.find(([url]) =>
+    String(url).endsWith('/comprehensive-report'),
+  );
+  expect(JSON.parse(String(request![1]!.body)).audit_log).toContainEqual({
+    sequence: 2,
+    action: 'note',
+    note: 'Fictional review only.',
+  });
+  await user.type(screen.getByLabelText('Fictional review note'), ' Updated.');
+  expect(screen.getByRole('button', { name: 'Download comprehensive JSON' })).toBeDisabled();
 });
-it('shows review API failures without enabling an export', async () => {
+it('shows comprehensive report API failures without enabling an export', async () => {
   const user = userEvent.setup();
   await ready();
   const normal = mockApi();
   fetchMock.mockImplementation((input, init) =>
-    String(input).endsWith('/review')
+    String(input).endsWith('/comprehensive-report')
       ? Promise.resolve(respond({ detail: 'Review unavailable' }, 500))
       : normal(input, init),
   );
   await user.click(screen.getByRole('tab', { name: 'Review & Export' }));
-  await user.click(screen.getByRole('button', { name: 'Request review JSON' }));
+  await user.click(screen.getByRole('checkbox', { name: /I confirm these review actions/ }));
+  await user.click(screen.getByRole('button', { name: 'Build comprehensive JSON report' }));
   expect(await screen.findByRole('alert')).toHaveTextContent('Review unavailable');
-  expect(screen.queryByRole('button', { name: 'Download review JSON' })).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole('button', { name: 'Download comprehensive JSON' }),
+  ).not.toBeInTheDocument();
 });
 it('cancels review requests when the mission changes', async () => {
   const user = userEvent.setup();
@@ -235,14 +255,15 @@ it('cancels review requests when the mission changes', async () => {
   const normal = mockApi();
   let signal: AbortSignal | undefined;
   fetchMock.mockImplementation((input, init) => {
-    if (String(input).endsWith('/review')) {
+    if (String(input).endsWith('/comprehensive-report')) {
       signal = init!.signal as AbortSignal;
       return new Promise(() => {});
     }
     return normal(input, init);
   });
   await user.click(screen.getByRole('tab', { name: 'Review & Export' }));
-  await user.click(screen.getByRole('button', { name: 'Request review JSON' }));
+  await user.click(screen.getByRole('checkbox', { name: /I confirm these review actions/ }));
+  await user.click(screen.getByRole('button', { name: 'Build comprehensive JSON report' }));
   await user.selectOptions(screen.getByLabelText('Demo scenario'), 'incomplete');
   await screen.findByText('Data quality blocks interpretation.');
   expect(signal?.aborted).toBe(true);

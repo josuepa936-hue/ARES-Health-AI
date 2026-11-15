@@ -56,7 +56,9 @@ it('uploads the local synthetic template as raw bytes and exports its embedded r
   expect(snapshot.review_report.assessment).toBe(snapshot.assessment);
   expect(snapshot.mission_timeline.assessment).toBe(snapshot.assessment);
   expect(snapshot.mission_timeline.scenario).toBe('uploaded_synthetic_csv');
-  expect(snapshot.mission_timeline.events.filter((event) => event.type === 'observation')).toHaveLength(21);
+  expect(
+    snapshot.mission_timeline.events.filter((event) => event.type === 'observation'),
+  ).toHaveLength(21);
   expect(JSON.parse(JSON.stringify(snapshot.review_report))).toEqual(snapshot.review_report);
 });
 it('surfaces strict CSV validation failures from the real backend', async () => {
@@ -97,16 +99,20 @@ it('keeps the optional research namespace separate from synthetic mission data',
   expect((await api.demo('stable', signal())).data_provenance).toBe('synthetic');
 });
 
-
 it('performs the complete fictional crew input-to-evaluation-to-report flow through real FastAPI', async () => {
-  const result = await api.fictionalCheckIn({
-    fictional_attestation: true,
-    scenario: 'stable',
-    seed: 2026, days: 21,
-    resting_hr_bpm: 140, sleep_hours: 7,
-    activity_minutes: 45,
-    concerns: ['fatigue'],
-  }, signal());
+  const result = await api.fictionalCheckIn(
+    {
+      fictional_attestation: true,
+      scenario: 'stable',
+      seed: 2026,
+      days: 21,
+      resting_hr_bpm: 140,
+      sleep_hours: 7,
+      activity_minutes: 45,
+      concerns: ['fatigue'],
+    },
+    signal(),
+  );
   expect(result.data_provenance).toBe('synthetic');
   expect(result.assessment).toBe('CHANGE_FOR_REVIEW');
   expect(result.mission_timeline.assessment).toBe(result.assessment);
@@ -131,9 +137,80 @@ it('refuses a fictional check-in without a true attestation', async () => {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      scenario: 'stable', days: 21,
-      resting_hr_bpm: 64, sleep_hours: 7, activity_minutes: 45,
+      scenario: 'stable',
+      days: 21,
+      resting_hr_bpm: 64,
+      sleep_hours: 7,
+      activity_minutes: 45,
     }),
   });
   expect(response.status).toBe(422);
+});
+
+it.each(['stable', 'heart_rate_shift', 'sleep_shift', 'incomplete'] as const)(
+  'recalculates an offline copilot briefing for %s',
+  async (scenario) => {
+    const source = { kind: 'scenario' as const, scenario, seed: 2026, days: 21 };
+    const [brief, demo] = await Promise.all([
+      api.copilot(source, '', 0, undefined, signal()),
+      api.demo(scenario, signal()),
+    ]);
+    expect(brief.assessment).toBe(demo.assessment);
+    expect(brief.engine).toBe('deterministic-offline');
+    expect(brief.generative_model).toBe(false);
+    const reply = await api.copilot(source, 'What changed?', 1, brief.context_ref, signal());
+    expect(reply.context_ref).toBe(brief.context_ref);
+    if (scenario === 'incomplete')
+      expect(reply.evidence_refs.every((ref) => ref.kind === 'quality')).toBe(true);
+  },
+);
+it('exports canonical check-in values and manual documented state without clinical authorization', async () => {
+  const source = {
+    kind: 'scenario' as const,
+    scenario: 'stable' as const,
+    seed: 2026,
+    days: 21,
+    check_in: {
+      fictional_attestation: true as const,
+      resting_hr_bpm: 140,
+      sleep_hours: 7,
+      activity_minutes: 45,
+      concerns: [],
+    },
+  };
+  const briefing = await api.copilot(source, '', 0, undefined, signal());
+  const report = await api.comprehensiveReport(
+    source,
+    briefing.context_ref,
+    [{ turn: 1, question: 'What changed?' }],
+    [
+      { sequence: 1, action: 'review_state', review_state: 'DOCUMENTED' },
+      { sequence: 2, action: 'source_units', checked: true },
+    ],
+    signal(),
+  );
+  expect(report.fictional_review.review_state).toBe('DOCUMENTED');
+  expect(report.fictional_review.clinical_authorization).toBe(false);
+  expect(report.assessment).toBe(briefing.assessment);
+  expect(report.copilot.transcript[0].response.context_ref).toBe(report.context_ref);
+  expect(report.evaluated_observations).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ resting_hr_bpm: 140, sleep_hours: 7, activity_minutes: 45 }),
+    ]),
+  );
+});
+it('refuses stale context and unsafe medical questions over real HTTP', async () => {
+  const stable = { kind: 'scenario' as const, scenario: 'stable' as const, seed: 2026, days: 21 };
+  const brief = await api.copilot(stable, '', 0, undefined, signal());
+  const unsafe = await api.copilot(stable, 'Give a treatment', 1, brief.context_ref, signal());
+  expect(unsafe.intent).toBe('refusal');
+  await expect(
+    api.copilot(
+      { ...stable, scenario: 'sleep_shift' },
+      'What changed?',
+      1,
+      brief.context_ref,
+      signal(),
+    ),
+  ).rejects.toThrow('Mission context changed');
 });
