@@ -8,6 +8,7 @@ import type {
   Snapshot,
   Timeline,
 } from './contracts';
+import { PUBLIC_DEMO } from './publicDemo';
 import { CsvUpload } from './components/CsvUpload';
 import { FictionalCheckIn } from './components/FictionalCheckIn';
 import { SpaceRiskExplorer } from './components/SpaceRiskExplorer';
@@ -346,7 +347,14 @@ export default function App() {
                   </div>
                 )}
               </div>
-              <CsvUpload onUpload={upload} busy={busy} />
+              {PUBLIC_DEMO ? (
+                <p>
+                  CSV uploads are unavailable in the public demo. Use fictional built-in scenarios
+                  or an explicitly fictional check-in.
+                </p>
+              ) : (
+                <CsvUpload onUpload={upload} busy={busy} />
+              )}
             </div>
           ),
           timeline: mission ? (

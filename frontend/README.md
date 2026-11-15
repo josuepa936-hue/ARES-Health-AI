@@ -1,5 +1,10 @@
 # ARES Health AI — integrated mission console
 
+Public deployment uses the [bounded Render mode](../docs/RENDER_PUBLIC_DEMO.md),
+which serves this compiled UI from FastAPI, hides research/CSV controls and
+preserves local development. It is not the default development server.
+
+
 The v1.5 copilot now supports a focused reading dialog, response-start navigation
 and progressive scientific evidence. Escape restores the same dock conversation
 and draft. Startup commands below are unchanged; no dependency or backend API was

@@ -1,7 +1,8 @@
-"""Local-only HTTP interface for the already-tested synthetic ARES engine.
+"""HTTP interface for the already-tested synthetic ARES engine.
 
 Run with: python -m uvicorn src.ares_health.api:app --host 127.0.0.1 --port 8000
-This service is NOT a medical API, an astronaut data feed, or a cloud service.
+Public deployment requires ARES_PUBLIC_DEMO and its bounded HTTP boundary.
+This is not a medical API or an astronaut data feed.
 """
 from __future__ import annotations
 
@@ -22,9 +23,14 @@ from src.ares_health.timeline import build_timeline
 from src.ares_health.mission import fictional_checkin, risk_guide
 from src.ares_health.serve_ui import install_compiled_frontend
 from src.ares_health.version import APP_VERSION
+from src.ares_health.public_demo import enabled, public_origin, PublicDemoBoundary
+from fastapi.exceptions import RequestValidationError
+
 from src.ares_health.research_api import router as research_router
 from src.ares_health.nasa_api import router as nasa_router
 from src.ares_health.copilot_api import router as copilot_router
+
+PUBLIC_DEMO = enabled()
 
 ScenarioId = Literal["stable", "heart_rate_shift", "sleep_shift", "incomplete"]
 ReviewState = Literal["Pending review", "Reviewed in demo"]
@@ -36,21 +42,23 @@ app = FastAPI(
         "No diagnosis, flight-medicine authorization, or NASA operational data."
     ),
     version=APP_VERSION,
-    docs_url="/docs",
+    docs_url=None if PUBLIC_DEMO else "/docs",
+    openapi_url=None if PUBLIC_DEMO else "/openapi.json",
     redoc_url=None,
 )
 
 # Local development UI only, not public internet or arbitrary hosted origins.
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173", "http://127.0.0.1:5173",
-        "http://localhost:3000", "http://127.0.0.1:3000",
-    ],
-    allow_credentials=False,
-    allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type", "X-Synthetic-Attestation"],
-)
+if not PUBLIC_DEMO:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[
+            "http://localhost:5173", "http://127.0.0.1:5173",
+            "http://localhost:3000", "http://127.0.0.1:3000",
+        ],
+        allow_credentials=False,
+        allow_methods=["GET", "POST"],
+        allow_headers=["Content-Type", "X-Synthetic-Attestation"],
+    )
 
 
 def _finite_json_float(text: str) -> float:
@@ -258,10 +266,31 @@ async def analyze_synthetic_csv(
 
 
 # Optional, read-only research namespace. Existing synthetic routes are unchanged.
-app.include_router(research_router)
-app.include_router(nasa_router)
+if not PUBLIC_DEMO:
+    app.include_router(research_router)
+    app.include_router(nasa_router)
 app.include_router(copilot_router)
 
 # Production demo mode: same-origin React + API at 127.0.0.1:8000.
 # Dev mode still supports the independent Vite server on port 5173.
-install_compiled_frontend(app)
+install_compiled_frontend(app, public_demo=PUBLIC_DEMO)
+
+if PUBLIC_DEMO:
+    @app.exception_handler(RequestValidationError)
+    async def public_validation_error(request, exc):
+        return JSONResponse(status_code=422, content={"detail": "Invalid fictional demo input."})
+
+    @app.exception_handler(HTTPException)
+    async def public_http_error(request, exc):
+        # Never reflect untrusted CSV, question, note, URL or exception text.
+        messages = {404: "Resource unavailable.", 409: "Mission context changed. Reload the scenario.",
+                    422: "Invalid fictional demo input."}
+        return JSONResponse(status_code=exc.status_code,
+                            content={"detail": messages.get(exc.status_code, "Demo request rejected.")})
+
+    @app.exception_handler(Exception)
+    async def public_internal_error(request, exc):
+        return JSONResponse(status_code=500, content={"detail": "Demo temporarily unavailable."})
+
+    # Last middleware added is outermost: input is bounded before buffering.
+    app.add_middleware(PublicDemoBoundary, origin=public_origin())

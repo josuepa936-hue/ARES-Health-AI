@@ -1,5 +1,11 @@
 # ARES Health AI — NASA Space Apps Challenge 2026
 
+> Public interactive deployment is available only through the opt-in, bounded
+> `ARES_PUBLIC_DEMO=1` configuration in [the Render guide](docs/RENDER_PUBLIC_DEMO.md).
+> The default development server remains local-only. Do not expose development
+> mode directly. No public Render URL has been deployed or verified here.
+
+
 **Astronaut Risk Evaluation System**  
 **Track:** Create Health Monitoring Software for Astronauts on Space Missions  
 **Event:** Universal Event · November 14–15, 2026  

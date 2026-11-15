@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: ares-health-ai-demo
+    runtime: docker
+    plan: starter
+    branch: feat/render-public-demo
+    autoDeployTrigger: "off"
+    healthCheckPath: /api/status
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    numInstances: 1
+    envVars:
+      - key: ARES_PUBLIC_DEMO
+        value: "1"
+      - key: ARES_RESEARCH_ENABLED
+        value: "0"

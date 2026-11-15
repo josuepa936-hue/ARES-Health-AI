@@ -1,0 +1,15 @@
+**/.git
+**/.venv*
+**/node_modules
+**/dist
+**/__pycache__
+**/.pytest_cache
+**/.env*
+**/secrets.toml
+**/*.pem
+**/*.key
+**/screenshots
+**/test-results
+**/playwright-report
+.ares-research
+data

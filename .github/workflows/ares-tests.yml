@@ -105,6 +105,26 @@ jobs:
             sleep 1
           done
           ARES_E2E_ORIGIN=http://127.0.0.1:8014 npm --prefix frontend run test:browser
+      - name: Build and verify the public Docker demo (no deployment)
+        working-directory: .
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker build -t ares-public-demo:ci .
+          docker run -d --name ares-public-ci --read-only --tmpfs /tmp:rw,noexec,nosuid,size=16m \
+            --cap-drop ALL --security-opt no-new-privileges --memory 512m --cpus 2 \
+            -p 127.0.0.1:18000:10000 -e PORT=10000 \
+            -e ARES_PUBLIC_ORIGIN=http://127.0.0.1:18000 ares-public-demo:ci
+          trap 'docker rm -f ares-public-ci >/dev/null' EXIT
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://127.0.0.1:18000/api/status > /dev/null; then break; fi
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:18000/api/status
+          ARES_PUBLIC_TEST_URL=http://127.0.0.1:18000 python -m pytest -q tests/test_public_demo.py
+          cd frontend
+          ARES_PUBLIC_TEST_URL=http://127.0.0.1:18000 npm run test:public:browser
+
       - name: Retain actual browser screenshots and failure traces
         if: always()
         uses: actions/upload-artifact@v4

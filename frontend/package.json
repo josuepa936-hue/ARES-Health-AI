@@ -9,7 +9,8 @@
     "test": "vitest run",
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "format": "prettier --write src integration scripts *.ts *.json index.html",
-    "test:browser": "playwright test"
+    "test:browser": "playwright test",
+    "test:public:browser": "playwright test --config playwright.public.config.ts"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

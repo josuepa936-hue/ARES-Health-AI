@@ -1,5 +1,6 @@
 import { lazy, Suspense, useState } from 'react';
 import App from './App';
+import { PUBLIC_DEMO } from './publicDemo';
 const ResearchLab = lazy(() => import('./components/ResearchLab'));
 const NasaResearch = lazy(() => import('./components/NasaResearch'));
 
@@ -15,16 +16,27 @@ export default function Workspace() {
         </div>
         <span className="global-status">INDEPENDENT DEMONSTRATION</span>
       </div>
+      {PUBLIC_DEMO && (
+        <p className="public-demo-notice" role="note">
+          Experimental public demo · Fictional data only. Not a medical device or a NASA-authorized
+          system. Never enter real health or personal information. Requests are processed
+          transiently; reports download to your device.
+        </p>
+      )}
       <nav className="workspace-nav" aria-label="Workspace mode">
         <button aria-pressed={mode === 'mission'} onClick={() => setMode('mission')}>
           Synthetic mission demo
         </button>
-        <button aria-pressed={mode === 'research'} onClick={() => setMode('research')}>
-          Optional research lab
-        </button>
-        <button aria-pressed={mode === 'nasa'} onClick={() => setMode('nasa')}>
-          NASA space biology
-        </button>
+        {!PUBLIC_DEMO && (
+          <>
+            <button aria-pressed={mode === 'research'} onClick={() => setMode('research')}>
+              Optional research lab
+            </button>
+            <button aria-pressed={mode === 'nasa'} onClick={() => setMode('nasa')}>
+              NASA space biology
+            </button>
+          </>
+        )}
       </nav>
       <div hidden={mode !== 'mission'}>
         <App />
