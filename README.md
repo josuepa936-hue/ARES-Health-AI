@@ -27,6 +27,7 @@ Instead of starting two separate servers, run from repository root:
 
 ```powershell
 .\\start-ares.ps1
+# Or double-click start-ares.cmd on Windows
 ```
 
 The launcher builds the production React interface if dependencies are
