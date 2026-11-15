@@ -91,3 +91,10 @@ real astronaut telemetry, clinical validations, or NASA endorsement were
 implemented. The planned Figma-designed anatomical 3D asset remains separate
 and must not be represented as complete. Human review and actual CI validation
 remain necessary before merging or submitting.
+
+
+The final v1.3 integration also added a PowerShell one-command launcher,
+static compiled React asset serving through localhost FastAPI, strict
+file-path restrictions, production distribution smoke tests, and
+documentation for offline presentation. Compiled assets are produced
+locally; no third-party hosted API or cloud patient-data service is required.
