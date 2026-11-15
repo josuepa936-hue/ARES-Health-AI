@@ -48,6 +48,7 @@ export function mockApi() {
           ...fixture,
           application_version: '1.5',
           copilot_application_version: '1.5',
+          mission_timeline: { ...fixture.mission_timeline, application_version: '1.5' },
           review_state: state,
           legacy_review_state: state === 'DOCUMENTED' ? 'Reviewed in demo' : 'Pending review',
           legacy_review_state_semantics: 'Compatibility-only; use review_state for current status.',
