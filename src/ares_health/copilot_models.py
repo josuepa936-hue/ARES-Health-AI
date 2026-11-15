@@ -1,6 +1,8 @@
 """Bounded synthetic context and explicit user-controlled review contracts."""
 
 from __future__ import annotations
+from datetime import datetime, timezone
+import re
 from typing import Annotated, Literal
 from pydantic import (
     BaseModel,
@@ -97,6 +99,9 @@ class CopilotRequest(StrictModel):
 
 class AuditEvent(StrictModel):
     sequence: StrictInt = Field(ge=1, le=64)
+    # Optional solely to accept old v1.5 export clients. New UI always records
+    # the user's device UTC at click time; this is NOT a trusted server clock.
+    recorded_at_utc: str | None = Field(default=None, max_length=32, strict=True)
     action: Literal[
         "source_units",
         "timestamp_context",
@@ -108,6 +113,21 @@ class AuditEvent(StrictModel):
     checked: StrictBool | None = None
     review_state: WorkflowState | None = None
     note: str | None = Field(default=None, max_length=500, strict=True)
+
+    @field_validator("recorded_at_utc")
+    @classmethod
+    def valid_client_utc(cls, value):
+        if value is None:
+            return None
+        if not re.fullmatch(r"\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z", value):
+            raise ValueError("Audit time must be a UTC ISO-8601 string ending in Z.")
+        try:
+            date = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        except ValueError:
+            raise ValueError("Invalid UTC audit timestamp.") from None
+        if date.tzinfo != timezone.utc:
+            raise ValueError("Audit timestamp must be UTC.")
+        return value
 
     @model_validator(mode="after")
     def event_shape(self):
@@ -138,4 +158,12 @@ class ComprehensiveRequest(Attested):
             range(1, len(self.questions) + 1)
         ):
             raise ValueError("Conversation turns must be contiguous from 1.")
+        # Old clients can omit timestamps. Any timestamps actually supplied
+        # must preserve user-entered event order, not invented server time.
+        stamps = [
+            datetime.fromisoformat(event.recorded_at_utc.replace("Z", "+00:00"))
+            for event in self.audit_log if event.recorded_at_utc is not None
+        ]
+        if stamps != sorted(stamps):
+            raise ValueError("Audit timestamps must be nondecreasing.")
         return self
