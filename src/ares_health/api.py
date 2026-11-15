@@ -16,6 +16,7 @@ from src.ares_health.import_csv import MAX_CSV_BYTES, load_synthetic_csv
 from src.ares_health.service import build_snapshot
 from src.ares_health.synthetic import SCENARIOS, generate_scenario
 from src.ares_health.timeline import build_timeline
+from src.ares_health.mission import fictional_checkin, risk_guide
 from src.ares_health.research_api import router as research_router
 from src.ares_health.nasa_api import router as nasa_router
 
@@ -54,6 +55,41 @@ class ReviewRequest(BaseModel):
     days: int = Field(default=21, ge=12, le=366)
     review_state: ReviewState = "Pending review"
     reviewer_note: str = Field(default="", max_length=500)
+
+
+class FictionalCheckInRequest(BaseModel):
+    """Explicitly fictional latest-day values, not a real health-data intake."""
+
+    fictional_attestation: Literal[True]
+    scenario: ScenarioId = "stable"
+    seed: int = Field(default=2026, ge=0, le=999999)
+    days: int = Field(default=21, ge=12, le=366)
+    resting_hr_bpm: float = Field(gt=0, le=250, allow_inf_nan=False)
+    sleep_hours: float = Field(ge=0, le=24, allow_inf_nan=False)
+    activity_minutes: int = Field(ge=0, le=1440)
+    concerns: list[Literal["fatigue", "headache", "dizziness", "sleepiness"]] = Field(
+        default_factory=list, max_length=4
+    )
+
+
+@app.get("/api/mission/risk-guide")
+def get_mission_risk_guide() -> dict:
+    """Officially linked research background; no NASA risk score."""
+    return risk_guide()
+
+
+@app.post("/api/mission/fictional-check-in")
+def submit_fictional_checkin(payload: FictionalCheckInRequest) -> dict:
+    """Create a standalone evaluated snapshot, timeline and review in memory."""
+    if len(set(payload.concerns)) != len(payload.concerns):
+        raise HTTPException(422, "Do not repeat hypothetical concerns.")
+    return fictional_checkin(
+        scenario=payload.scenario, seed=payload.seed, days=payload.days,
+        resting_hr_bpm=payload.resting_hr_bpm,
+        sleep_hours=payload.sleep_hours,
+        activity_minutes=payload.activity_minutes,
+        concerns=payload.concerns,
+    )
 
 
 @app.get("/api/status")
@@ -169,9 +205,13 @@ async def analyze_synthetic_csv(
             status_code=422,
             detail={"status": "CSV_REJECTED", "errors": errors},
         )
-    return build_snapshot(
+    snapshot = build_snapshot(
         records, scenario="uploaded_synthetic_csv", include_report=True
     )
+    snapshot["mission_timeline"] = build_timeline(
+        records, scenario="uploaded_synthetic_csv"
+    )
+    return snapshot
 
 
 # Optional, read-only research namespace. Existing synthetic routes are unchanged.
