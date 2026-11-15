@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import App from '../App';
@@ -43,7 +43,10 @@ it('shows comparison withheld for quality-blocked mission and never invents tren
   await user.click(screen.getByRole('tab', { name: 'ARES Copilot' }));
   await screen.findByText('Mission Wellness & Procedures');
   await user.click(screen.getByText('Mission Wellness & Procedures'));
-  const withheld = await screen.findAllByText('Comparison withheld');
+  // The cockpit also says "Comparison withheld" for its own three metric
+  // cards. Restrict assertions to the new Wellness module, not the full page.
+  const wellness = within(screen.getByLabelText('Mission Wellness and Procedures'));
+  const withheld = await wellness.findAllByText('Comparison withheld');
   expect(withheld).toHaveLength(3);
-  expect(screen.getAllByText(/no trend can be inferred/i)).toHaveLength(3);
+  expect(wellness.getAllByText(/no trend can be inferred/i)).toHaveLength(3);
 });
