@@ -98,6 +98,9 @@ terminal and one browser address after dependencies are installed:
 .\\start-ares.ps1
 ```
 
+Alternatively double-click `start-ares.cmd` on Windows. For an already
+compiled offline demonstration use `start-ares.cmd --skip-build`.
+
 The launcher uses `npm.cmd` to build the React production assets, then
 starts the local FastAPI process on `127.0.0.1:8000`. Both the user
 interface and backend API are accessible at the same origin,
