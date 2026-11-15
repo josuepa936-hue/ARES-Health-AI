@@ -97,6 +97,16 @@ class CopilotRequest(StrictModel):
         return self
 
 
+class WellnessRequest(StrictModel):
+    """Recalculate a fictional wellness review for an attested mission context."""
+
+    context: ContextInput
+    expected_context_ref: str | None = Field(
+        default=None, pattern=r"^ctx-[0-9a-f]{64}$"
+    )
+
+
+
 class AuditEvent(StrictModel):
     sequence: StrictInt = Field(ge=1, le=64)
     # Optional solely to accept old v1.5 export clients. New UI always records
