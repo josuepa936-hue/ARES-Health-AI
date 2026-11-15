@@ -61,3 +61,16 @@ arrhythmia classifier, HRV health inference, astronaut risk scoring, volunteer
 records or treatment recommendations were developed. Human source/license and
 scientific review are required before this draft can advance; software tests and
 algorithm benchmarking do not establish clinical or spaceflight qualification.
+
+
+## Experimental v1.2 NASA and MIT research branch
+
+OpenAI ChatGPT helped integrate the NASA OSDR study metadata adapter,
+opt-in public small-sample CSV access, React NASA research view, offline
+provenance/security regression tests and documentation with the Codex-created
+MIT-BIH ECG evaluation module. Codex assisted separately with the MIT-BIH
+WFDB/NeuroKit2 pipeline and its synthetic-fixture tests. No real astronaut
+data were accessed, and PhysioNet record 100 has **not** been successfully
+downloaded and evaluated in the Codex environment. NASA OSD-87 is a mouse
+retina study, not human mission monitoring. The team must independently
+verify scientific and data license claims before publication.
