@@ -42,7 +42,24 @@ export function mockApi() {
           .reverse()
           .find((event) => event.action === 'review_state')?.review_state ??
           'PENDING_REVIEW') as 'PENDING_REVIEW';
-        return respond({ ...copilotFixtures[key].report, ...copilotFixtures[key].reports[state] });
+        const fixture = { ...copilotFixtures[key].report, ...copilotFixtures[key].reports[state] };
+        return respond({
+          ...fixture,
+          application_version: '1.5',
+          copilot_application_version: '1.5',
+          review_state: state,
+          legacy_review_state: state === 'DOCUMENTED' ? 'Reviewed in demo' : 'Pending review',
+          legacy_review_state_semantics: 'Compatibility-only; use review_state for current status.',
+          fictional_review: {
+            ...fixture.fictional_review,
+            review_state: state,
+            audit_log: body.audit_log,
+            audit_timestamp_source: 'User device UTC at action time; not independently authenticated.',
+            audit_timestamps_complete: body.audit_log.every(
+              (event: { recorded_at_utc?: string }) => !!event.recorded_at_utc
+            ),
+          },
+        });
       }
       case '/api/scenarios':
         return respond(fixtures.scenarios);
