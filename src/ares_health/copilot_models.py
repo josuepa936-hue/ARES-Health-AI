@@ -119,7 +119,7 @@ class AuditEvent(StrictModel):
     def valid_client_utc(cls, value):
         if value is None:
             return None
-        if not re.fullmatch(r"\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z", value):
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?Z", value):
             raise ValueError("Audit time must be a UTC ISO-8601 string ending in Z.")
         try:
             date = datetime.fromisoformat(value.replace("Z", "+00:00"))
