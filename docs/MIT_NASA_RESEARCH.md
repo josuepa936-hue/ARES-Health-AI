@@ -57,7 +57,15 @@ python -m pip install -r requirements-research.txt
 python -m scripts.prepare_research_ecg --download --acknowledge-license
 ```
 
-Only run the latter command after reviewing the official source terms and citation. If the execution environment returns 403, inspect the network permission issue or use official files and the checksum manifest that you obtained yourself, as documented in [RESEARCH_LAB.md](RESEARCH_LAB.md). Do not disable security protections or claim a measured F1 until actual MIT-BIH record 100 has been acquired and scored successfully.
+Only run the latter command after reviewing the official source terms and citation. If the execution environment returns 403, try the **official public AWS distribution**
+linked directly by [PhysioNet](https://physionet.org/content/mitdb/1.0.0/)
+without changing the checksum or quality validation:
+
+```powershell
+python -m scripts.prepare_research_ecg --aws-public --acknowledge-license
+```
+
+Or use the official files and checksum manifest you obtained yourself, as documented in [RESEARCH_LAB.md](RESEARCH_LAB.md). Do not disable security protections or claim a measured F1 until actual MIT-BIH record 100 has been acquired and scored successfully.
 
 **No MIT-BIH record 100 performance scores have yet been independently confirmed.** The four offline optional WFDB/NeuroKit integration tests use synthetic fixtures, not the published MIT waveform.
 
