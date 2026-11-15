@@ -22,7 +22,7 @@ export function CsvUpload({ onUpload, busy }: { onUpload: (file: File) => void; 
     onUpload(file);
   }
   return (
-    <section>
+    <section id="synthetic-csv">
       <h2>Synthetic CSV import</h2>
       <p>
         Never upload real health records. Validation occurs in Python; an attestation is not
