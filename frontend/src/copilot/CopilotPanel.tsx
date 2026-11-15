@@ -2,15 +2,19 @@ import { useState, useLayoutEffect, useRef, type FormEvent } from 'react';
 import { Send, MessagesSquare, ArrowRight, Maximize2, Minimize2 } from 'lucide-react';
 import type { CopilotSession } from './useMissionCopilot';
 import type { Snapshot } from '../contracts';
+import type { CopilotContext } from '../copilot-contract';
+import { MissionWellness } from './MissionWellness';
 import { EvidenceView } from './EvidenceView';
 export function CopilotPanel({
   session,
   onReview,
   snapshot,
+  context,
 }: {
   session: CopilotSession;
   onReview: () => void;
   snapshot?: Snapshot;
+  context: CopilotContext;
 }) {
   const [question, setQuestion] = useState('');
   const [focused, setFocused] = useState(false);
@@ -193,6 +197,11 @@ export function CopilotPanel({
                   <p>{session.briefing.answer}</p>
                   <EvidenceView response={session.briefing} snapshot={snapshot} />
                 </details>
+                <MissionWellness
+                  context={context}
+                  contextRef={session.briefing.context_ref}
+                  onReview={review}
+                />
                 <details className="copilot-suggestions">
                   <summary>
                     Suggested questions <span>· {prompts.length} supported topics</span>
