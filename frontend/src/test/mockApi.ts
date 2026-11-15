@@ -30,6 +30,63 @@ export function mockApi() {
           : fixture.briefing;
         return respond({ ...response, turn: body.turn });
       }
+      case '/api/mission/wellness': {
+        const body = JSON.parse(String(init?.body));
+        const key = (
+          body.context.kind === 'synthetic_csv'
+            ? 'csv'
+            : body.context.check_in
+              ? 'checkin'
+              : body.context.scenario
+        ) as keyof typeof copilotFixtures;
+        const briefing = copilotFixtures[key].briefing;
+        const blocked = ['DATA_QUALITY_BLOCKED', 'INSUFFICIENT_DATA'].includes(briefing.assessment);
+        const topics = [
+          {
+            id: 'cardiovascular', metric: 'resting_hr_bpm',
+            title: 'Cardiovascular observation',
+            source_title: 'Risk of Cardiovascular Adaptations',
+            source_url: 'https://www.nasa.gov/reference/risk-of-cardiovascular-adaptations/',
+          },
+          {
+            id: 'sleep', metric: 'sleep_hours',
+            title: 'Sleep and schedule',
+            source_title: 'Risk from Inadequate Sleep and Irregular Schedules',
+            source_url: 'https://www.nasa.gov/reference/risk-from-inadequate-sleep-and-irregular-schedules/',
+          },
+          {
+            id: 'movement', metric: 'activity_minutes',
+            title: 'Movement and exercise context',
+            source_title: 'Risk of Reduced Cardiorespiratory and Musculoskeletal Fitness',
+            source_url: 'https://www.nasa.gov/reference/risk-of-reduced-cardiorespiratory-and-musculoskeletal-fitness/',
+          },
+        ].map((topic) => ({
+          ...topic,
+          research_context: 'NASA educational research background; not clinical care.',
+          review_step: blocked
+            ? 'Comparison unavailable: verify missing fictional data; no trend can be inferred.'
+            : 'Verify fictional source, unit and timestamp.',
+          routine_example: 'Document a hypothetical observation in the mission check-in.',
+          comparison: blocked ? 'withheld' : 'available',
+          illustrative_flag: briefing.assessment === 'CHANGE_FOR_REVIEW' && topic.id === 'cardiovascular',
+          source_organization: 'NASA Human Research Program',
+          limitation: 'This indicator does not determine an astronaut medical condition.',
+        }));
+        return respond({
+          context_ref: briefing.context_ref,
+          scenario: briefing.scenario,
+          assessment: briefing.assessment,
+          summary: blocked
+            ? 'Data unavailable for comparison. No health conclusion is made.'
+            : 'Educational routine guidance only; no medical clearance.',
+          topics,
+          provenance: 'synthetic',
+          demo_only: true,
+          clinical_decision_support: false,
+          automated_reminders: false,
+          disclaimer: 'No diagnosis, treatment, clinical clearance or NASA endorsement.',
+        });
+      }
       case '/api/mission/comprehensive-report': {
         const body = JSON.parse(String(init?.body));
         const key = (
