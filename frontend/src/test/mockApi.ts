@@ -16,6 +16,57 @@ export function mockApi() {
         return respond(fixtures.scenarios);
       case '/api/evidence':
         return respond(fixtures.evidence);
+      case '/api/mission/risk-guide':
+        return respond({
+          source: 'NASA Human Research Program — Five Hazards of Human Spaceflight',
+          reference_url: 'https://www.nasa.gov/hrp/hazards/',
+          disclaimer: 'Educational hazard context, not NASA operational health guidance or patient-specific recommendations.',
+          risks: [
+            { id: 'radiation', title: 'Space radiation', body_region: 'whole_body' },
+            { id: 'gravity', title: 'Altered gravity', body_region: 'musculoskeletal' },
+            { id: 'isolation', title: 'Isolation and confinement', body_region: 'head' },
+            { id: 'distance', title: 'Distance from Earth', body_region: 'whole_body' },
+            { id: 'environment', title: 'Hostile or closed environments', body_region: 'cardiovascular' },
+          ].map((item) => ({
+            ...item, spaceflight_context: 'NASA research background.',
+            candidate_observations: ['Research indicators'],
+            ares_current_coverage: 'Fictional or unavailable.',
+            crew_review: 'Review approved mission procedures.',
+            reference_url: 'https://www.nasa.gov/hrp/hazards/',
+          })),
+        });
+      case '/api/mission/fictional-check-in': {
+        const input = JSON.parse(String(init?.body));
+        const id = input.scenario as 'stable';
+        const scenario = id + '_fictional_checkin';
+        const snapshot = fixtures[id].demo;
+        const observations = snapshot.observations.map((row, index) =>
+          index === snapshot.observations.length - 1
+            ? { ...row, resting_hr_bpm: input.resting_hr_bpm,
+                sleep_hours: input.sleep_hours, activity_minutes: input.activity_minutes }
+            : row,
+        );
+        return respond({
+          ...snapshot, scenario, observations,
+          mission_timeline: { ...fixtures[id].timeline, scenario },
+          review_report: { ...fixtures[id].report, scenario },
+          check_in: {
+            timestamp_utc: observations.at(-1)?.timestamp_utc,
+            fictional_attestation: true,
+            mode: 'fictional_latest_day_override',
+            reported_concerns: input.concerns,
+            notice: 'Only the latest fictional observation was replaced.',
+          },
+          decision_support: {
+            assessment: snapshot.assessment,
+            review_action: 'Review the observations and approved procedures.',
+            reported_concerns: input.concerns,
+            concerns_notice: 'No clinical triage is performed.',
+            mission_procedures: 'Consult authorized flight-medical personnel.',
+            clinical_decision_support: false,
+          },
+        });
+      }
       case '/api/demo':
         return respond(fixtures[scenario].demo);
       case '/api/timeline':
@@ -33,6 +84,10 @@ export function mockApi() {
           ...fixtures.stable.demo,
           scenario: 'uploaded_synthetic_csv',
           review_report: { ...fixtures.stable.report, scenario: 'uploaded_synthetic_csv' },
+          mission_timeline: {
+            ...fixtures.stable.timeline,
+            scenario: 'uploaded_synthetic_csv',
+          },
         });
       default:
         throw new Error(`Unexpected request ${url}`);
