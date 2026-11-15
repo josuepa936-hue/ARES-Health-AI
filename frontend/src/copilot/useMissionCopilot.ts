@@ -108,6 +108,9 @@ export function useMissionCopilot(context: CopilotContext | undefined, scope: nu
   ) {
     if (current.audit.length >= 64) return;
     invalidateExport();
+    // Timestamp at the event handler boundary, outside the React state updater
+    // so concurrent rendering or StrictMode cannot alter an action's audit time.
+    const recordedAtUtc = new Date().toISOString();
     setSession((state) => ({
       ...state,
       audit: [
@@ -117,7 +120,7 @@ export function useMissionCopilot(context: CopilotContext | undefined, scope: nu
           sequence: state.audit.length + 1,
           // Capture the user's real click-time UTC, not the synthetic
           // observation clock or an unverified server timestamp.
-          recorded_at_utc: new Date().toISOString(),
+          recorded_at_utc: recordedAtUtc,
         } as AuditEvent,
       ],
       state: event.action === 'review_state' ? event.review_state : state.state,
