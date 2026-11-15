@@ -27,9 +27,9 @@ export const reviewActions = [
 ] as const;
 export type ActionId = (typeof reviewActions)[number]['id'];
 export type AuditEvent =
-  | { sequence: number; action: ActionId; checked: boolean }
-  | { sequence: number; action: 'review_state'; review_state: WorkflowState }
-  | { sequence: number; action: 'note'; note: string };
+  | { sequence: number; recorded_at_utc?: string; action: ActionId; checked: boolean }
+  | { sequence: number; recorded_at_utc?: string; action: 'review_state'; review_state: WorkflowState }
+  | { sequence: number; recorded_at_utc?: string; action: 'note'; note: string };
 export type Question = { turn: number; question: string };
 export const responseSchema = z.object({
   answer: z.string(),
@@ -87,6 +87,12 @@ export const responseSchema = z.object({
 export type CopilotResponse = z.infer<typeof responseSchema>;
 export const comprehensiveSchema = reportSchema
   .extend({
+    // Comprehensive v1.5 reports use a single canonical four-state status.
+    // Old standalone reports retain reportSchema's binary status contract.
+    review_state: z.enum(workflowStates),
+    legacy_review_state: z.enum(['Pending review', 'Reviewed in demo']),
+    legacy_review_state_semantics: z.string(),
+    application_version: z.literal('1.5'),
     context_ref: z.string(),
     copilot_schema_version: z.literal('1.5-demo'),
     copilot_application_version: z.literal('1.5'),
@@ -103,12 +109,25 @@ export const comprehensiveSchema = reportSchema
       review_state: z.enum(workflowStates),
       note: z.string(),
       actions: z.record(z.boolean()),
-      audit_log: z.array(z.unknown()),
+      audit_log: z.array(z.object({
+        sequence: z.number().int().min(1).max(64),
+        action: z.enum(['source_units', 'timestamp_context', 'mission_protocol', 'authorized_review', 'review_state', 'note']),
+        checked: z.boolean().optional(),
+        note: z.string().optional(),
+        review_state: z.enum(workflowStates).optional(),
+        recorded_at_utc: z.string().datetime({ offset: true }).optional(),
+      }).passthrough()),
+      audit_timestamp_source: z.string(),
+      audit_timestamps_complete: z.boolean(),
       fictional_attestation: z.literal(true),
       clinical_authorization: z.literal(false),
       storage: z.string(),
       notice: z.string(),
     }),
   })
-  .passthrough();
+  .passthrough()
+  .refine((report) => report.review_state === report.fictional_review.review_state,
+    'Root review status and fictional workflow status must agree.')
+  .refine((report) => report.application_version === report.copilot_application_version,
+    'Report and copilot app versions must agree.');
 export type ComprehensiveReport = z.infer<typeof comprehensiveSchema>;
