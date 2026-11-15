@@ -13,7 +13,7 @@ if errorlevel 1 (
   exit /b 1
 )
 pushd frontend
-if not exist node_modules\package.json if not exist node_modules (
+if not exist node_modules (
   call npm.cmd ci
   if errorlevel 1 (
     popd
