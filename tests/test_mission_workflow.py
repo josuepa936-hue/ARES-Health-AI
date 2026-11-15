@@ -1,5 +1,5 @@
 """End-to-end fictional check-in and spaceflight risk explorer contract tests."""
-import math
+import json
 
 import pytest
 from fastapi.testclient import TestClient
@@ -82,7 +82,7 @@ def test_attestation_is_required_not_default_true():
 def test_input_is_strictly_json_safe():
     for metric in ["resting_hr_bpm", "sleep_hours"]:
         payload = {**BASE, metric: float("inf")}
-        assert client.post("/api/mission/fictional-check-in", json=payload).status_code == 422
+        assert client.post("/api/mission/fictional-check-in", content=json.dumps(payload), headers={"Content-Type": "application/json"}).status_code == 422
 
 
 def test_incomplete_scenario_never_accidentally_overrides_quality_gate():
