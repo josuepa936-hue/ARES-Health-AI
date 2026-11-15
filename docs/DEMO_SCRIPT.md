@@ -1,51 +1,95 @@
-# ARES Health AI — Demo Script (2–3 minutes)
+# ARES Health AI — Integrated Space Apps Demonstration Script
 
-**Language:** English  
-**Application:** Streamlit local demo; synthetic records only  
-**Audience:** NASA Space Apps Challenge 2026 reviewers
+**Target duration:** 3–4 minutes, in English.
+**Software:** Local FastAPI + React v1.3 mission console, with independent optional
+MIT ECG and NASA space-biology research views.
+**Data policy:** Mission-mode readings are 100% fictional. Research-mode sources
+are public MIT-BIH terrestrial ECG and NASA OSDR OSD-87 mouse research.
+**Not:** diagnostic software, NASA endorsement, medical-device approval or
+flight-qualified astronaut monitoring.
 
-## Preparation
+## Prepare the laptop
 
-- Run `python -m pytest -q` and record the actual passing test count.
-- Run `python -m streamlit run app.py`.
-- Set screen zoom so the sidebar and main dashboard are readable.
-- Have the built-in scenarios ready. Use the **synthetic sample CSV** supplied by the app.
-- Do not show personal accounts, private notifications, emails or access tokens in the recording.
+1. `git status` clean and project on a verified submission branch/commit.
+2. Run `python -m pytest -q` and `cd frontend; npm test; npm run build`.
+3. Terminal 1 from repo root: `python -m uvicorn src.ares_health.api:app --host 127.0.0.1 --port 8000`.
+4. Terminal 2: `cd frontend; npm run dev`.
+5. Open local Vite URL on port 5173. Do not expose browser personal info,
+   notifications, passwords, API keys or terminal accounts.
+6. The MIT/NASA tabs require optional research mode. Prepare these separately;
+   do **not** rely on NASA network availability for the core demonstration.
 
-## Spoken walkthrough
+## 0:00–0:25 — Mission context
 
-**0:00–0:20 — Problem**
+“Human space exploration creates operational and physiological challenges.
+Astronauts need understandable ways to review observations, spot data problems,
+and know which approved procedures to consult. ARES is an independent,
+local-first *research and demonstration prototype* for that workflow.”
 
-"Long-duration space missions create physiological and operational challenges. Astronauts may need understandable ways to review health observations when communication and medical resources are constrained. ARES Health AI explores how an offline-capable interface can support that review."
+## 0:25–0:50 — One integrated tool
 
-**0:20–0:45 — What we built**
+“This is the ARES mission console built with React and FastAPI. It provides one
+coherent sequence: choose a fictional crew scenario, submit a fictional check-in,
+inspect quality-gated charts and timelines, review procedure-oriented
+explanations, and export a JSON report. All mission-mode values are synthetic.”
 
-"This is our ARES Health AI prototype, developed in Python with Streamlit. It includes synthetic health-data generation, a local CSV importer, data-quality checks, interactive charts, transparent change flags, and exportable review reports. All data shown are fictional."
+## 0:50–1:20 — Actual check-in and assessment
 
-**0:45–1:15 — A scenario with a change**
+“Here I select stable fictional observations. I enter a hypothetical latest-day
+resting heart rate of 140 bpm, seven hours of sleep and 45 minutes of activity.
+I explicitly certify these are *fictional* values. ARES uses the existing Python
+engine to recalculate the demonstration-only comparison and explain the change.
+These settings are not clinical danger thresholds and cannot diagnose disease.”
 
-"Here is a simulated resting heart-rate shift. ARES compares the first seven fictional days with the latest four, shows the magnitude and date intervals, and suggests checking the observations. The rule is illustrative and does not diagnose any medical condition."
+## 1:20–1:45 — Verification and missing data
 
-**1:15–1:40 — Safety and data quality**
+“The underlying 21-day series, exact UTC dates and explainable events are visible.
+When I select the incomplete-records scenario instead, ARES blocks trend
+interpretation and preserves missing readings as gaps. It never fills in missing
+measurements or infers medical clearance.”
 
-"When we select incomplete records, ARES blocks interpretation. We intentionally prefer withholding an analysis rather than presenting a potentially misleading result."
+## 1:45–2:05 — Local CSV and review report
 
-**1:40–2:00 — CSV and reports**
+“We can also import a small fictional CSV with explicit source attestation.
+The actual data are validated by Python. Accepted files generate their own
+mission timeline and a JSON review report. Invalid uploads are rejected.”
 
-"We can upload a synthetic CSV, validate its structure locally, visualize the imported records, and export an explanatory JSON report for review. Invalid CSV files are rejected."
+## 2:05–2:35 — NASA risk explorer and review
 
-**2:00–2:20 — Scientific evidence**
+“We connect the NASA Human Research Program's five spaceflight hazards to
+candidate observations, what this prototype can measure and what it cannot.
+ARES does not choose treatments or determine medical severity. A real crew
+must follow its mission's approved procedures and consult flight medical
+professionals.”
 
-"Under Scientific Evidence, the dashboard links directly to NASA Human Research Program and Canadian Space Agency publications. The heart-rate, sleep and activity indicators are motivated by that research context, but those sources do not validate our numerical thresholds."
+## 2:35–3:20 — Research transparency (optional if demonstrable)
 
-**2:20–2:40 — Limitations and vision**
+“An independent research area measures ECG R-peak detection on MIT-BIH
+terrestrial research ECG and compares its output with expert annotations.
+A separate NASA OSDR explorer accesses published mouse-retina experiment
+metadata from the STS-135 study. These are **different sources and questions**;
+neither is live astronaut telemetry or a validation of our fictional mission
+alert thresholds.”
 
-"ARES is not medical or flight-certified software. It does not use NASA astronaut medical records or perform diagnosis. Future research would require clinically approved protocols, validated sensors and real-world validation. Our contribution is an accessible, auditable foundation for astronaut health-data review."
+Show only source access and benchmark results that are actually available
+and verified at presentation time. If NASA network access fails, skip the
+file download rather than replacing it with fictional research data.
 
-## After recording
+## 3:20–3:40 — Limitations and close
 
-- Link to the public GitHub repository and provide instructions to run the prototype locally.
-- Add a video link or permitted upload in the event submission, if required.
-- State exactly which tools and AI assistants were used.
-- Confirm the official event deadlines and participant requirements before submission.
-- Keep a copy of the test results and screenshots.
+“ARES offers an integrated, auditable prototype for *reviewing* fictional
+astronaut health observations and exploring public biomedical research.
+It is not a medical device, a diagnosis tool or a flight-qualified system.
+Clinical evaluation, validated sensors, mission-specific procedures and
+expert authorization are necessary before real-world use.”
+
+## Submission checklist
+
+- Record and link the *working* React application, not just a Figma mockup.
+- Credit NASA/CSA/PhysioNet sources and AI tool assistance.
+- Include stable GitHub commit, environment startup instructions, actual
+  automated test logs and precise limitations.
+- Confirm event instructions, submission fields, team requirements and deadline
+  through the official NASA Space Apps Challenge site.
+- **Do not** claim the prototype is medically precise on astronauts,
+  clinically validated or endorsed by NASA.
