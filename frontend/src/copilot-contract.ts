@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { assessment, reportSchema, type FictionalCheckInInput, type ScenarioId } from './contracts';
+import { assessment, reportSchema, timelineSchema, type FictionalCheckInInput, type ScenarioId } from './contracts';
 export type CopilotContext =
   | {
       kind: 'scenario';
@@ -96,6 +96,8 @@ export const comprehensiveSchema = reportSchema
     context_ref: z.string(),
     copilot_schema_version: z.literal('1.5-demo'),
     copilot_application_version: z.literal('1.5'),
+    // Reuse the verified timeline schema and keep its app version explicit.
+    mission_timeline: timelineSchema.extend({ application_version: z.literal('1.5') }),
     copilot: z.object({
       engine: z.literal('deterministic-offline'),
       generative_model: z.literal(false),
