@@ -27,7 +27,9 @@ are never described as evidence from the public record.
 
 To complete source verification, allow `physionet.org` through environment
 network settings, review the current official source/license page, and rerun
-preparation, or supply the official files and official checksum manifest locally.
+preparation. **Alternatively use the public AWS distribution explicitly listed
+on PhysioNet's MIT-BIH dataset page**, with the same exact official checksum
+manifest verification, or supply approved local files and manifest.
 Do not weaken TLS, file checksums, calibration checks or signal-quality gates.
 Public record/license review and a measured benchmark remain draft-PR blockers.
 
@@ -50,12 +52,19 @@ For official files already downloaded by the operator:
 .\.venv-research\Scripts\python.exe -m scripts.prepare_research_ecg --official-files C:\approved\mitdb-1.0.0 --acknowledge-license
 ```
 
+If the primary PhysioNet endpoint returns HTTP 403, a second **officially
+published** public distribution can be requested explicitly:
+
+```powershell
+.\.venv-research\Scripts\python.exe -m scripts.prepare_research_ecg --aws-public --acknowledge-license
+```
+
 Only `100.hea`, `100.dat`, `100.atr`, and `SHA256SUMS.txt` are read. All must be
 regular bounded files. The script reads fixed HTTPS URLs, bounds each response,
 verifies all three data-file SHA-256 hashes against the official manifest, and
 records hashes including the manifest hash. A supplied local manifest verifies
 integrity relative to that manifest, **not independent authenticity**; acquisition
-metadata states this limitation. No mirror or arbitrary remote URL is accepted.
+metadata states this limitation. Only the PhysioNet-hosted files or its explicitly published public AWS distribution are accepted; no arbitrary source URL is accepted.
 A TLS-authenticated official download and its matching manifest are the intended
 source-authentication path, not a cryptographic signature.
 
