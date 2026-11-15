@@ -116,12 +116,12 @@ export function ReviewWorkflow({ session }: { session: CopilotSession }) {
                 <code>
                   #{event.sequence} {event.action}
                 </code>
+                {event.recorded_at_utc && (
+                  <time dateTime={event.recorded_at_utc} title="User-device UTC, not server verified">
+                    {event.recorded_at_utc}
+                  </time>
+                )}
                 <span>
-                  {event.recorded_at_utc && (
-                    <time dateTime={event.recorded_at_utc}>
-                      {event.recorded_at_utc} ·{' '}
-                    </time>
-                  )}
                   {'checked' in event
                     ? event.checked
                       ? 'Confirmed by user'
