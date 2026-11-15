@@ -25,6 +25,8 @@ SAMPLE_FILENAME = "GLDS-87_array_SampleTable_GLmicroarray.csv"
 ORIGIN = "https://osdr.nasa.gov"
 MAX_MANIFEST_BYTES = 256_000
 MAX_SAMPLE_BYTES = 16_384
+MANIFEST_TIMEOUT_SECONDS = 12
+SAMPLE_TIMEOUT_SECONDS = 30
 DISCLAIMER = (
     "Public NASA research on mouse retinal tissue after spaceflight; NOT "
     "individual astronaut health data, medical validation, exposure "
@@ -92,7 +94,7 @@ def _bounded_download(url: str, limit: int) -> bytes:
         "Accept": "text/csv" if sample else "application/json",
     })
     opener = build_opener(RestrictedRedirect())
-    with opener.open(req, timeout=12) as response:
+    with opener.open(req, timeout=SAMPLE_TIMEOUT_SECONDS if sample else MANIFEST_TIMEOUT_SECONDS) as response:
         final_url = response.geturl()
         if not _approved_research_url(final_url, sample=sample):
             raise ValueError("NASA file response came from an unapproved destination.")
@@ -226,6 +228,10 @@ def parse_sample_table(raw: bytes, catalog: dict) -> dict:
     }
 
 
+class SampleDownloadTimeout(TimeoutError):
+    """The known public NASA sample-storage connection exceeded its bounded timeout."""
+
+
 def load_sample_table() -> dict:
     """Opt-in public CSV preview, after checking NASA current access metadata."""
     catalog = load_file_catalog()
@@ -234,4 +240,10 @@ def load_sample_table() -> dict:
     )
     if not target or target["size_bytes"] > MAX_SAMPLE_BYTES:
         raise ValueError("Approved public NASA sample CSV is unavailable.")
-    return parse_sample_table(_bounded_download(target["file_url"], MAX_SAMPLE_BYTES), catalog)
+    try:
+        payload = _bounded_download(target["file_url"], MAX_SAMPLE_BYTES)
+    except TimeoutError as exc:
+        raise SampleDownloadTimeout(
+            f"Public NASA sample file storage exceeded {SAMPLE_TIMEOUT_SECONDS} seconds."
+        ) from exc
+    return parse_sample_table(payload, catalog)
