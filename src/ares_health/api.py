@@ -9,7 +9,7 @@ from typing import Literal
 
 from fastapi import FastAPI, Header, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 from src.ares_health.evidence import EVIDENCE
 from src.ares_health.import_csv import MAX_CSV_BYTES, load_synthetic_csv
@@ -59,6 +59,8 @@ class ReviewRequest(BaseModel):
 
 class FictionalCheckInRequest(BaseModel):
     """Explicitly fictional latest-day values, not a real health-data intake."""
+
+    model_config = ConfigDict(extra="forbid")
 
     fictional_attestation: Literal[True]
     scenario: ScenarioId = "stable"
