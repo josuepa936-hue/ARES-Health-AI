@@ -1,4 +1,5 @@
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
+import aresBrand from './assets/ares-brand.webp';
 import App from './App';
 import { PUBLIC_DEMO } from './publicDemo';
 const ResearchLab = lazy(() => import('./components/ResearchLab'));
@@ -7,12 +8,29 @@ const NasaResearch = lazy(() => import('./components/NasaResearch'));
 /** Research is never fetched until explicitly opened; mission state stays separate. */
 export default function Workspace() {
   const [mode, setMode] = useState<'mission' | 'research' | 'nasa'>('mission');
+  // Vite fingerprints the local brand asset, so it is available through FastAPI /assets
+  // in both Render and the standalone offline build.
+  useEffect(() => {
+    const favicon = document.createElement('link');
+    favicon.rel = 'icon';
+    favicon.type = 'image/webp';
+    favicon.href = aresBrand;
+    favicon.setAttribute('data-ares-brand', 'true');
+    document.head.appendChild(favicon);
+    return () => favicon.remove();
+  }, []);
   return (
     <div className="mission-shell">
       <div className="global-header">
         <div className="brand-lockup">
-          <span className="brand-mark">ARES</span>
-          <span className="brand-subtitle">HEALTH AI / MISSION SYSTEMS</span>
+          <span className="brand-logo-tile">
+            <img className="brand-logo-image" src={aresBrand} alt="ARES letter A with orbital satellite and ARES wordmark" width="67" height="46" />
+          </span>
+          <span className="brand-wordmark">
+            <span className="brand-mark">ARES</span>
+            <span className="brand-subtitle">HEALTH AI / MISSION SYSTEMS</span>
+            <span className="brand-ai-disclosure">AI-GENERATED LOGO</span>
+          </span>
         </div>
         <span className="global-status">INDEPENDENT DEMONSTRATION</span>
       </div>
