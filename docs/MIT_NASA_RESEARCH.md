@@ -73,10 +73,15 @@ Or use the official files and checksum manifest you obtained yourself, as docume
 ### OSDR small-table download troubleshooting
 
 The OSD-87 public catalog can succeed even when the small sample CSV request
-fails. The upstream `remote_url` is an official NASA file endpoint, but it may
-return a redirect rather than CSV bytes. This adapter **only** accepts HTTPS
-redirects into the official NASA `nasa-osdr` public S3 bucket and the same
-OSD-87 sample-table filename, with at most two hops. Unknown destinations,
+fails. On November 15, 2026 a user's actual NASA HTTP 302 response revealed
+the public file destination `genelab-repo-prod.s3.amazonaws.com` with the
+exact object key `/genelab-data/GLDS-87/array/GLDS-87_array_SampleTable_GLmicroarray.csv`.
+The adapter now allows **only that one GeneLab S3 object** in addition to its
+prior allowlisted NASA destinations. No arbitrary file or S3 bucket access is
+introduced. The upstream `remote_url` is an official NASA file endpoint, but it may
+return a redirect rather than CSV bytes. This adapter accepts HTTPS redirects
+only into the `nasa-osdr` public S3 routes or the **exact observed GeneLab S3
+object**, with at most two hops. Unknown destinations,
 other studies, non-HTTPS URLs and oversized/malformed responses remain blocked.
 That support is a compatibility measure, **not proof** of access to a particular
 version of the file.
