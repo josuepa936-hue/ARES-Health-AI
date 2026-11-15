@@ -47,3 +47,17 @@ Streamlit behavior, clinical disclaimers and demonstration thresholds are unchan
 The work does not implement the future Figma design, anatomical model or 3D UI.
 Human review is required before merging; passing integration tests demonstrates
 software behavior, not medical safety or clinical validation.
+
+## Version 1.2 Biomedical Research Lab (isolated future research)
+
+OpenAI Codex assisted with Issue #9 review, optional WFDB/NeuroKit preparation,
+fixed-protocol heartbeat matching and engineering quality gates, bounded read-only
+research API, minimal separate React view, offline fixtures, CI and documentation.
+The original mission algorithms and thresholds are unchanged. Generated ECG/WFDB
+fixtures are synthetic software tests, not real-record benchmark evidence.
+PhysioNet access was denied, so the official record benchmark and source/license
+review remain unverified and are explicitly documented as blockers. No diagnoses,
+arrhythmia classifier, HRV health inference, astronaut risk scoring, volunteer
+records or treatment recommendations were developed. Human source/license and
+scientific review are required before this draft can advance; software tests and
+algorithm benchmarking do not establish clinical or spaceflight qualification.

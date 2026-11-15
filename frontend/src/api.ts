@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { researchSchema } from './research-contract';
 import {
   evidenceSchema,
   csvSnapshotSchema,
@@ -72,6 +73,8 @@ export function createApi(baseUrl = import.meta.env.VITE_API_BASE_URL ?? '') {
   const query = (scenario: ScenarioId) =>
     `?scenario=${encodeURIComponent(scenario)}&seed=2026&days=21`;
   return {
+    research: (signal: AbortSignal) =>
+      request('/research/ecg/demo?record=100', researchSchema, signal),
     scenarios: (signal: AbortSignal) => request('/scenarios', scenariosSchema, signal),
     evidence: (signal: AbortSignal) => request('/evidence', evidenceSchema, signal),
     demo: (scenario: ScenarioId, signal: AbortSignal) =>

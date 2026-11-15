@@ -214,3 +214,31 @@ The UI clears the prior scenario timeline rather than inventing CSV events.
 Review notes and returned reports remain in memory only. No endpoint or existing
 Python report schema changes were required. See `frontend/README.md` for startup,
 proxy configuration, errors, regression tests and limitations.
+
+## v1.2 optional research namespace (future research)
+
+Existing synthetic routes and their accepted provenance remain unchanged.
+`GET /api/research/ecg/demo?record=100` serves a separately prepared terrestrial
+ECG artifact with `data_provenance=public_research_ecg`. It is disabled unless
+`ARES_RESEARCH_ENABLED=1`, requires a loopback client, and accepts only literal
+record `100`. No URL, file path, duration or upload parameter is exposed.
+
+- HTTP 403: non-loopback client. HTTP 422: unsupported record.
+- HTTP 503: disabled, missing/oversized/corrupt/nonfinite artifact; never initiates
+  a download, detector or preparation task.
+- HTTP 200: `status=benchmarked` with measured results, or `status=abstained` with
+  reasons and no scores/waveform. Abstention is not medical clearance.
+- Envelope: `schema_version=1.2-research`, record, source/version/citation,
+  protocol, processing_versions, quality, annotation_counts, acquisition hashes,
+  metrics, waveform, detected_peaks, reference_peaks, matches, discrepancies and
+  disclaimer. Undefined metrics are null. All sample indices are original 360 Hz
+  positions; display decimation does not affect full-resolution scoring.
+- Metrics: TP/FP/FN, precision, recall, F1, mean absolute timing error in ms.
+  No medical accuracy, specificity, classification or risk score is supplied.
+
+See `RESEARCH_LAB.md` for the exact heartbeat-symbol list, scoring window,
+matching tolerance/tie behavior, engineering quality gates, resource bounds,
+provenance/license limitations and opt-in preparation. The public-record run is
+currently unverified because PhysioNet is blocked; synthetic fixture metrics are
+never represented as the public benchmark. React research loads independently
+and cannot populate mission/CSV/timeline state.

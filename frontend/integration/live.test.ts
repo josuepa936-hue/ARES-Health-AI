@@ -79,3 +79,17 @@ it('submits a fictional review and preserves API report fields for JSON export',
   expect(report.review_state).toBe('Reviewed in demo');
   expect(report).toHaveProperty('methodology');
 });
+
+it('keeps the optional research namespace separate from synthetic mission data', async () => {
+  const response = await fetch(`${origin}/api/research/ecg/demo?record=100`);
+  if (response.status === 503) {
+    expect((await response.json()).detail).toMatch(/disabled|artifact/i);
+  } else {
+    expect(response.status).toBe(200);
+    const { researchSchema } = await import('../src/research-contract');
+    const research = researchSchema.parse(await response.json());
+    expect(research.data_provenance).toBe('public_research_ecg');
+    if (research.status === 'abstained') expect(research.metrics).toBeNull();
+  }
+  expect((await api.demo('stable', signal())).data_provenance).toBe('synthetic');
+});

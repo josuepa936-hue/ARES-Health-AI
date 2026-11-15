@@ -146,3 +146,14 @@ The team owns its decisions and must confirm contributor permission before addin
 - Event schedule: https://www.spaceappschallenge.org/2026/
 - NASA Human Research Roadmap: https://humanresearchroadmap.nasa.gov/risks/
 - NASA OSDR: https://science.nasa.gov/biological-physical/data/osdr/
+
+## Optional Biomedical Research Lab (v1.2 draft, future work)
+
+An isolated opt-in research view and offline WFDB/NeuroKit pipeline benchmark
+heartbeat detection for an allowlisted public terrestrial ECG case, separately
+from synthetic mission data. No diagnosis, classification, HRV inference or risk
+scoring is added. Existing mission/CSV/timeline routes and Streamlit remain the
+submission fallback. **The official PhysioNet run and source/license review are
+blocked by network access and are not claimed complete.** See
+[research protocol, provenance and preparation](docs/RESEARCH_LAB.md) for exact
+bounds, abstention behavior, citations, optional tooling and draft scope gate.

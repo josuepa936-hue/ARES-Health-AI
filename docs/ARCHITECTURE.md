@@ -79,3 +79,20 @@ and embedded report; no timeline HTTP route exists for CSV. No browser storage,
 backend persistence or new Python functionality is introduced. This basic UI is
 a functional integration milestone; final Figma styling, anatomy and 3D remain
 out of scope. CI runs component/adapter tests plus live HTTP checks through Vite.
+
+## v1.2 future research isolation
+
+The optional `research.py` domain module and explicit
+`scripts.prepare_research_ecg` command own bounded official-file verification,
+WFDB parsing, NeuroKit processing and full-resolution beat-reference matching.
+Optional pinned tools are in `requirements-research.txt`. `research_api.py` reads
+only an already-prepared bounded artifact, behind an opt-in environment flag and
+loopback restriction. It performs no network acquisition or detector computation.
+Existing synthetic endpoints and mission modules remain unchanged.
+
+React `Workspace` defaults to the existing mission app, preserving its state.
+The separate lazy research view requests only the new namespace and labels the
+provenance as public terrestrial research, with no upload or clinical inference.
+No research result is converted into synthetic observations. The source/license
+and official measured-case checks remain unresolved; keep this draft branch as
+future work rather than changing the submission fallback. See `RESEARCH_LAB.md`.

@@ -29,3 +29,18 @@ The application exports CSV; CSV import and an ingestion pipeline are not implem
 ## v0.5 verification result
 
 On Python 3.12, `python -m pytest -q` completed with **64 passed**. Dependency consistency (`python -m pip check`) and `git diff --check` also passed. These are software checks using fictional records only.
+
+## v1.2 optional research checks
+
+Offline unit tests cover inclusive one-to-one sample matching, TP/FP/FN and
+undefined ratios, annotation selection/boundaries, missingness, wrong duration/fs,
+flat/dropout/mains/amplitude exclusions, strict JSON and endpoint opt-in/loopback/
+record/artifact bounds. Optional WFDB/NeuroKit tests write only self-contained
+synthetic records, exercise calibration/checksum metadata and real deterministic
+processing, and verify HTTP does not trigger acquisition/detection. Frontend
+checks cover research provenance, abstention, displayed metrics/markers, retry,
+cancellation and mission-mode isolation. Existing suites remain required.
+
+A measured benchmark against the official public record is a **separate check**;
+it is currently blocked by PhysioNet access. Dataset-license review is also pending.
+No offline fixture result is a clinical or public-record performance claim.
