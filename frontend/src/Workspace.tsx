@@ -7,8 +7,15 @@ const NasaResearch = lazy(() => import('./components/NasaResearch'));
 export default function Workspace() {
   const [mode, setMode] = useState<'mission' | 'research' | 'nasa'>('mission');
   return (
-    <>
-      <nav aria-label="Workspace mode">
+    <div className="mission-shell">
+      <div className="global-header">
+        <div className="brand-lockup">
+          <span className="brand-mark">ARES / HEALTH AI</span>
+          <span className="brand-subtitle">Astronaut Risk Evaluation System · Demonstration Console</span>
+        </div>
+        <span className="global-status">INDEPENDENT RESEARCH PROTOTYPE · SYNTHETIC CREW</span>
+      </div>
+      <nav className="workspace-nav" aria-label="Workspace mode">
         <button aria-pressed={mode === 'mission'} onClick={() => setMode('mission')}>
           Synthetic mission demo
         </button>
@@ -19,6 +26,16 @@ export default function Workspace() {
           NASA space biology
         </button>
       </nav>
+      {mode === 'mission' && (
+        <nav className="quick-nav" aria-label="Mission workflow navigation">
+          <a href="#crew-checkin">Crew check-in</a>
+          <a href="#mission-results">Mission assessment</a>
+          <a href="#mission-timeline">Timeline</a>
+          <a href="#mission-review">Review report</a>
+          <a href="#space-risks">Spaceflight hazards</a>
+          <a href="#scientific-evidence">Evidence</a>
+        </nav>
+      )}
       <div hidden={mode !== 'mission'}>
         <App />
       </div>
@@ -32,6 +49,6 @@ export default function Workspace() {
           <NasaResearch />
         </Suspense>
       )}
-    </>
+    </div>
   );
 }
