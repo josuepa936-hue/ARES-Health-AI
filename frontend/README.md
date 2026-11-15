@@ -1,5 +1,10 @@
 # ARES Health AI — integrated mission console
 
+Offline operation uses a prepared **local React + FastAPI server**, independent
+of Render. See [offline setup and disconnected verification](../docs/OFFLINE_OPERATION.md);
+a cached Render browser tab is not an offline implementation.
+
+
 Public deployment uses the [bounded Render mode](../docs/RENDER_PUBLIC_DEMO.md),
 which serves this compiled UI from FastAPI, hides research/CSV controls and
 preserves local development. It is not the default development server.

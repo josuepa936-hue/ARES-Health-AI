@@ -125,6 +125,22 @@ jobs:
           cd frontend
           ARES_PUBLIC_TEST_URL=http://127.0.0.1:18000 npm run test:public:browser
 
+      - name: Verify prepared local operation with Internet disconnected
+        working-directory: .
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker tag ares-public-demo:ci ares-public-demo:local
+          docker build -f offline_checks/Dockerfile -t ares-offline-validation:ci .
+          trap 'docker rm -f ares-offline-ci >/dev/null 2>&1 || true' EXIT
+          offline_result=0
+          docker run --name ares-offline-ci --network none --shm-size=256m ares-offline-validation:ci || offline_result=$?
+          mkdir -p frontend/test-results/offline-isolated
+          offline_copy_result=0
+          docker cp ares-offline-ci:/results/. frontend/test-results/offline-isolated/ || offline_copy_result=$?
+          if [ "$offline_result" -ne 0 ]; then exit "$offline_result"; fi
+          exit "$offline_copy_result"
+
       - name: Retain actual browser screenshots and failure traces
         if: always()
         uses: actions/upload-artifact@v4

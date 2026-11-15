@@ -1,5 +1,10 @@
 # ARES Health AI — NASA Space Apps Challenge 2026
 
+Offline operation uses a prepared **local React + FastAPI server**, independent
+of Render. See [offline setup and disconnected verification](docs/OFFLINE_OPERATION.md);
+a cached Render browser tab is not an offline implementation.
+
+
 > Public interactive deployment is available only through the opt-in, bounded
 > `ARES_PUBLIC_DEMO=1` configuration in [the Render guide](docs/RENDER_PUBLIC_DEMO.md).
 > The default development server remains local-only. Do not expose development
