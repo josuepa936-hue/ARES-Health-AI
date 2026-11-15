@@ -1,5 +1,10 @@
 # Copilot reading and evidence — Issue #17
 
+**Layout update:** [Issue #19 cockpit balance](COCKPIT_BALANCE.md) supersedes the
+fixed-height desktop dock and compressed telemetry layout described below.
+Docked reading now follows the page while preserving cockpit minimum heights.
+Focus, answer-first navigation, evidence and the original captures remain intact.
+
 This UI-only change starts from `feat/ares-v1.5-mission-copilot` at `0eb4ac6`.
 Review branch: `feat/ares-issue-17-copilot-readability`; target the v1.5 branch,
 not main. The Python engine, API contracts, synthetic CSV checks, timeline,

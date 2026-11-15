@@ -67,12 +67,18 @@ export function ContextDock({
           ))}
         </div>
         <button
-          className="icon-button dock-collapse"
-          aria-label={open ? 'Collapse contextual workspace' : 'Expand contextual workspace'}
+          className="icon-button dock-collapse dock-layout-toggle"
+          aria-label={
+            open
+              ? 'Full cockpit — collapse contextual workspace'
+              : 'Open workspace — expand contextual workspace'
+          }
           aria-expanded={open}
+          aria-controls={`panel-${active}`}
           onClick={onToggle}
         >
           {open ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
+          <span>{open ? 'Full cockpit' : 'Open workspace'}</span>
         </button>
       </div>
       {dockTabs.map(({ id }) => (

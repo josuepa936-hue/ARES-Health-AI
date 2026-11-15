@@ -5,6 +5,11 @@ and progressive scientific evidence. Escape restores the same dock conversation
 and draft. Startup commands below are unchanged; no dependency or backend API was
 added. See [Issue #17 behavior, browser captures and current verification](../docs/COPILOT_READING.md).
 
+Issue #19 preserves useful cockpit panel heights while docking Copilot. The page
+may scroll vertically; **Full cockpit** collapses the workspace without resetting
+its state. Focus mode keeps the single conversation scroll surface. See
+[current layout, tradeoffs and browser verification](../docs/COCKPIT_BALANCE.md).
+
 This standalone Vite + React + TypeScript client consumes the existing FastAPI
 v1.0 API. Python remains the only source of physiological values, validation,
 trend rules, statistics, assessments, guidance and reports. The integrated high-contrast operations console is a usable demonstration

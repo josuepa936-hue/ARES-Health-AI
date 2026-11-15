@@ -1,0 +1,118 @@
+/* Issue #19: reading must never borrow the cockpit's minimum useful height.
+ * A docked workspace follows the page; Focus is the single modal scroll owner.
+ * Short viewports deliberately scroll vertically instead of shrinking telemetry.
+ */
+@media (min-width: 761px) {
+  .console-app,
+  .console-app.dock-closed {
+    height: auto;
+    min-height: calc(100dvh - 52px);
+    grid-template-rows: 48px 48px minmax(560px, 1fr) auto 20px;
+  }
+  .command-grid {
+    min-height: 560px;
+  }
+  .telemetry-card {
+    min-height: 156px;
+    padding: 10px 13px;
+  }
+  .telemetry-value {
+    font-size: 32px;
+    margin-top: 4px;
+  }
+  .telemetry-value > small {
+    font-size: 11px;
+    margin-top: 3px;
+    letter-spacing: 0.4px;
+  }
+  .mini-chart {
+    display: block;
+    height: 28px;
+    margin: 3px 0;
+  }
+  .telemetry-foot {
+    display: flex;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+  .telemetry-foot span:last-child {
+    font-size: 10px;
+  }
+  .last-valid {
+    font-size: 11px;
+    line-height: 1.4;
+    margin-top: 4px;
+    overflow-wrap: anywhere;
+  }
+  .body-stage {
+    min-height: 320px;
+  }
+  .body-frame {
+    min-height: 320px;
+  }
+  /* Intrinsic image aspect ratio must not dictate the grid row's height. */
+  .body-frame > img {
+    position: absolute;
+    inset: 0;
+  }
+  .primary-chart {
+    height: 180px;
+    min-height: 180px;
+    flex: 0 0 180px;
+  }
+  .metric-panel {
+    overflow: visible;
+  }
+  .metric-panel .finding p {
+    overflow: visible;
+    max-height: none !important;
+  }
+  .signal-detail {
+    overflow: auto;
+  }
+}
+.context-dock {
+  height: auto;
+  max-height: none;
+  overflow: visible;
+}
+.context-dock.collapsed {
+  min-height: 0;
+}
+.dock-toolbar {
+  flex-shrink: 0;
+}
+.dock-content {
+  flex: none;
+  overflow: visible;
+  max-height: none;
+}
+.context-dock[data-active='copilot'] #panel-copilot {
+  overflow: visible;
+}
+.dock-layout-toggle {
+  display: inline-flex;
+  font-size: 12px;
+  white-space: nowrap;
+  gap: 5px;
+}
+@media (max-width: 760px) {
+  .telemetry-card {
+    min-height: 200px;
+  }
+  .telemetry-foot {
+    font-size: 10px;
+  }
+  .last-valid {
+    font-size: 10px;
+    line-height: 1.4;
+  }
+  .telemetry-value > small {
+    font-size: 9px;
+    letter-spacing: 0;
+  }
+  .dock-layout-toggle {
+    font-size: 11px;
+    padding: 5px;
+  }
+}

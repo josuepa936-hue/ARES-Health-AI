@@ -14,6 +14,7 @@ export function CopilotPanel({
 }) {
   const [question, setQuestion] = useState('');
   const [focused, setFocused] = useState(false);
+  const [dockedHeight, setDockedHeight] = useState(0);
   const [briefOpen, setBriefOpen] = useState(true);
   const [announcement, setAnnouncement] = useState('');
   const dialog = useRef<HTMLDialogElement>(null);
@@ -53,11 +54,11 @@ export function CopilotPanel({
     const reader = history.current;
     if (!reader) return;
     // Give a short new turn room to align at the top after a long previous answer.
-    // Natural mobile document flow must not grow itself in a resize feedback loop.
+    // Docked document flow must not grow itself in a resize feedback loop.
     const measure = () =>
       reader.style.setProperty(
         '--answer-min-height',
-        `${!focused && window.matchMedia('(max-width: 760px)').matches ? 0 : Math.max(0, reader.clientHeight - 20)}px`,
+        `${!focused ? 0 : Math.max(0, reader.clientHeight - 20)}px`,
       );
     measure();
     if (typeof ResizeObserver === 'undefined') return;
@@ -83,8 +84,7 @@ export function CopilotPanel({
       const node = turnNodes.current.get(pendingTurn.current!);
       const reader = history.current;
       if (node && reader) {
-        if (!focused && window.matchMedia('(max-width: 760px)').matches)
-          node.scrollIntoView({ block: 'start', behavior: 'instant' });
+        if (!focused) node.scrollIntoView({ block: 'start', behavior: 'instant' });
         else
           reader.scrollTop = Math.max(
             0,
@@ -100,6 +100,8 @@ export function CopilotPanel({
     return () => cancelAnimationFrame(frame);
   }, [session.turns.length, briefOpen, focused]);
   function toggleFocus() {
+    // Hold the document's reading position while its dialog moves into the top layer.
+    if (!focused) setDockedHeight(dialog.current?.getBoundingClientRect().height ?? 0);
     pendingTurn.current = focused ? null : (session.turns.at(-1)?.turn ?? null);
     setFocused((value) => !value);
     if (focused) requestAnimationFrame(() => expandButton.current?.focus({ preventScroll: true }));
@@ -117,156 +119,165 @@ export function CopilotPanel({
   }
   const prompts = session.briefing?.suggested_questions ?? [];
   return (
-    <dialog
-      ref={dialog}
-      className={`copilot-dialog ${focused ? 'copilot-focus-mode' : ''}`}
-      aria-label={
-        focused ? 'Expanded ARES Copilot conversation' : 'Docked ARES Copilot conversation'
-      }
-      aria-modal={focused}
-      onCancel={(event) => {
-        event.preventDefault();
-        setFocused(false);
-        requestAnimationFrame(() => expandButton.current?.focus({ preventScroll: true }));
-      }}
-    >
-      <section className="copilot-panel" aria-label="ARES mission copilot">
-        <header className="copilot-title">
-          <div>
-            <h2>
-              <MessagesSquare size={17} /> ARES Copilot
-            </h2>
-            <p>Deterministic · offline · not an LLM</p>
-          </div>
-          <div className="copilot-reader-controls">
-            <button onClick={review}>
-              Review workflow <ArrowRight size={14} />
-            </button>
-            <button ref={expandButton} aria-expanded={focused} onClick={toggleFocus}>
-              {focused ? <Minimize2 size={15} /> : <Maximize2 size={15} />}{' '}
-              {focused ? 'Restore docked conversation' : 'Focus / expand conversation'}
-            </button>
-          </div>
-        </header>
-        <p className="copilot-assessment">
-          <span>Current mission assessment</span>
-          <strong>{session.briefing?.assessment ?? 'Awaiting Python briefing'}</strong>
-        </p>
-        <span role="status" className="sr-only">
-          {announcement}
-        </span>
-        <div
-          className="copilot-history"
-          ref={history}
-          tabIndex={0}
-          role="region"
-          aria-label="Conversation reading area"
-        >
-          {session.error && (
-            <div role="alert">
-              {session.error}
-              <button onClick={session.retry}>Reset and retry copilot</button>
-            </div>
-          )}
-
-          {!session.briefing && session.loading && (
-            <p role="status">Recalculating grounded mission briefing…</p>
-          )}
-          {session.briefing && (
-            <>
-              <details
-                className="copilot-briefing"
-                open={briefOpen}
-                onToggle={(event) => setBriefOpen(event.currentTarget.open)}
-              >
-                <summary>
-                  Current mission briefing <span>· Python analysis</span>
-                </summary>
-                <p>{session.briefing.answer}</p>
-                <EvidenceView response={session.briefing} snapshot={snapshot} />
-              </details>
-              <details className="copilot-suggestions">
-                <summary>
-                  Suggested questions <span>· {prompts.length} supported topics</span>
-                </summary>
-                <div>
-                  {prompts.map((item) => (
-                    <button
-                      key={item}
-                      disabled={session.loading || session.turns.length >= 20}
-                      onClick={() => session.ask(item)}
-                    >
-                      {item}
-                      <ArrowRight size={13} />
-                    </button>
-                  ))}
-                </div>
-              </details>
-              <div
-                className="copilot-transcript"
-                role="log"
-                aria-label="Current mission conversation"
-                aria-live="off"
-              >
-                {session.turns.map((turn) => (
-                  <article
-                    key={turn.turn}
-                    data-testid={`copilot-turn-${turn.turn}`}
-                    ref={(node) => {
-                      if (node) turnNodes.current.set(turn.turn, node);
-                      else turnNodes.current.delete(turn.turn);
-                    }}
-                  >
-                    <h3 data-turn-heading tabIndex={-1}>
-                      Conversation turn {turn.turn}
-                    </h3>
-                    <div className="copilot-question">
-                      <span>Your fictional question</span>
-                      <p>{turn.question}</p>
-                    </div>
-                    <div className="copilot-answer">
-                      <h4>
-                        ARES response <span>· {turn.response.intent.replaceAll('_', ' ')}</span>
-                      </h4>
-                      <p>{turn.response.answer}</p>
-                    </div>
-                    <EvidenceView response={turn.response} snapshot={snapshot} />
-                  </article>
-                ))}
-              </div>
-              {!session.turns.length && (
-                <p className="copilot-empty">
-                  Ask a mission question below, or open Suggested questions. Expand the conversation
-                  for uninterrupted reading.
-                </p>
-              )}
-              {session.loading && <p role="status">Checking current Python evidence…</p>}
-            </>
-          )}
-        </div>
-        {session.briefing && (
-          <form className="copilot-compose" onSubmit={submit}>
-            <label htmlFor="copilot-question">Fictional mission question</label>
+    <div style={{ minHeight: focused ? dockedHeight : undefined }}>
+      <dialog
+        ref={dialog}
+        className={`copilot-dialog ${focused ? 'copilot-focus-mode' : ''}`}
+        aria-label={
+          focused ? 'Expanded ARES Copilot conversation' : 'Docked ARES Copilot conversation'
+        }
+        aria-modal={focused}
+        onCancel={(event) => {
+          event.preventDefault();
+          setFocused(false);
+          requestAnimationFrame(() => expandButton.current?.focus({ preventScroll: true }));
+        }}
+      >
+        <section className="copilot-panel" aria-label="ARES mission copilot">
+          <header className="copilot-title">
             <div>
-              <input
-                id="copilot-question"
-                value={question}
-                onChange={(event) => setQuestion(event.target.value)}
-                maxLength={240}
-                placeholder="Ask what changed, about the baseline, or why data are blocked"
-                disabled={session.loading || session.turns.length >= 20}
-              />
-              <button disabled={session.loading || !question.trim() || session.turns.length >= 20}>
-                <Send size={15} /> Ask
+              <h2>
+                <MessagesSquare size={17} /> ARES Copilot
+              </h2>
+              <p>Deterministic · offline · not an LLM</p>
+              <p>
+                {focused
+                  ? 'Focused reading · cockpit is behind this dialog'
+                  : 'Full-size cockpit above · read below or expand the conversation'}
+              </p>
+            </div>
+            <div className="copilot-reader-controls">
+              <button onClick={review}>
+                Review workflow <ArrowRight size={14} />
+              </button>
+              <button ref={expandButton} aria-expanded={focused} onClick={toggleFocus}>
+                {focused ? <Minimize2 size={15} /> : <Maximize2 size={15} />}{' '}
+                {focused ? 'Restore docked conversation' : 'Focus / expand conversation'}
               </button>
             </div>
-            <small>
-              {session.turns.length}/20 turns · Fictional data only · Review states do not grant
-              medical authorization.
-            </small>
-          </form>
-        )}
-      </section>
-    </dialog>
+          </header>
+          <p className="copilot-assessment">
+            <span>Current mission assessment</span>
+            <strong>{session.briefing?.assessment ?? 'Awaiting Python briefing'}</strong>
+          </p>
+          <span role="status" className="sr-only">
+            {announcement}
+          </span>
+          <div
+            className="copilot-history"
+            ref={history}
+            tabIndex={0}
+            role="region"
+            aria-label="Conversation reading area"
+          >
+            {session.error && (
+              <div role="alert">
+                {session.error}
+                <button onClick={session.retry}>Reset and retry copilot</button>
+              </div>
+            )}
+
+            {!session.briefing && session.loading && (
+              <p role="status">Recalculating grounded mission briefing…</p>
+            )}
+            {session.briefing && (
+              <>
+                <details
+                  className="copilot-briefing"
+                  open={briefOpen}
+                  onToggle={(event) => setBriefOpen(event.currentTarget.open)}
+                >
+                  <summary>
+                    Current mission briefing <span>· Python analysis</span>
+                  </summary>
+                  <p>{session.briefing.answer}</p>
+                  <EvidenceView response={session.briefing} snapshot={snapshot} />
+                </details>
+                <details className="copilot-suggestions">
+                  <summary>
+                    Suggested questions <span>· {prompts.length} supported topics</span>
+                  </summary>
+                  <div>
+                    {prompts.map((item) => (
+                      <button
+                        key={item}
+                        disabled={session.loading || session.turns.length >= 20}
+                        onClick={() => session.ask(item)}
+                      >
+                        {item}
+                        <ArrowRight size={13} />
+                      </button>
+                    ))}
+                  </div>
+                </details>
+                <div
+                  className="copilot-transcript"
+                  role="log"
+                  aria-label="Current mission conversation"
+                  aria-live="off"
+                >
+                  {session.turns.map((turn) => (
+                    <article
+                      key={turn.turn}
+                      data-testid={`copilot-turn-${turn.turn}`}
+                      ref={(node) => {
+                        if (node) turnNodes.current.set(turn.turn, node);
+                        else turnNodes.current.delete(turn.turn);
+                      }}
+                    >
+                      <h3 data-turn-heading tabIndex={-1}>
+                        Conversation turn {turn.turn}
+                      </h3>
+                      <div className="copilot-question">
+                        <span>Your fictional question</span>
+                        <p>{turn.question}</p>
+                      </div>
+                      <div className="copilot-answer">
+                        <h4>
+                          ARES response <span>· {turn.response.intent.replaceAll('_', ' ')}</span>
+                        </h4>
+                        <p>{turn.response.answer}</p>
+                      </div>
+                      <EvidenceView response={turn.response} snapshot={snapshot} />
+                    </article>
+                  ))}
+                </div>
+                {!session.turns.length && (
+                  <p className="copilot-empty">
+                    Ask a mission question below, or open Suggested questions. Expand the
+                    conversation for uninterrupted reading.
+                  </p>
+                )}
+                {session.loading && <p role="status">Checking current Python evidence…</p>}
+              </>
+            )}
+          </div>
+          {session.briefing && (
+            <form className="copilot-compose" onSubmit={submit}>
+              <label htmlFor="copilot-question">Fictional mission question</label>
+              <div>
+                <input
+                  id="copilot-question"
+                  value={question}
+                  onChange={(event) => setQuestion(event.target.value)}
+                  maxLength={240}
+                  placeholder="Ask what changed, about the baseline, or why data are blocked"
+                  disabled={session.loading || session.turns.length >= 20}
+                />
+                <button
+                  disabled={session.loading || !question.trim() || session.turns.length >= 20}
+                >
+                  <Send size={15} /> Ask
+                </button>
+              </div>
+              <small>
+                {session.turns.length}/20 turns · Fictional data only · Review states do not grant
+                medical authorization.
+              </small>
+            </form>
+          )}
+        </section>
+      </dialog>
+    </div>
   );
 }

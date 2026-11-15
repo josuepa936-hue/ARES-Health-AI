@@ -21,3 +21,4 @@ frontend/.env.local
 frontend/test-results/
 frontend/playwright-report/
 frontend/screenshots/issue-17-regression/
+frontend/screenshots/issue-19-regression/

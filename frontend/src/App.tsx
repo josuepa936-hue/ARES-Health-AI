@@ -36,9 +36,27 @@ export default function App() {
   const [selectedMetric, setSelectedMetric] = useState<MetricKey>('resting_hr_bpm');
   const [dockTab, setDockTab] = useState<DockTab>('checkin');
   const [dockOpen, setDockOpen] = useState(true);
+  function toggleWorkspace() {
+    setDockOpen(!dockOpen);
+    if (dockOpen)
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        document
+          .querySelector<HTMLButtonElement>('.copilot-launch')
+          ?.focus({ preventScroll: true });
+      });
+  }
   function openDock(tab: DockTab) {
     setDockTab(tab);
     setDockOpen(true);
+  }
+  function launchCopilot() {
+    openDock('copilot');
+    requestAnimationFrame(() => {
+      const tab = document.getElementById('tab-copilot');
+      tab?.closest('.context-dock')?.scrollIntoView({ block: 'start', behavior: 'instant' });
+      tab?.focus({ preventScroll: true });
+    });
   }
   const [scenarios, setScenarios] = useState<{ id: ScenarioId; label: string }[]>([]);
   const [scenario, setScenario] = useState<ScenarioId | ''>('');
@@ -197,7 +215,7 @@ export default function App() {
             Biomedical mission control<span>01</span>
           </h1>
         </div>
-        <button className="copilot-launch" onClick={() => openDock('copilot')}>
+        <button className="copilot-launch" onClick={launchCopilot}>
           ARES Copilot ·{' '}
           {copilot.loading
             ? 'briefing…'
@@ -294,7 +312,7 @@ export default function App() {
         active={dockTab}
         open={dockOpen}
         onSelect={openDock}
-        onToggle={() => setDockOpen((value) => !value)}
+        onToggle={toggleWorkspace}
         panels={{
           copilot: mission ? (
             <CopilotPanel

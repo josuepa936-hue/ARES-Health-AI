@@ -251,3 +251,13 @@ optional original observation IDs, rules and scientific source links. Blocked da
 never display comparison averages. The deterministic backend, synthetic-data
 restrictions, manual review audit and comprehensive JSON export are unchanged.
 See [behavior, real before/after screenshots and verification](docs/COPILOT_READING.md).
+
+### Cockpit balance correction (Issue #19)
+
+Opening Copilot now preserves full-height telemetry, sparklines, anatomy and the
+main chart. The docked conversation continues below the cockpit using page scroll;
+it no longer takes height away from the mission panels. **Full cockpit** collapses
+the workspace and returns to telemetry without discarding the conversation or
+draft. Focus reading, evidence and keyboard navigation remain available. This
+intentionally permits vertical page scrolling on short desktop windows. See
+[layout tradeoffs, four-viewport browser captures and verification](docs/COCKPIT_BALANCE.md).

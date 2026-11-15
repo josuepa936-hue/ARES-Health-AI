@@ -324,7 +324,22 @@ dialog.copilot-dialog .copilot-compose small {
   padding: 0 !important;
   border: 0 !important;
 }
-/* The compact copilot has a useful reading height, not a 65px history slot. */
+/* Docked reading follows the page; only Focus owns an internal scroll surface. */
+.copilot-dialog:not(.copilot-focus-mode) {
+  height: auto;
+  overflow: visible;
+}
+dialog.copilot-dialog:not(.copilot-focus-mode) .copilot-panel {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+dialog.copilot-dialog:not(.copilot-focus-mode) .copilot-history {
+  height: auto;
+  overflow: visible;
+  flex: none;
+}
 @media (min-width: 761px) {
   dialog.copilot-dialog:not(.copilot-focus-mode) .copilot-compose {
     display: grid;
@@ -338,103 +353,6 @@ dialog.copilot-dialog .copilot-compose small {
   dialog.copilot-dialog:not(.copilot-focus-mode) .copilot-compose small {
     grid-column: 1/-1;
     margin: 0;
-  }
-
-  .console-app {
-    min-height: 0;
-    grid-template-rows: 48px 48px minmax(0, 1fr) 225px 20px;
-  }
-  .console-app:has(.context-dock[data-active='copilot']:not(.collapsed)) {
-    grid-template-rows: 40px 44px minmax(0, 1fr) clamp(376px, 43dvh, 420px) 20px;
-  }
-  .console-app:has(.context-dock[data-active='copilot']) .mini-chart {
-    display: none;
-  }
-  .console-app:has(.context-dock[data-active='copilot']) .primary-chart {
-    min-height: 45px;
-  }
-  .console-app:has(.context-dock[data-active='copilot']) .panel-heading {
-    min-height: 28px;
-    padding: 7px 12px;
-  }
-  .console-app:has(.context-dock[data-active='copilot']) .metric-selector {
-    margin-top: 7px;
-  }
-  .console-app:has(.context-dock[data-active='copilot']) .chart-title {
-    margin-top: 8px;
-  }
-  .console-app:has(.context-dock[data-active='copilot']) .comparison-grid {
-    margin: 6px 12px;
-  }
-  .console-app:has(.context-dock[data-active='copilot']) .comparison-grid > div {
-    padding: 6px 10px;
-  }
-  .console-app:has(.context-dock[data-active='copilot']) .finding {
-    margin-bottom: 5px;
-    padding: 6px 9px;
-  }
-  .console-app:has(.context-dock[data-active='copilot']) .finding p {
-    max-height: 42px;
-  }
-  .console-app:has(.context-dock[data-active='copilot']) .panel-actions {
-    padding-bottom: 7px;
-  }
-}
-@media (min-width: 761px) and (max-height: 820px) {
-  .console-app .telemetry-card {
-    padding: 5px 10px;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 2px 6px;
-  }
-  .console-app .telemetry-title svg:last-child {
-    display: none;
-  }
-  .console-app .telemetry-value small {
-    font-size: 8px;
-  }
-
-  .console-app .telemetry-value {
-    font-size: 26px;
-    margin-top: 3px;
-  }
-  .console-app .mini-chart,
-  .console-app .telemetry-foot {
-    display: none;
-  }
-  .console-app .last-valid {
-    grid-column: 1/-1;
-    margin-top: 0;
-    font-size: 10px;
-  }
-  .console-app .primary-chart {
-    min-height: 42px;
-  }
-  .console-app .metric-panel > .panel-heading {
-    display: none;
-  }
-  .console-app .metric-selector {
-    margin-top: 7px;
-  }
-  .console-app .chart-title {
-    margin-top: 7px;
-  }
-  .console-app .comparison-grid {
-    margin: 5px 12px;
-  }
-  .console-app .comparison-grid > div {
-    padding: 6px 9px;
-  }
-  .console-app .finding {
-    padding: 5px 8px;
-    margin-bottom: 4px;
-  }
-  .console-app .finding p {
-    max-height: 40px;
-  }
-  .console-app .panel-actions {
-    padding-bottom: 6px;
   }
 }
 @media (max-width: 760px) {
@@ -519,51 +437,6 @@ dialog.copilot-dialog .copilot-compose small {
     animation: none !important;
   }
 }
-@media (min-width: 761px) {
-  .console-app.dock-closed {
-    grid-template-rows: 48px 48px minmax(0, 1fr) 38px 20px;
-  }
-}
 dialog.copilot-dialog .copilot-transcript > article:last-child {
   min-height: var(--answer-min-height, 0px);
-}
-/* Keep long quality findings inside analytics, never over the copilot controls. */
-.console-app .metric-panel {
-  overflow: auto;
-}
-.console-app .metric-panel .finding p {
-  max-height: none !important;
-  overflow: visible;
-}
-.console-app .metric-panel > .primary-chart {
-  flex-shrink: 0;
-}
-
-@media (min-width: 761px) {
-  dialog.copilot-dialog:not(.copilot-focus-mode) .copilot-transcript article {
-    padding: 8px 10px;
-  }
-  dialog.copilot-dialog:not(.copilot-focus-mode) .copilot-transcript h3 {
-    margin-bottom: 6px;
-  }
-  dialog.copilot-dialog:not(.copilot-focus-mode) .copilot-question {
-    padding: 5px 8px;
-    margin-bottom: 8px;
-  }
-  dialog.copilot-dialog:not(.copilot-focus-mode) .copilot-question p {
-    display: inline;
-    margin-left: 8px;
-  }
-}
-@media (min-width: 761px) and (max-height: 820px) {
-  .console-app:has(.context-dock[data-active='copilot']:not(.collapsed)) .telemetry-rail {
-    gap: 5px;
-  }
-  .console-app:has(.context-dock[data-active='copilot']:not(.collapsed)) .telemetry-card {
-    padding: 3px 8px;
-  }
-  .console-app:has(.context-dock[data-active='copilot']:not(.collapsed)) .telemetry-value {
-    font-size: 22px;
-    margin: 0;
-  }
 }

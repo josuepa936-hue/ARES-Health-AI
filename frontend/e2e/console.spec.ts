@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import path from 'node:path';
-const screenshots = path.resolve('screenshots/issue-17-regression');
+const screenshots = path.resolve('screenshots/issue-19-regression');
 async function loaded(page: import('@playwright/test').Page) {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Mission overview' })).toBeVisible();

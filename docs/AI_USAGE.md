@@ -139,3 +139,16 @@ screenshots are actual local Chromium renders of synthetic scenarios, not genera
 mockups. Browser checks run on Linux at the requested desktop/mobile viewports;
 they do not establish Windows execution, physical-device coverage or clinical
 validation. Human review is required before merging against the v1.5 branch.
+
+## Issue #19 cockpit and conversation balance
+
+OpenAI Codex assisted with reproducing the Issue #17 layout regression, measuring
+actual browser geometry, removing viewport-dependent telemetry compression,
+introducing explicit full-cockpit navigation and document-flow docked reading,
+preserving modal reading position, and implementing regression tests/documentation.
+Actual local Chromium screenshots compare the Issue #17 base against this change
+at three desktop sizes and one mobile viewport. No new generated image, biomedical
+calculation, threshold, diagnosis, runtime generative model or research-data claim
+was introduced. The existing anatomical illustration and its attribution remain
+unchanged. Code assistance and software checks do not establish clinical validity;
+human review is required before merging this draft against the Issue #17 branch.

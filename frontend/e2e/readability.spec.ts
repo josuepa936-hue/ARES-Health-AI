@@ -29,16 +29,17 @@ for (const [width, height] of [
     await expect(compactTurn.locator('.copilot-question')).toBeInViewport();
     await expect(compactTurn.locator('.copilot-answer h4')).toBeInViewport();
     if (width > 760) {
+      // Issue #19 intentionally lets the page grow; telemetry may never be crushed.
       expect(
-        await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight + 1),
-      ).toBe(true);
-      expect(
-        await page.locator('.copilot-history').evaluate((element) => element.clientHeight),
-      ).toBeGreaterThanOrEqual(140);
+        await page.locator('.command-grid').evaluate((element) => element.clientHeight),
+      ).toBeGreaterThanOrEqual(560);
+      await expect(page.locator('.copilot-history')).toHaveCSS('overflow-y', 'visible');
       const panel = await page.locator('.metric-panel').boundingBox();
       const dock = await page.locator('.context-dock').boundingBox();
       expect(panel!.y + panel!.height).toBeLessThanOrEqual(dock!.y);
-      await page.screenshot({ path: path.resolve(`screenshots/issue-17-docked-${width}.png`) });
+      await page.screenshot({
+        path: path.resolve(`screenshots/issue-19-regression/issue-17-docked-${width}.png`),
+      });
     }
     await page.getByRole('button', { name: 'Focus / expand conversation', exact: true }).click();
     const dialog = page.getByRole('dialog', { name: 'Expanded ARES Copilot conversation' });
@@ -111,7 +112,9 @@ for (const [width, height] of [
         element.scrollTop -
         12;
     });
-    await page.screenshot({ path: path.resolve(`screenshots/issue-17-evidence-${width}.png`) });
+    await page.screenshot({
+      path: path.resolve(`screenshots/issue-19-regression/issue-17-evidence-${width}.png`),
+    });
     await reader.evaluate(
       (element) =>
         (element.scrollTop =
@@ -121,7 +124,9 @@ for (const [width, height] of [
           12),
     );
     await expect(heading).toBeInViewport();
-    await page.screenshot({ path: path.resolve(`screenshots/issue-17-after-${width}.png`) });
+    await page.screenshot({
+      path: path.resolve(`screenshots/issue-19-regression/issue-17-after-${width}.png`),
+    });
     if (width === 1440)
       expect(
         (
@@ -161,7 +166,9 @@ for (const [width, height] of [
     await blocked.getByTestId('response-evidence').locator('summary').first().click();
     await expect(blocked.getByTestId('response-evidence')).toContainText('No numerical averages');
     await expect(blocked.locator('.evidence-comparisons')).toHaveCount(0);
-    await page.screenshot({ path: path.resolve(`screenshots/issue-17-blocked-${width}.png`) });
+    await page.screenshot({
+      path: path.resolve(`screenshots/issue-19-regression/issue-17-blocked-${width}.png`),
+    });
     expect(errors).toEqual([]);
   });
 }

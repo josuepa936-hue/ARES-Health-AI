@@ -87,3 +87,31 @@ it('expands and restores the same conversation draft without new data requests',
   expect(fetch.mock.calls).toHaveLength(count);
   expect(document.body.style.overflow).not.toBe('hidden');
 });
+
+it('returns to the full cockpit and reopens the draft without changing mission facts or requesting data', async () => {
+  const fetch = mockApi();
+  vi.stubGlobal('fetch', fetch);
+  const scroll = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+  const user = userEvent.setup();
+  render(<App />);
+  await screen.findByRole('heading', { name: 'Mission overview' });
+  await user.selectOptions(screen.getByLabelText('Demo scenario'), 'heart_rate_shift');
+  await screen.findByText(snapshots.heart_rate_shift.demo.assessment, {
+    selector: '.assessment-chip strong',
+  });
+  await user.click(screen.getByRole('tab', { name: 'ARES Copilot' }));
+  await screen.findByText(responses.heart_rate_shift.briefing.answer);
+  const originalValue = screen.getByTestId('latest-resting_hr_bpm').textContent;
+  await user.type(screen.getByLabelText('Fictional mission question'), 'What changed?');
+  const calls = fetch.mock.calls.length;
+  await user.click(screen.getByRole('button', { name: /Full cockpit/ }));
+  await waitFor(() =>
+    expect(screen.getByRole('button', { name: /ARES Copilot · briefing ready/ })).toHaveFocus(),
+  );
+  expect(scroll).toHaveBeenCalledWith({ top: 0, behavior: 'instant' });
+  expect(screen.getByLabelText('Demo scenario')).toHaveValue('heart_rate_shift');
+  await user.click(screen.getByRole('button', { name: /Open workspace/ }));
+  expect(screen.getByLabelText('Fictional mission question')).toHaveValue('What changed?');
+  expect(screen.getByTestId('latest-resting_hr_bpm')).toHaveTextContent(originalValue!);
+  expect(fetch.mock.calls).toHaveLength(calls);
+});

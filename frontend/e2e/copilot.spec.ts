@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import path from 'node:path';
-const captures = path.resolve('screenshots/issue-17-regression');
+const captures = path.resolve('screenshots/issue-19-regression');
 test('offline copilot questions, manual four-state audit and canonical integrated export', async ({
   page,
 }) => {
