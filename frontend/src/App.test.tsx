@@ -167,7 +167,8 @@ it('uses the embedded CSV report for export without submitting a built-in review
   await user.click(screen.getByRole('checkbox', { name: /I attest/ }));
   await user.click(screen.getByRole('button', { name: 'Upload synthetic CSV' }));
   await screen.findByText('Active data source: Uploaded synthetic CSV');
-  expect(screen.getByText(/API does not provide timelines for CSV/)).toBeVisible();
+  expect(screen.getByRole('heading', { name: 'Mission timeline' })).toBeVisible();
+  expect(screen.getByText('event-000001')).toBeVisible();
   expect(screen.queryByRole('button', { name: 'Request review JSON' })).not.toBeInTheDocument();
   await user.click(screen.getByRole('button', { name: 'Download review JSON' }));
   expect(download).toHaveBeenCalledWith(
