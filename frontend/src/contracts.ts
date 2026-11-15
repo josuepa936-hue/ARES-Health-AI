@@ -94,14 +94,6 @@ const snapshotBase = z.object({
 const consistentGuidance = (snapshot: z.infer<typeof snapshotBase>) =>
   snapshot.assessment === snapshot.guidance.state;
 export const snapshotSchema = snapshotBase.refine(consistentGuidance);
-export const csvSnapshotSchema = snapshotBase
-  .extend({ review_report: reportSchema })
-  .refine(consistentGuidance)
-  .refine(
-    (snapshot) =>
-      snapshot.review_report.scenario === snapshot.scenario &&
-      snapshot.review_report.assessment === snapshot.assessment,
-  );
 export type Snapshot = z.infer<typeof snapshotSchema>;
 export const eventTypes = [
   'observation',
@@ -129,6 +121,72 @@ export const timelineSchema = z.object({
   disclaimer: z.string(),
 });
 export type Timeline = z.infer<typeof timelineSchema>;
+
+export const csvSnapshotSchema = snapshotBase
+  .extend({ review_report: reportSchema, mission_timeline: timelineSchema })
+  .refine(consistentGuidance)
+  .refine((snapshot) =>
+    snapshot.review_report.scenario === snapshot.scenario &&
+    snapshot.review_report.assessment === snapshot.assessment &&
+    snapshot.mission_timeline.assessment === snapshot.assessment &&
+    snapshot.mission_timeline.scenario === snapshot.scenario
+  );
+
+export const concernSchema = z.enum(['fatigue', 'headache', 'dizziness', 'sleepiness']);
+export type FictionalConcern = z.infer<typeof concernSchema>;
+export type FictionalCheckInInput = {
+  fictional_attestation: true;
+  scenario: ScenarioId;
+  seed: number;
+  days: number;
+  resting_hr_bpm: number;
+  sleep_hours: number;
+  activity_minutes: number;
+  concerns: FictionalConcern[];
+};
+export const checkInSchema = snapshotBase.extend({
+  review_report: reportSchema,
+  mission_timeline: timelineSchema,
+  check_in: z.object({
+    timestamp_utc: z.string(),
+    fictional_attestation: z.literal(true),
+    mode: z.literal('fictional_latest_day_override'),
+    reported_concerns: z.array(concernSchema),
+    notice: z.string(),
+  }),
+  decision_support: z.object({
+    assessment,
+    review_action: z.string(),
+    reported_concerns: z.array(concernSchema),
+    concerns_notice: z.string(),
+    mission_procedures: z.string(),
+    clinical_decision_support: z.literal(false),
+  }),
+}).refine((snapshot) =>
+  consistentGuidance(snapshot) &&
+  snapshot.mission_timeline.assessment === snapshot.assessment &&
+  snapshot.review_report.assessment === snapshot.assessment &&
+  snapshot.review_report.scenario === snapshot.scenario &&
+  snapshot.decision_support.assessment === snapshot.assessment
+);
+export type CheckInResult = z.infer<typeof checkInSchema>;
+export const riskGuideSchema = z.object({
+  source: z.string(),
+  reference_url: z.string().url(),
+  risks: z.array(z.object({
+    id: z.enum(['radiation', 'gravity', 'isolation', 'distance', 'environment']),
+    title: z.string(),
+    body_region: z.enum(['whole_body', 'musculoskeletal', 'head', 'cardiovascular']),
+    spaceflight_context: z.string(),
+    candidate_observations: z.array(z.string()),
+    ares_current_coverage: z.string(),
+    crew_review: z.string(),
+    reference_url: z.string().url(),
+  })).length(5),
+  disclaimer: z.string(),
+});
+export type RiskGuide = z.infer<typeof riskGuideSchema>;
+
 export const evidenceSchema = z.object({
   usage: z.string(),
   references: z.array(
