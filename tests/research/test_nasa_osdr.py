@@ -216,3 +216,45 @@ def test_gene_lab_redirect_is_exact_single_file_not_a_bucket_allowance():
         source.replace("genelab-repo-prod.s3.amazonaws.com", "genelab-repo-prod.s3.amazonaws.com.evil.test"),
         sample=True,
     )
+
+
+def test_catalog_and_sample_file_have_different_bounded_timeouts(monkeypatch):
+    calls = []
+    class FakeResponse:
+        headers = {}
+        def __init__(self, url):
+            self.url = url
+        def __enter__(self):
+            return self
+        def __exit__(self, *args):
+            return False
+        def geturl(self):
+            return self.url
+        def read(self, max_size):
+            return b"Sample,Condition\\nMOUSE_R1,flight\\n"
+    class FakeOpener:
+        def open(self, req, timeout):
+            calls.append((req.full_url, timeout))
+            return FakeResponse(req.full_url)
+    monkeypatch.setattr(nasa_osdr, "build_opener", lambda handler: FakeOpener())
+    nasa_osdr._bounded_download(nasa_osdr.MANIFEST_API, nasa_osdr.MAX_MANIFEST_BYTES)
+    sample_url = "https://" + nasa_osdr.GENELAB_SAMPLE_HOST + nasa_osdr.GENELAB_SAMPLE_PATH
+    nasa_osdr._bounded_download(sample_url, nasa_osdr.MAX_SAMPLE_BYTES)
+    assert calls == [
+        (nasa_osdr.MANIFEST_API, nasa_osdr.MANIFEST_TIMEOUT_SECONDS),
+        (sample_url, nasa_osdr.SAMPLE_TIMEOUT_SECONDS),
+    ]
+    assert nasa_osdr.SAMPLE_TIMEOUT_SECONDS <= 30
+
+
+def test_sample_storage_timeout_has_specific_but_safe_http_error(monkeypatch):
+    monkeypatch.setenv("ARES_RESEARCH_ENABLED", "1")
+    def fake_download(url, _limit):
+        if url == nasa_osdr.MANIFEST_API:
+            return response(EXAMPLE_FILE)
+        raise TimeoutError("simulated public S3 request timed out")
+    monkeypatch.setattr(nasa_osdr, "_bounded_download", fake_download)
+    reply = client.get("/api/research/nasa/sample-table")
+    assert reply.status_code == 503
+    assert "sample storage timed out after 30 seconds" in reply.json()["detail"]
+    assert "no study result was invented" in reply.json()["detail"]
