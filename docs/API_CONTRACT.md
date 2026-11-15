@@ -242,3 +242,27 @@ provenance/license limitations and opt-in preparation. The public-record run is
 currently unverified because PhysioNet is blocked; synthetic fixture metrics are
 never represented as the public benchmark. React research loads independently
 and cannot populate mission/CSV/timeline state.
+
+
+## Separate experimental research endpoints — MIT + NASA v1.2
+
+All research routes are **optional, localhost-only, disabled by default** and require
+`ARES_RESEARCH_ENABLED=1`. They do not accept real patient uploads or replace the
+original `/api/demo`, `/api/timeline`, `/api/synthetic-csv` or medical disclaimers.
+
+- `GET /api/research/ecg/demo?record=100`: separately prepared, rigorously
+  checked MIT-BIH record-100 benchmark or an explicit abstention; no remote
+  downloading at request time, no unverified numerical performance claims.
+- `GET /api/research/nasa/study`: on-demand, approved NASA OSDR **OSD-87**
+  public metadata manifest, including only unrestricted and visible files,
+  file categories, sizes and official study links. Source provenance:
+  `public_space_biology_research`. Organism: *Mus musculus*, retina, STS-135.
+- `GET /api/research/nasa/sample-table`: exact original columns and rows from
+  the small OSD-87 microarray sample table, fetched **only if** the current
+  official NASA catalog confirms that file is visible and unrestricted.
+
+NASA requests are HTTPS-only, limited in size and time, refuse redirects and do
+not permit arbitrary file names/URLs, inaccessible human datasets, bulk raw omics
+data or open access from outside loopback. Connectivity, file changes and
+unverified data yield HTTP 503 with no invented results. See
+[docs/MIT_NASA_RESEARCH.md](MIT_NASA_RESEARCH.md).
