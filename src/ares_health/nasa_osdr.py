@@ -32,24 +32,73 @@ DISCLAIMER = (
 )
 
 
+# NASA's published public S3 distribution, never an arbitrary redirect target.
+NASA_S3_HOSTS = frozenset({
+    "nasa-osdr.s3.amazonaws.com",
+    "nasa-osdr.s3.us-west-2.amazonaws.com",
+})
+MAX_REDIRECTS = 2
+
+
+def _approved_research_url(url: str, *, sample: bool) -> bool:
+    """Only known NASA study resources or NASA-published S3 bucket paths."""
+    p = urlsplit(url)
+    if p.scheme != "https" or p.username or p.password or p.port or p.fragment:
+        return False
+    if p.hostname == "osdr.nasa.gov":
+        if sample:
+            return (
+                p.path == "/geode-py/ws/studies/OSD-87/download"
+                and parse_qs(p.query) == {"source": ["datamanager"], "file": [SAMPLE_FILENAME]}
+            )
+        return p.path == "/osdr/data/osd/files/87" and not p.query
+    if not sample:
+        return False
+    if p.hostname in NASA_S3_HOSTS:
+        # The final file name is fixed, and it must remain inside NASA's study.
+        return (
+            p.path.startswith("/OSD-87/")
+            and p.path.rsplit("/", 1)[-1] == SAMPLE_FILENAME
+        )
+    if p.hostname == "s3.us-west-2.amazonaws.com":
+        return (
+            p.path.startswith("/nasa-osdr/OSD-87/")
+            and p.path.rsplit("/", 1)[-1] == SAMPLE_FILENAME
+        )
+    return False
+
+
 def _bounded_download(url: str, limit: int) -> bytes:
-    """Bound memory, timeout and HTTPS host; refuse off-host redirects."""
-    parsed = urlsplit(url)
-    if parsed.scheme != "https" or parsed.hostname != "osdr.nasa.gov" or parsed.port:
-        raise ValueError("The research adapter only accesses official NASA OSDR HTTPS.")
-    req = Request(url, headers={"User-Agent": "ARES-Research-Prototype/1.2", "Accept": "application/json,text/csv"})
-    class NoExternalRedirect(HTTPRedirectHandler):
+    """Bounded official NASA fetch, including narrowly approved S3 redirects."""
+    sample = url != MANIFEST_API
+    if not _approved_research_url(url, sample=sample):
+        raise ValueError("The research adapter only accesses explicitly approved NASA URLs.")
+    class RestrictedRedirect(HTTPRedirectHandler):
+        redirects = 0
         def redirect_request(self, req, fp, code, msg, headers, newurl):
-            # Refuse redirects altogether: a NASA URL must not SSRF via another host.
-            return None
-    opener = build_opener(NoExternalRedirect)
+            self.redirects += 1
+            if self.redirects > MAX_REDIRECTS or not _approved_research_url(newurl, sample=sample):
+                raise ValueError("NASA file download redirected to an unapproved destination.")
+            return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+    req = Request(url, headers={
+        "User-Agent": "ARES-Research-Prototype/1.2",
+        "Accept": "text/csv" if sample else "application/json",
+    })
+    opener = build_opener(RestrictedRedirect())
     with opener.open(req, timeout=12) as response:
-        final = urlsplit(response.geturl())
-        if final.scheme != "https" or final.hostname != "osdr.nasa.gov" or final.port:
-            raise ValueError("Unexpected redirect outside NASA OSDR.")
+        final_url = response.geturl()
+        if not _approved_research_url(final_url, sample=sample):
+            raise ValueError("NASA file response came from an unapproved destination.")
         header_size = response.headers.get("Content-Length")
-        if header_size is not None and int(header_size) > limit:
-            raise ValueError("NASA OSDR response exceeds the byte limit.")
+        if header_size is not None:
+            try:
+                if int(header_size) > limit:
+                    raise ValueError("NASA OSDR response exceeds the byte limit.")
+            except ValueError as exc:
+                if "exceeds" in str(exc):
+                    raise
+                raise ValueError("Malformed NASA response Content-Length.") from exc
         data = response.read(limit + 1)
     if len(data) > limit:
         raise ValueError("NASA OSDR response exceeds the byte limit.")
