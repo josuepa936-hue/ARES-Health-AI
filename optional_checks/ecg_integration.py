@@ -36,6 +36,7 @@ def test_preparation_hashes_corruption_and_metadata_rejection(tmp_path):
     fixture(tmp_path)
     result = prepare(tmp_path, 'self-contained-test-fixture')
     assert result['acquisition']['sha256'] == verify(tmp_path)
+    assert 'operator-supplied' in result['acquisition']['note']
     assert result['status'] == 'benchmarked'
     with (tmp_path/'100.dat').open('r+b') as handle:
         handle.write(b'bad')

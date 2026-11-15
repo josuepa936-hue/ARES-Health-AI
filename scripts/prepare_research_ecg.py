@@ -53,7 +53,7 @@ def prepare(directory: Path, acquisition: str) -> dict:
     result = analyze_segment(signal, 360, samples, symbols)
     result['acquisition'] = {'method': acquisition, 'source_url': SOURCE,
                              'sha256': hashes, 'license_acknowledged': True,
-                             'note': 'Local files and manifest are operator-supplied; matching hashes alone do not authenticate their origin.' if acquisition == 'official-local-files' else 'Files and checksum manifest acquired over verified HTTPS from PhysioNet.'}
+                             'note': 'Files and checksum manifest acquired over verified HTTPS from PhysioNet.' if acquisition == 'official-https' else 'Local files and manifest are operator-supplied; matching hashes alone do not authenticate their origin.'}
     return result
 
 
