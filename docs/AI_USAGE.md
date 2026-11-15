@@ -163,3 +163,20 @@ timestamps, strict backend timestamp validation, typed React contracts, and
 additional tests. This does **not** change the biomedical domain rules or
 constitute flight-qualified audit timestamps; existing user records remain
 fictional and ephemeral. Changes require CI and human review before merging.
+
+
+## Mission Wellness & Procedures (post-v1.5, optional hackathon scope)
+
+ChatGPT assisted with the design and GitHub branch implementation of a small
+educational wellness extension using the existing deterministic Python engine.
+A bounded `POST /api/mission/wellness` endpoint recreates the active synthetic
+scenario, exposes only NASA-referenced research context, and abstains when
+quality gates block comparisons. React renders a collapsible guide integrated
+into the existing Copilot, with user-controlled navigation to Review & Export.
+
+NASA published pages were checked for sleep/circadian schedules and exercise
+countermeasures; the new module does not infer treatment, risk scores, wellness
+fitness or medical clearance, nor claim NASA tested or endorsed ARES. The module
+does not implement scheduled reminders or gamification. A review branch/PR is
+required before integration; local test runs and visual verification are
+required and must not be reported as passed until executed.
