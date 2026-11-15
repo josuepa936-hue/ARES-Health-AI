@@ -233,7 +233,7 @@ it('exports a manually documented comprehensive review and invalidates it after 
       note: 'Fictional review only.',
       // New Issue #21 provenance: UTC browser click-time is retained.
       recorded_at_utc: expect.stringMatching(
-        /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$/,
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/,
       ),
     }),
   );
