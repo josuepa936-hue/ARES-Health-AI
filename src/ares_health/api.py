@@ -21,6 +21,7 @@ from src.ares_health.synthetic import SCENARIOS, generate_scenario
 from src.ares_health.timeline import build_timeline
 from src.ares_health.mission import fictional_checkin, risk_guide
 from src.ares_health.serve_ui import install_compiled_frontend
+from src.ares_health.version import APP_VERSION
 from src.ares_health.research_api import router as research_router
 from src.ares_health.nasa_api import router as nasa_router
 from src.ares_health.copilot_api import router as copilot_router
@@ -34,7 +35,7 @@ app = FastAPI(
         "Local educational software demo. Only fictional daily observations. "
         "No diagnosis, flight-medicine authorization, or NASA operational data."
     ),
-    version="1.0.0",
+    version=APP_VERSION,
     docs_url="/docs",
     redoc_url=None,
 )
@@ -142,6 +143,7 @@ def get_service_status() -> dict:
         "data_provenance": "synthetic-only",
         "clinical_validation": False,
         "nasa_approved": False,
+        "application_version": APP_VERSION,
     }
 
 
