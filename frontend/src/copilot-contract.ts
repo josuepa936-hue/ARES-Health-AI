@@ -133,3 +133,31 @@ export const comprehensiveSchema = reportSchema
   .refine((report) => report.application_version === report.copilot_application_version,
     'Report and copilot app versions must agree.');
 export type ComprehensiveReport = z.infer<typeof comprehensiveSchema>;
+
+/** Canonical, educational-only spaceflight wellness review, never a risk score. */
+export const wellnessSchema = z.object({
+  context_ref: z.string().regex(/^ctx-[0-9a-f]{64}$/),
+  scenario: z.string(),
+  assessment,
+  summary: z.string(),
+  topics: z.array(z.object({
+    id: z.enum(['cardiovascular', 'sleep', 'movement']),
+    metric: z.enum(['resting_hr_bpm', 'sleep_hours', 'activity_minutes']),
+    title: z.string(),
+    research_context: z.string(),
+    review_step: z.string(),
+    routine_example: z.string(),
+    comparison: z.enum(['available', 'withheld']),
+    illustrative_flag: z.boolean(),
+    source_title: z.string(),
+    source_url: z.string().url().refine((url) => url.startsWith('https://www.nasa.gov/')),
+    source_organization: z.literal('NASA Human Research Program'),
+    limitation: z.string(),
+  })).length(3),
+  provenance: z.literal('synthetic'),
+  demo_only: z.literal(true),
+  clinical_decision_support: z.literal(false),
+  automated_reminders: z.literal(false),
+  disclaimer: z.string(),
+});
+export type MissionWellness = z.infer<typeof wellnessSchema>;
