@@ -11,6 +11,8 @@ export default defineConfig({
   },
   preview: { host: '127.0.0.1', port: 5173, strictPort: true },
   test: {
+    // Bound concurrent DOM suites so constrained CI runners do not starve async UI checks.
+    maxWorkers: 2,
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],

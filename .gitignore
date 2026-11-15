@@ -20,3 +20,4 @@ frontend/.env.local
 .venv-research/
 frontend/test-results/
 frontend/playwright-report/
+frontend/screenshots/issue-17-regression/

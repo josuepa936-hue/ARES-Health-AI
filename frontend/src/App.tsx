@@ -297,7 +297,12 @@ export default function App() {
         onToggle={() => setDockOpen((value) => !value)}
         panels={{
           copilot: mission ? (
-            <CopilotPanel key={mission.key} session={copilot} onReview={() => openDock('review')} />
+            <CopilotPanel
+              key={mission.key}
+              session={copilot}
+              snapshot={mission.snapshot}
+              onReview={() => openDock('review')}
+            />
           ) : (
             <p>Load a fictional mission for a grounded offline briefing.</p>
           ),

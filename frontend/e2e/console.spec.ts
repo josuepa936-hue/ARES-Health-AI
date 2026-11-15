@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import path from 'node:path';
-const screenshots = path.resolve('screenshots');
+const screenshots = path.resolve('screenshots/issue-17-regression');
 async function loaded(page: import('@playwright/test').Page) {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Mission overview' })).toBeVisible();
@@ -29,7 +29,7 @@ test('real one-server mission workflow and desktop capture', async ({ page }) =>
   await page.getByLabel('Demo scenario').selectOption('incomplete');
   await expect(page.locator('.assessment-chip')).toContainText('DATA_QUALITY_BLOCKED');
   await expect(page.locator('.finding')).toContainText('INTERPRETATION WITHHELD');
-  await expect(page.locator('.comparison-grid')).not.toContainText('64');
+  await expect(page.locator('.comparison-grid')).toHaveCount(0);
   await page.getByRole('button', { name: 'Inspect quality events' }).click();
   await expect(page.getByRole('tabpanel')).toContainText('data_quality');
   await page.screenshot({
@@ -147,9 +147,11 @@ test('WCAG AA automated check on desktop console', async ({ page }) => {
     .analyze();
   expect(result.violations).toEqual([]);
   await expect(page.locator('.copilot-launch')).toContainText('briefing ready');
-  for(const name of ['ARES Copilot','Review & Export']){
-    await page.getByRole('tab',{name,exact:true}).click();
-    const audited=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa']).analyze();
+  for (const name of ['ARES Copilot', 'Review & Export']) {
+    await page.getByRole('tab', { name, exact: true }).click();
+    const audited = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .analyze();
     expect(audited.violations).toEqual([]);
   }
 });

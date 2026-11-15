@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import path from 'node:path';
-const captures = path.resolve('screenshots');
+const captures = path.resolve('screenshots/issue-17-regression');
 test('offline copilot questions, manual four-state audit and canonical integrated export', async ({
   page,
 }) => {
@@ -18,6 +18,7 @@ test('offline copilot questions, manual four-state audit and canonical integrate
   );
   await expect(page.locator('.copilot-launch')).toContainText('briefing ready');
   await page.screenshot({ path: path.join(captures, 'copilot-v15-desktop.png'), fullPage: true });
+  await page.locator('.copilot-suggestions > summary').click();
   await page.getByRole('button', { name: 'What changed?', exact: true }).click();
   await expect(page.getByRole('log')).toContainText('reference');
   await page.getByRole('tab', { name: 'Review & Export' }).click();
@@ -27,10 +28,12 @@ test('offline copilot questions, manual four-state audit and canonical integrate
   await expect(page.getByLabel('Fictional review state')).toHaveValue('PENDING_REVIEW');
   await page.getByRole('tab', { name: 'ARES Copilot', exact: true }).click();
   await expect(page.getByRole('log')).toBeEmpty();
+  await page.locator('.copilot-suggestions > summary').click();
   await page.getByRole('button', { name: 'What changed?', exact: true }).click();
   await expect(page.getByRole('log')).toContainText('difference');
   const log = page.getByRole('log');
-  await log.getByText(/Why this response/).click();
+  await log.getByText(/View evidence/).click();
+  await log.getByText(/Detailed observations, UTC dates and timeline IDs/).click();
   await expect(log).toContainText('rule:resting_hr_bpm:mean_difference');
   await expect(log).toContainText('Timeline:');
   await page.getByLabel('Fictional mission question').fill('Give a treatment');
@@ -54,7 +57,7 @@ test('offline copilot questions, manual four-state audit and canonical integrate
   await page.screenshot({ path: path.join(captures, 'copilot-v15-review.png'), fullPage: true });
   const downloaded = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Download comprehensive JSON' }).click();
-  await page.screenshot({path:path.join(captures,'copilot-v15-export.png'),fullPage:true});
+  await page.screenshot({ path: path.join(captures, 'copilot-v15-export.png'), fullPage: true });
   const fs = await import('node:fs/promises');
   const report = JSON.parse(await fs.readFile((await (await downloaded).path())!, 'utf8'));
   expect(report.assessment).toBe(assessment);
@@ -80,6 +83,7 @@ test('mobile copilot remains functional and review is reset on page reload', asy
   await expect(page.getByRole('heading', { name: 'Mission overview' })).toBeVisible();
   await page.getByRole('tab', { name: 'ARES Copilot', exact: true }).click();
   await expect(page.locator('.copilot-briefing')).toContainText('No demonstration rule triggered');
+  await page.locator('.copilot-suggestions > summary').click();
   await page.getByRole('button', { name: 'What is still not monitored?', exact: true }).click();
   await expect(page.getByRole('log')).toContainText('not monitored');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);

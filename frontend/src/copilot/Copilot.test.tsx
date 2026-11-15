@@ -15,11 +15,12 @@ async function ready() {
   await screen.findByRole('heading', { name: 'Mission overview' });
   await userEvent.setup().click(screen.getByRole('tab', { name: 'ARES Copilot' }));
   await screen.findByText(data.stable.briefing.answer);
+  await userEvent.setup().click(screen.getByText(/Suggested questions/, { selector: 'summary' }));
 }
 it('shows an automatic current briefing without claiming an LLM or medical clearance', async () => {
   await ready();
   const panel = screen.getByRole('region', { name: 'ARES mission copilot' });
-  expect(panel).toHaveTextContent('DETERMINISTIC / OFFLINE · NOT AN LLM');
+  expect(panel).toHaveTextContent('Deterministic · offline · not an LLM');
   expect(panel).toHaveTextContent('not medical clearance');
   expect(screen.getByRole('heading', { name: 'Mission overview' })).toBeVisible();
   expect(
@@ -32,13 +33,14 @@ it('answers supported chips and exposes exact backend observation/rule/source re
   await user.click(screen.getByRole('button', { name: 'What changed?' }));
   const log = screen.getByRole('log', { name: 'Current mission conversation' });
   expect(await within(log).findByText(data.stable.answers['What changed?'].answer)).toBeVisible();
-  await user.click(within(log).getByText(/Why this response/));
+  await user.click(within(log).getByText(/View evidence/));
+  await user.click(within(log).getByText(/Detailed observations, UTC dates and timeline IDs/));
   expect(within(log).getByText('observation:20:resting_hr_bpm')).toBeVisible();
   expect(within(log).getByText('rule:resting_hr_bpm:mean_difference')).toBeVisible();
   await user.click(
     screen.getByRole('button', { name: 'What is the relevant NASA hazard background?' }),
   );
-  const answers = within(log).getAllByText(/Why this response/);
+  const answers = within(log).getAllByText(/View evidence/);
   await user.click(answers.at(-1)!);
   expect(within(log).getByRole('link', { name: 'Space radiation' })).toHaveAttribute(
     'href',

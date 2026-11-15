@@ -13,3 +13,18 @@ if (!Blob.prototype.arrayBuffer) {
     });
   };
 }
+// Layout/scroll behavior is checked in actual Chromium; jsdom has no media API.
+if (!window.matchMedia) {
+  window.matchMedia = (query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener() {},
+    removeListener() {},
+    addEventListener() {},
+    removeEventListener() {},
+    dispatchEvent() {
+      return true;
+    },
+  });
+}

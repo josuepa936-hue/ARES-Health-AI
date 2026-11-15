@@ -1,4 +1,9 @@
-# ARES Health AI v1.3 — integrated mission console
+# ARES Health AI — integrated mission console
+
+The v1.5 copilot now supports a focused reading dialog, response-start navigation
+and progressive scientific evidence. Escape restores the same dock conversation
+and draft. Startup commands below are unchanged; no dependency or backend API was
+added. See [Issue #17 behavior, browser captures and current verification](../docs/COPILOT_READING.md).
 
 This standalone Vite + React + TypeScript client consumes the existing FastAPI
 v1.0 API. Python remains the only source of physiological values, validation,

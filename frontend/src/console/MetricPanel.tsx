@@ -113,20 +113,22 @@ export function MetricPanel({
           </AreaChart>
         </ResponsiveContainer>
       </div>
-      <div className="comparison-grid">
-        <div>
-          <span>REFERENCE / FIRST 7 DAYS</span>
-          <strong>
-            {signal?.baseline_mean.toFixed(2) ?? '—'} <small>{metric.unit}</small>
-          </strong>
+      {available && (
+        <div className="comparison-grid">
+          <div>
+            <span>REFERENCE / FIRST 7 DAYS</span>
+            <strong>
+              {signal?.baseline_mean.toFixed(2) ?? '—'} <small>{metric.unit}</small>
+            </strong>
+          </div>
+          <div>
+            <span>RECENT / LAST 4 DAYS</span>
+            <strong>
+              {signal?.recent_mean.toFixed(2) ?? '—'} <small>{metric.unit}</small>
+            </strong>
+          </div>
         </div>
-        <div>
-          <span>RECENT / LAST 4 DAYS</span>
-          <strong>
-            {signal?.recent_mean.toFixed(2) ?? '—'} <small>{metric.unit}</small>
-          </strong>
-        </div>
-      </div>
+      )}
       <div className={`finding ${!available ? 'blocked' : flags.length ? 'change' : ''}`}>
         <span className="eyebrow">
           {!available
@@ -142,12 +144,14 @@ export function MetricPanel({
             <button onClick={onQualityInspect}>Inspect quality events</button>
           </div>
         )}
-        <p>
-          {!available
-            ? 'Missing or invalid records prevent a meaningful comparison. No health interpretation is available.'
-            : (flags[0]?.explanation ??
-              'No illustrative rule triggered for this indicator. This does not establish medical safety.')}
-        </p>
+        {snapshot.assessment !== 'DATA_QUALITY_BLOCKED' && (
+          <p>
+            {!available
+              ? 'Missing or invalid records prevent a meaningful comparison. No health interpretation is available.'
+              : (flags[0]?.explanation ??
+                'No illustrative rule triggered for this indicator. This does not establish medical safety.')}
+          </p>
+        )}
       </div>
       <div className="panel-actions">
         <button onClick={() => setDetails((value) => !value)} aria-expanded={details}>

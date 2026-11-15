@@ -240,3 +240,14 @@ until explicit export; new missions/page reload reset it. The v1.4 anatomy and
 existing mission/research modules remain intact. See [v1.5 workflow, API, limits
 and screenshots](docs/COPILOT_V15.md). Startup remains `start-ares.cmd` after the
 existing Python setup and `cd frontend; npm ci; npm run build` steps.
+
+### Copilot reading improvements (Issue #17)
+
+**Focus / expand conversation** opens the same conversation in a keyboard-accessible
+reading dialog; Escape restores the dock and vitals. Replies start at the new
+question and answer, with readable text and one conversation scroll surface.
+**View evidence** reveals Python-provided comparisons and actual UTC windows before
+optional original observation IDs, rules and scientific source links. Blocked data
+never display comparison averages. The deterministic backend, synthetic-data
+restrictions, manual review audit and comprehensive JSON export are unchanged.
+See [behavior, real before/after screenshots and verification](docs/COPILOT_READING.md).

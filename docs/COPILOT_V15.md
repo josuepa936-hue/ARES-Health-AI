@@ -33,9 +33,13 @@ never converted into synthetic crew evidence, risk scores or medical claims.
    domains. Unsupported topics abstain; unsafe/override requests refuse. This
    conservative keyword parser may refuse benign wording; it is not a general
    language-understanding system or comprehensive clinical safety classifier.
-4. **Why this response** expands exact observation timestamps, metrics, units,
-   window membership, matching timeline IDs, rule IDs/metadata and official source
-   URLs where relevant. Refusals and workflow-policy explanations add no
+4. **View evidence** opens a concise summary of Python-provided baseline/recent
+   comparisons and actual UTC windows. Optional **Detailed observations, UTC dates
+   and timeline IDs** exposes every original observation, metric, unit and window;
+   rule IDs/metadata and official source URLs remain accessible. Use **Focus /
+   expand conversation** for uninterrupted reading; Escape restores the dock.
+   See [Issue #17 reading behavior and captures](COPILOT_READING.md).
+   Refusals and workflow-policy explanations add no
    physiological claim and explain their policy limitation rather than inventing
    scientific citations. A context hash identifies the recalculated data source.
 5. In **Review & Export**, manually record fictional source/unit verification,

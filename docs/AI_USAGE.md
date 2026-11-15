@@ -125,3 +125,17 @@ provenance and biomedical/research modules are preserved. Questions and notes ar
 fictional-only, transient user text; notes cannot instruct the analysis engine.
 Codex implementation assistance must not be confused with a generative runtime
 model. Human review remains required before merging this draft against v1.4.
+
+## Issue #17 copilot reading and evidence presentation
+
+OpenAI Codex assisted with inspecting the reported clipping/scroll defects,
+implementing a native React dialog that preserves the conversation and draft,
+response-start focus/announcements, responsive readable typography, progressive
+evidence disclosure, unit/browser regression tests and documentation. Evidence
+values are displayed from the existing Python API; no biomedical calculation,
+threshold, clinical claim or runtime generative model was introduced. The existing
+anatomical image and public research provenance were preserved. Before/after
+screenshots are actual local Chromium renders of synthetic scenarios, not generated
+mockups. Browser checks run on Linux at the requested desktop/mobile viewports;
+they do not establish Windows execution, physical-device coverage or clinical
+validation. Human review is required before merging against the v1.5 branch.

@@ -1,165 +1,272 @@
-import { useState, useEffect, useRef, type FormEvent } from 'react';
-import { BookOpen, Send, MessagesSquare, ArrowRight } from 'lucide-react';
-import type { CopilotResponse } from '../copilot-contract';
+import { useState, useLayoutEffect, useRef, type FormEvent } from 'react';
+import { Send, MessagesSquare, ArrowRight, Maximize2, Minimize2 } from 'lucide-react';
 import type { CopilotSession } from './useMissionCopilot';
-export function WhyResponse({ response }: { response: CopilotResponse }) {
-  return (
-    <details className="copilot-evidence">
-      <summary>
-        <BookOpen size={12} /> Why this response · {response.evidence_refs.length} evidence
-        references
-      </summary>
-      <p>
-        Context {response.context_ref} · {response.assessment}
-      </p>
-      {response.evidence_refs.length ? (
-        <ul>
-          {response.evidence_refs.map((ref) => (
-            <li key={ref.id}>
-              <code>{ref.id}</code>
-              {ref.timestamp_utc && <time>{ref.timestamp_utc}</time>}
-              {ref.metric && (
-                <span>
-                  {ref.metric} ·{' '}
-                  {ref.value ??
-                    (ref.absolute_difference === undefined
-                      ? ''
-                      : `rule ≥ ${ref.absolute_difference}`)}{' '}
-                  {ref.unit}
-                </span>
-              )}
-              {ref.window && <span>{ref.window} window</span>}
-              {ref.timeline_id && <span>Timeline: {ref.timeline_id}</span>}
-              {ref.text && <p>{ref.text}</p>}
-              {ref.url && (
-                <a href={ref.url} target="_blank" rel="noreferrer">
-                  {ref.title ?? 'Official source'}
-                </a>
-              )}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>
-          This response states a supported review-policy limitation; no physiological inference or
-          source fact was added.
-        </p>
-      )}
-      <ul>
-        {response.limitations.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ul>
-    </details>
-  );
-}
+import type { Snapshot } from '../contracts';
+import { EvidenceView } from './EvidenceView';
 export function CopilotPanel({
   session,
   onReview,
+  snapshot,
 }: {
   session: CopilotSession;
   onReview: () => void;
+  snapshot?: Snapshot;
 }) {
   const [question, setQuestion] = useState('');
+  const [focused, setFocused] = useState(false);
+  const [briefOpen, setBriefOpen] = useState(true);
+  const [announcement, setAnnouncement] = useState('');
+  const dialog = useRef<HTMLDialogElement>(null);
   const history = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (history.current) history.current.scrollTop = history.current.scrollHeight;
+  const expandButton = useRef<HTMLButtonElement>(null);
+  const turnNodes = useRef(new Map<number, HTMLElement>());
+  const previousCount = useRef(session.turns.length);
+  const pendingTurn = useRef<number | null>(null);
+  // Reuse one dialog subtree so changing reading modes preserves drafts and history.
+  // Native modal behavior traps focus and makes the background console inert.
+  useLayoutEffect(() => {
+    const element = dialog.current;
+    if (!element) return;
+    if (element.open) {
+      if (element.close) element.close();
+      else element.removeAttribute('open');
+    }
+    if (focused) {
+      if (element.showModal) element.showModal();
+      else element.setAttribute('open', '');
+    } else {
+      if (element.show) element.show();
+      else element.setAttribute('open', '');
+    }
+    const previousOverflow = document.body.style.overflow;
+    if (focused) document.body.style.overflow = 'hidden';
+    if (focused) expandButton.current?.focus({ preventScroll: true });
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      if (element.open) {
+        if (element.close) element.close();
+        else element.removeAttribute('open');
+      }
+    };
+  }, [focused]);
+  useLayoutEffect(() => {
+    const reader = history.current;
+    if (!reader) return;
+    // Give a short new turn room to align at the top after a long previous answer.
+    // Natural mobile document flow must not grow itself in a resize feedback loop.
+    const measure = () =>
+      reader.style.setProperty(
+        '--answer-min-height',
+        `${!focused && window.matchMedia('(max-width: 760px)').matches ? 0 : Math.max(0, reader.clientHeight - 20)}px`,
+      );
+    measure();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(measure);
+    observer.observe(reader);
+    return () => observer.disconnect();
+  }, [focused]);
+  useLayoutEffect(() => {
+    if (session.turns.length > previousCount.current) {
+      const latest = session.turns.at(-1)!;
+      pendingTurn.current = latest.turn;
+      setBriefOpen(false);
+      setAnnouncement(
+        `Answer ${latest.turn} is ready. Focus is at the start of your question and response.`,
+      );
+    }
+    previousCount.current = session.turns.length;
   }, [session.turns.length]);
+  useLayoutEffect(() => {
+    if (pendingTurn.current === null) return;
+    // Only new answers and entering focus move the reader; evidence disclosure does not.
+    const frame = requestAnimationFrame(() => {
+      const node = turnNodes.current.get(pendingTurn.current!);
+      const reader = history.current;
+      if (node && reader) {
+        if (!focused && window.matchMedia('(max-width: 760px)').matches)
+          node.scrollIntoView({ block: 'start', behavior: 'instant' });
+        else
+          reader.scrollTop = Math.max(
+            0,
+            node.getBoundingClientRect().top -
+              reader.getBoundingClientRect().top +
+              reader.scrollTop -
+              12,
+          );
+        node.querySelector<HTMLElement>('[data-turn-heading]')?.focus({ preventScroll: true });
+      }
+      pendingTurn.current = null;
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [session.turns.length, briefOpen, focused]);
+  function toggleFocus() {
+    pendingTurn.current = focused ? null : (session.turns.at(-1)?.turn ?? null);
+    setFocused((value) => !value);
+    if (focused) requestAnimationFrame(() => expandButton.current?.focus({ preventScroll: true }));
+  }
+  function review() {
+    setFocused(false);
+    onReview();
+    requestAnimationFrame(() => document.getElementById('tab-review')?.focus());
+  }
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (!question.trim()) return;
     await session.ask(question);
     setQuestion('');
   }
+  const prompts = session.briefing?.suggested_questions ?? [];
   return (
-    <section className="copilot-panel" aria-label="ARES mission copilot">
-      <div className="copilot-title">
-        <h2>
-          <MessagesSquare size={15} /> ARES Copilot
-        </h2>
-        <span>DETERMINISTIC / OFFLINE · NOT AN LLM</span>
-        <button onClick={onReview}>
-          Review workflow <ArrowRight size={12} />
-        </button>
-      </div>
-      {session.loading && !session.briefing && (
-        <p role="status">Recalculating grounded mission briefing…</p>
-      )}
-      {session.error && (
-        <div role="alert">
-          {session.error}
-          <button onClick={session.retry}>Reset and retry copilot</button>
-        </div>
-      )}
-      {session.briefing && (
-        <div className="copilot-grid">
-          <div className="copilot-conversation">
-            <div className="copilot-history" ref={history}>
-              <article className="copilot-briefing">
-                <span className="eyebrow">
-                  CURRENT MISSION BRIEFING · {session.briefing.assessment}
-                </span>
+    <dialog
+      ref={dialog}
+      className={`copilot-dialog ${focused ? 'copilot-focus-mode' : ''}`}
+      aria-label={
+        focused ? 'Expanded ARES Copilot conversation' : 'Docked ARES Copilot conversation'
+      }
+      aria-modal={focused}
+      onCancel={(event) => {
+        event.preventDefault();
+        setFocused(false);
+        requestAnimationFrame(() => expandButton.current?.focus({ preventScroll: true }));
+      }}
+    >
+      <section className="copilot-panel" aria-label="ARES mission copilot">
+        <header className="copilot-title">
+          <div>
+            <h2>
+              <MessagesSquare size={17} /> ARES Copilot
+            </h2>
+            <p>Deterministic · offline · not an LLM</p>
+          </div>
+          <div className="copilot-reader-controls">
+            <button onClick={review}>
+              Review workflow <ArrowRight size={14} />
+            </button>
+            <button ref={expandButton} aria-expanded={focused} onClick={toggleFocus}>
+              {focused ? <Minimize2 size={15} /> : <Maximize2 size={15} />}{' '}
+              {focused ? 'Restore docked conversation' : 'Focus / expand conversation'}
+            </button>
+          </div>
+        </header>
+        <p className="copilot-assessment">
+          <span>Current mission assessment</span>
+          <strong>{session.briefing?.assessment ?? 'Awaiting Python briefing'}</strong>
+        </p>
+        <span role="status" className="sr-only">
+          {announcement}
+        </span>
+        <div
+          className="copilot-history"
+          ref={history}
+          tabIndex={0}
+          role="region"
+          aria-label="Conversation reading area"
+        >
+          {session.error && (
+            <div role="alert">
+              {session.error}
+              <button onClick={session.retry}>Reset and retry copilot</button>
+            </div>
+          )}
+
+          {!session.briefing && session.loading && (
+            <p role="status">Recalculating grounded mission briefing…</p>
+          )}
+          {session.briefing && (
+            <>
+              <details
+                className="copilot-briefing"
+                open={briefOpen}
+                onToggle={(event) => setBriefOpen(event.currentTarget.open)}
+              >
+                <summary>
+                  Current mission briefing <span>· Python analysis</span>
+                </summary>
                 <p>{session.briefing.answer}</p>
-                <WhyResponse response={session.briefing} />
-              </article>
+                <EvidenceView response={session.briefing} snapshot={snapshot} />
+              </details>
+              <details className="copilot-suggestions">
+                <summary>
+                  Suggested questions <span>· {prompts.length} supported topics</span>
+                </summary>
+                <div>
+                  {prompts.map((item) => (
+                    <button
+                      key={item}
+                      disabled={session.loading || session.turns.length >= 20}
+                      onClick={() => session.ask(item)}
+                    >
+                      {item}
+                      <ArrowRight size={13} />
+                    </button>
+                  ))}
+                </div>
+              </details>
               <div
                 className="copilot-transcript"
                 role="log"
                 aria-label="Current mission conversation"
-                aria-live="polite"
+                aria-live="off"
               >
                 {session.turns.map((turn) => (
-                  <article key={turn.turn}>
-                    <p className="copilot-question">{turn.question}</p>
-                    <p>{turn.response.answer}</p>
-                    <WhyResponse response={turn.response} />
+                  <article
+                    key={turn.turn}
+                    data-testid={`copilot-turn-${turn.turn}`}
+                    ref={(node) => {
+                      if (node) turnNodes.current.set(turn.turn, node);
+                      else turnNodes.current.delete(turn.turn);
+                    }}
+                  >
+                    <h3 data-turn-heading tabIndex={-1}>
+                      Conversation turn {turn.turn}
+                    </h3>
+                    <div className="copilot-question">
+                      <span>Your fictional question</span>
+                      <p>{turn.question}</p>
+                    </div>
+                    <div className="copilot-answer">
+                      <h4>
+                        ARES response <span>· {turn.response.intent.replaceAll('_', ' ')}</span>
+                      </h4>
+                      <p>{turn.response.answer}</p>
+                    </div>
+                    <EvidenceView response={turn.response} snapshot={snapshot} />
                   </article>
                 ))}
               </div>
+              {!session.turns.length && (
+                <p className="copilot-empty">
+                  Ask a mission question below, or open Suggested questions. Expand the conversation
+                  for uninterrupted reading.
+                </p>
+              )}
               {session.loading && <p role="status">Checking current Python evidence…</p>}
-            </div>
-            <form className="copilot-compose" onSubmit={submit}>
-              <label htmlFor="copilot-question">Fictional mission question</label>
-              <div>
-                <input
-                  id="copilot-question"
-                  value={question}
-                  onChange={(event) => setQuestion(event.target.value)}
-                  maxLength={240}
-                  placeholder="Ask what changed or which evidence supports it"
-                  disabled={session.loading || session.turns.length >= 20}
-                />
-                <button
-                  disabled={session.loading || !question.trim() || session.turns.length >= 20}
-                >
-                  <Send size={13} /> Ask
-                </button>
-              </div>
-              <small>
-                {session.turns.length}/20 turns · no personal health information · bounded supported
-                intents
-              </small>
-            </form>
-          </div>
-          <aside className="copilot-prompts">
-            <span className="eyebrow">EVIDENCE-GROUNDED QUESTIONS</span>
-            {session.briefing.suggested_questions.map((item) => (
-              <button
-                key={item}
-                disabled={session.loading || session.turns.length >= 20}
-                onClick={() => session.ask(item)}
-              >
-                {item}
-                <ArrowRight size={11} />
-              </button>
-            ))}
-            <p>
-              Conversation and review actions reset with each new mission snapshot or page reload.
-              No server case storage.
-            </p>
-          </aside>
+            </>
+          )}
         </div>
-      )}
-    </section>
+        {session.briefing && (
+          <form className="copilot-compose" onSubmit={submit}>
+            <label htmlFor="copilot-question">Fictional mission question</label>
+            <div>
+              <input
+                id="copilot-question"
+                value={question}
+                onChange={(event) => setQuestion(event.target.value)}
+                maxLength={240}
+                placeholder="Ask what changed, about the baseline, or why data are blocked"
+                disabled={session.loading || session.turns.length >= 20}
+              />
+              <button disabled={session.loading || !question.trim() || session.turns.length >= 20}>
+                <Send size={15} /> Ask
+              </button>
+            </div>
+            <small>
+              {session.turns.length}/20 turns · Fictional data only · Review states do not grant
+              medical authorization.
+            </small>
+          </form>
+        )}
+      </section>
+    </dialog>
   );
 }

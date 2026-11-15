@@ -34,7 +34,9 @@ it('loads real API shapes, all scenario states, physiological charts and scienti
   for (const id of ['heart_rate_shift', 'sleep_shift', 'incomplete', 'stable'] as const) {
     await user.selectOptions(screen.getByLabelText('Demo scenario'), id);
     await screen.findByRole('heading', { name: 'Mission overview' });
-    expect(screen.getByText(fixtures[id].demo.assessment, { selector: 'strong' })).toBeVisible();
+    expect(
+      screen.getByText(fixtures[id].demo.assessment, { selector: '.assessment-chip strong' }),
+    ).toBeVisible();
   }
   expect(
     fetchMock.mock.calls.some(([url]) =>

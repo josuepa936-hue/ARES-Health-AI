@@ -35,6 +35,7 @@ export function ContextDock({
     <section
       className={`context-dock ${open ? '' : 'collapsed'}`}
       aria-label="Mission contextual workspace"
+      data-active={active}
     >
       <div className="dock-toolbar">
         <div role="tablist" aria-label="Mission workflow">
