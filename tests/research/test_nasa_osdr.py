@@ -152,3 +152,44 @@ def test_excessive_catalog_response_is_rejected_before_processing(monkeypatch):
     monkeypatch.setattr(nasa_osdr, "_bounded_download", excessive)
     with pytest.raises(ValueError):
         nasa_osdr.load_file_catalog()
+
+
+@pytest.mark.parametrize("url, sample, expected", [
+    (nasa_osdr.MANIFEST_API, False, True),
+    ("https://osdr.nasa.gov/geode-py/ws/studies/OSD-87/download?source=datamanager&file=" + nasa_osdr.SAMPLE_FILENAME, True, True),
+    ("https://nasa-osdr.s3.us-west-2.amazonaws.com/OSD-87/version-1/" + nasa_osdr.SAMPLE_FILENAME, True, True),
+    ("https://nasa-osdr.s3.amazonaws.com/OSD-87/version-1/" + nasa_osdr.SAMPLE_FILENAME, True, True),
+    ("https://s3.us-west-2.amazonaws.com/nasa-osdr/OSD-87/version-1/" + nasa_osdr.SAMPLE_FILENAME, True, True),
+    ("https://nasa-osdr.s3.us-west-2.amazonaws.com/OSD-87/version-1/" + nasa_osdr.SAMPLE_FILENAME, False, False),
+    ("https://evil.example/OSD-87/" + nasa_osdr.SAMPLE_FILENAME, True, False),
+    ("http://nasa-osdr.s3.us-west-2.amazonaws.com/OSD-87/" + nasa_osdr.SAMPLE_FILENAME, True, False),
+    ("https://nasa-osdr.s3.us-west-2.amazonaws.com/OSD-999/" + nasa_osdr.SAMPLE_FILENAME, True, False),
+    ("https://nasa-osdr.s3.us-west-2.amazonaws.com/OSD-87/not-approved.csv", True, False),
+    ("https://osdr.nasa.gov/geode-py/ws/studies/OSD-88/download?source=datamanager&file=" + nasa_osdr.SAMPLE_FILENAME, True, False),
+    ("https://user:secret@osdr.nasa.gov/osdr/data/osd/files/87", False, False),
+])
+def test_only_allowlisted_nasa_study_and_public_aws_redirects(url, sample, expected):
+    assert nasa_osdr._approved_research_url(url, sample=sample) is expected
+
+
+def test_bad_redirect_error_is_specific_without_exposing_external_host(monkeypatch):
+    monkeypatch.setenv("ARES_RESEARCH_ENABLED", "1")
+    def failed(_url, _limit):
+        raise ValueError("NASA file download redirected to an unapproved destination.")
+    monkeypatch.setattr(nasa_osdr, "_bounded_download", failed)
+    reply = client.get("/api/research/nasa/sample-table")
+    assert reply.status_code == 503
+    assert "unapproved redirect" in reply.json()["detail"]
+    assert "no study result was invented" in reply.json()["detail"]
+
+
+def test_nasa_http_rejection_is_transparent_but_not_a_fake_study(monkeypatch):
+    from urllib.error import HTTPError
+    monkeypatch.setenv("ARES_RESEARCH_ENABLED", "1")
+    def failed(_url, _limit):
+        raise HTTPError(nasa_osdr.MANIFEST_API, 403, "Forbidden", {}, None)
+    monkeypatch.setattr(nasa_osdr, "_bounded_download", failed)
+    reply = client.get("/api/research/nasa/sample-table")
+    assert reply.status_code == 503
+    assert "HTTP 403" in reply.json()["detail"]
+    assert reply.json().get("study") is None
