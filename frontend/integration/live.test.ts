@@ -228,3 +228,27 @@ it('refuses stale context and unsafe medical questions over real HTTP', async ()
     ),
   ).rejects.toThrow('Mission context changed');
 });
+
+
+it('loads offline NASA-linked wellness procedures and abstains with incomplete observations', async () => {
+  const source = {
+    kind: 'scenario' as const, scenario: 'stable' as const,
+    seed: 2026, days: 21,
+  };
+  const briefing = await api.copilot(source, '', 0, undefined, signal());
+  const wellness = await api.wellness(source, briefing.context_ref, signal());
+  expect(wellness.context_ref).toBe(briefing.context_ref);
+  expect(wellness.assessment).toBe(briefing.assessment);
+  expect(wellness.topics).toHaveLength(3);
+  expect(wellness.automated_reminders).toBe(false);
+  expect(wellness.clinical_decision_support).toBe(false);
+  expect(wellness.topics.every((item) => item.source_url.startsWith('https://www.nasa.gov/')))
+    .toBe(true);
+
+  const incomplete = { ...source, scenario: 'incomplete' as const };
+  const blockedBriefing = await api.copilot(incomplete, '', 0, undefined, signal());
+  const blocked = await api.wellness(incomplete, blockedBriefing.context_ref, signal());
+  expect(blocked.assessment).toBe('DATA_QUALITY_BLOCKED');
+  expect(blocked.topics.every((item) => item.comparison === 'withheld')).toBe(true);
+  expect(blocked.topics.every((item) => !item.illustrative_flag)).toBe(true);
+});
