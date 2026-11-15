@@ -90,7 +90,17 @@ it('handles loading, empty scenario/evidence lists and API errors without fallba
   expect(screen.queryByRole('heading', { name: 'Mission overview' })).not.toBeInTheDocument();
 });
 it('can retry a failed API connection', async () => {
-  fetchMock.mockRejectedValueOnce(new TypeError('Offline'));
+  // The NASA risk explorer also fetches on mount. Fail the scenario
+  // request by path rather than relying on incidental effect ordering.
+  const normal = mockApi();
+  let failedScenarioOnce = false;
+  fetchMock.mockImplementation((input, init) => {
+    if (!failedScenarioOnce && String(input).endsWith('/api/scenarios')) {
+      failedScenarioOnce = true;
+      return Promise.reject(new TypeError('Offline'));
+    }
+    return normal(input, init);
+  });
   const user = userEvent.setup();
   render(<App />);
   expect(await screen.findByRole('alert')).toHaveTextContent('Cannot reach the local API');
