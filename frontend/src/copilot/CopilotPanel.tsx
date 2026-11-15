@@ -27,6 +27,11 @@ export function CopilotPanel({
   const turnNodes = useRef(new Map<number, HTMLElement>());
   const previousCount = useRef(session.turns.length);
   const pendingTurn = useRef<number | null>(null);
+  // The native dialog temporarily leaves document flow in Focus mode.
+  // Record the background page offset before the transition; browser focus
+  // restoration and shrinking transcript min-height can otherwise move it.
+  const scrollBeforeFocus = useRef<number | null>(null);
+  const restoreDockScroll = useRef(false);
   // Reuse one dialog subtree so changing reading modes preserves drafts and history.
   // Native modal behavior traps focus and makes the background console inert.
   useLayoutEffect(() => {
@@ -46,7 +51,24 @@ export function CopilotPanel({
     const previousOverflow = document.body.style.overflow;
     if (focused) document.body.style.overflow = 'hidden';
     if (focused) expandButton.current?.focus({ preventScroll: true });
+    let restoreFrame: number | undefined;
+    if (!focused && restoreDockScroll.current) {
+      restoreDockScroll.current = false;
+      const savedY = scrollBeforeFocus.current;
+      // Restore after the dialog has rejoined document flow, without scrolling
+      // its focus target into view. Reassert in the next animation frame after
+      // browser layout/scroll anchoring and the transcript-size update.
+      expandButton.current?.focus({ preventScroll: true });
+      if (savedY !== null) {
+        window.scrollTo({ top: savedY, behavior: 'instant' });
+        restoreFrame = requestAnimationFrame(() => {
+          expandButton.current?.focus({ preventScroll: true });
+          window.scrollTo({ top: savedY, behavior: 'instant' });
+        });
+      }
+    }
     return () => {
+      if (restoreFrame !== undefined) cancelAnimationFrame(restoreFrame);
       document.body.style.overflow = previousOverflow;
       if (element.open) {
         if (element.close) element.close();
@@ -105,10 +127,14 @@ export function CopilotPanel({
   }, [session.turns.length, briefOpen, focused]);
   function toggleFocus() {
     // Hold the document's reading position while its dialog moves into the top layer.
-    if (!focused) setDockedHeight(dialog.current?.getBoundingClientRect().height ?? 0);
+    if (!focused) {
+      scrollBeforeFocus.current = window.scrollY;
+      setDockedHeight(dialog.current?.getBoundingClientRect().height ?? 0);
+    } else {
+      restoreDockScroll.current = true;
+    }
     pendingTurn.current = focused ? null : (session.turns.at(-1)?.turn ?? null);
     setFocused((value) => !value);
-    if (focused) requestAnimationFrame(() => expandButton.current?.focus({ preventScroll: true }));
   }
   function review() {
     setFocused(false);
@@ -133,8 +159,8 @@ export function CopilotPanel({
         aria-modal={focused}
         onCancel={(event) => {
           event.preventDefault();
+          restoreDockScroll.current = true;
           setFocused(false);
-          requestAnimationFrame(() => expandButton.current?.focus({ preventScroll: true }));
         }}
       >
         <section className="copilot-panel" aria-label="ARES mission copilot">
