@@ -3,14 +3,14 @@
 **Astronaut Risk Evaluation System**  
 **Track:** Create Health Monitoring Software for Astronauts on Space Missions  
 **Event:** Universal Event · November 14–15, 2026  
-**Stage:** Stable Streamlit demonstration v0.7 with a v1.0 local API and mission timeline — scientific evidence, plain-language guidance, synthetic CSV import, monitoring and review reporting, **not** clinically validated.
+**Stage:** Functional React integration v1.1 with the stable Streamlit v0.7 fallback and v1.0 API — scientific evidence, plain-language guidance, synthetic CSV import, monitoring and review reporting, **not** clinically validated.
 
 ## Local API foundation
 
 The current **Streamlit v0.7** interface remains the reliable standalone demo.
-This branch adds `src/ares_health/service.py` (a canonical, strict-JSON domain
-snapshot) and `src/ares_health/api.py` (local FastAPI endpoints) to prepare
-integration with a future approved Figma + React frontend. The backend also
+`src/ares_health/service.py` provides canonical strict-JSON snapshots, and
+`src/ares_health/api.py` exposes local FastAPI endpoints used by the functional
+React client. The future approved Figma visual design remains separate. The backend also
 includes **SciPy descriptive statistics** (median, robust MAD and Theil–Sen
 slope) for valid fictional records only. This is not medical risk scoring. **The new visual
 design is not integrated yet.**
@@ -36,6 +36,19 @@ all trend interpretations. Events do not estimate clinical onset or diagnose
 health conditions. The Streamlit interface and CSV/report workflows are unchanged.
 See [timeline API contract](docs/API_CONTRACT.md#mission-timeline--explainability--v10)
 for event fields, ordering, blocking and reproducibility guarantees.
+
+## Functional React integration (v1.1)
+
+A standalone `frontend/` Vite + React + TypeScript client now consumes the local
+FastAPI API for scenarios, three physiological charts, quality gating, timeline
+filters, strict synthetic CSV import, review JSON export and NASA/CSA references.
+All values and biomedical calculations remain in Python. No final Figma styling,
+anatomical model or 3D interface is included; Streamlit remains available unchanged.
+
+Start the loopback backend as above, then run `cd frontend`, `npm install`, and
+`npm run dev` in a second terminal. Vite uses port 5173 and proxies `/api` to
+127.0.0.1:8000. See [frontend startup and functional walkthrough](frontend/README.md)
+for exact PowerShell steps, test commands, configuration and limitations.
 
 ## Mission
 

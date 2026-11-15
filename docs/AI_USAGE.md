@@ -34,3 +34,16 @@ Tests use deterministic fictional observations only; no patient or astronaut
 records, new clinical thresholds, diagnoses, or external medical evidence were
 introduced. No Streamlit UI changes were made. Human review remains required
 before merge; passing software tests is not medical validation.
+
+## Version 1.1 functional React integration
+
+OpenAI Codex assisted with reading Issue #7, implementing the standalone
+Vite/React/TypeScript API client and accessible functional components, adding
+runtime response validation and request cancellation, creating tests and CI,
+and documenting startup and limitations. Backend-generated fictional fixtures
+and a Python-generated local synthetic template were used; no real health records
+or biomedical algorithms were added to React. The existing Python domain modules,
+Streamlit behavior, clinical disclaimers and demonstration thresholds are unchanged.
+The work does not implement the future Figma design, anatomical model or 3D UI.
+Human review is required before merging; passing integration tests demonstrates
+software behavior, not medical safety or clinical validation.

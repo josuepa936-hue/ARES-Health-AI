@@ -12,3 +12,7 @@ data/real/
 *.db
 *.sqlite
 *.sqlite3
+frontend/node_modules/
+frontend/dist/
+frontend/coverage/
+frontend/.env.local
