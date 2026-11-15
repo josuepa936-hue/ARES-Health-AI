@@ -227,9 +227,17 @@ def test_user_states_never_change_analysis_or_grant_authorization(state):
     assert data["fictional_review"]["clinical_authorization"] is False
     assert data["fictional_review"]["actions"]["source_units"] is True
     assert data["fictional_review"]["audit_log"] == events
-    assert data["review_state"] == (
+    assert data["review_state"] == state
+    assert data["fictional_review"]["review_state"] == data["review_state"]
+    assert data["legacy_review_state"] == (
         "Reviewed in demo" if state == "DOCUMENTED" else "Pending review"
     )
+    assert "Compatibility-only" in data["legacy_review_state_semantics"]
+    assert data["application_version"] == data["copilot_application_version"]
+    assert data["application_version"] == data["mission_timeline"]["application_version"]
+    assert data["schema_version"] == "1.0-demo"
+    assert data["mission_timeline"]["schema_version"] == "1.0-timeline"
+    assert data["fictional_review"]["audit_timestamps_complete"] is False
     assert (
         first.content
         == client.post("/api/mission/comprehensive-report", json=payload).content
