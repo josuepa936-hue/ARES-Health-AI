@@ -10,10 +10,10 @@ export default function Workspace() {
     <div className="mission-shell">
       <div className="global-header">
         <div className="brand-lockup">
-          <span className="brand-mark">ARES / HEALTH AI</span>
-          <span className="brand-subtitle">Astronaut Risk Evaluation System · Demonstration Console</span>
+          <span className="brand-mark">ARES</span>
+          <span className="brand-subtitle">HEALTH AI / MISSION SYSTEMS</span>
         </div>
-        <span className="global-status">INDEPENDENT RESEARCH PROTOTYPE · SYNTHETIC CREW</span>
+        <span className="global-status">INDEPENDENT DEMONSTRATION</span>
       </div>
       <nav className="workspace-nav" aria-label="Workspace mode">
         <button aria-pressed={mode === 'mission'} onClick={() => setMode('mission')}>
@@ -26,16 +26,6 @@ export default function Workspace() {
           NASA space biology
         </button>
       </nav>
-      {mode === 'mission' && (
-        <nav className="quick-nav" aria-label="Mission workflow navigation">
-          <a href="#crew-checkin">Crew check-in</a>
-          <a href="#mission-results">Mission assessment</a>
-          <a href="#mission-timeline">Timeline</a>
-          <a href="#mission-review">Review report</a>
-          <a href="#space-risks">Spaceflight hazards</a>
-          <a href="#scientific-evidence">Evidence</a>
-        </nav>
-      )}
       <div hidden={mode !== 'mission'}>
         <App />
       </div>

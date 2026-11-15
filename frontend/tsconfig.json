@@ -11,5 +11,12 @@
     "esModuleInterop": true,
     "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"]
   },
-  "include": ["src", "vite.config.ts", "vitest.integration.config.ts", "integration"]
+  "include": [
+    "src",
+    "vite.config.ts",
+    "vitest.integration.config.ts",
+    "integration",
+    "e2e",
+    "playwright.config.ts"
+  ]
 }

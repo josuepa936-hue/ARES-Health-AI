@@ -96,3 +96,14 @@ provenance as public terrestrial research, with no upload or clinical inference.
 No research result is converted into synthetic observations. The source/license
 and official measured-case checks remain unresolved; keep this draft branch as
 future work rather than changing the submission fallback. See `RESEARCH_LAB.md`.
+
+## v1.4 presentation layer
+
+The v1.3 data orchestration remains in App; new console presenters consume its
+current snapshot and selected metric. TelemetryCard, BodyViewer and MetricPanel
+share selection without computing new physiological findings. ContextDock uses
+accessible mounted panels for the existing check-in, CSV, timeline, review, hazard
+and evidence components. Research presenters retain separate provenance/state.
+Recharts is split into a vendor bundle; the original generated illustration is a
+local hashed asset, served by the unchanged FastAPI compiled-asset mount. New
+Playwright checks validate real compiled one-server rendering and workflows.

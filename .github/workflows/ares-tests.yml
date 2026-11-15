@@ -91,6 +91,29 @@ jobs:
           curl --fail --silent http://127.0.0.1:5173/api/status
           npm --prefix frontend run test:integration
 
+      - name: Install browser for actual console review
+        run: npx playwright install --with-deps chromium
+      - name: Run real one-server desktop and mobile UI checks
+        working-directory: .
+        shell: bash
+        run: |
+          python -m uvicorn src.ares_health.api:app --host 127.0.0.1 --port 8014 > /tmp/ares-browser.log 2>&1 &
+          ARES_BROWSER_PID=$!
+          trap 'kill "$ARES_BROWSER_PID" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8014/api/status > /dev/null; then break; fi
+            sleep 1
+          done
+          ARES_E2E_ORIGIN=http://127.0.0.1:8014 npm --prefix frontend run test:browser
+      - name: Retain actual browser screenshots and failure traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ares-console-browser-review
+          path: |
+            frontend/screenshots/
+            frontend/test-results/
+
   research-offline-tests:
     runs-on: ubuntu-latest
     steps:

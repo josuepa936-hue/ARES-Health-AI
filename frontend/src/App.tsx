@@ -1,10 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
 import { api, message } from './api';
-import type { CheckInResult, Evidence, FictionalCheckInInput, ScenarioId, Snapshot, Timeline } from './contracts';
+import type {
+  CheckInResult,
+  Evidence,
+  FictionalCheckInInput,
+  ScenarioId,
+  Snapshot,
+  Timeline,
+} from './contracts';
 import { CsvUpload } from './components/CsvUpload';
 import { FictionalCheckIn } from './components/FictionalCheckIn';
 import { SpaceRiskExplorer } from './components/SpaceRiskExplorer';
-import { Overview } from './components/Overview';
+import { MissionCommandBar } from './console/MissionCommandBar';
+import { TelemetryCard } from './console/TelemetryCard';
+import { BodyViewer } from './console/BodyViewer';
+import { MetricPanel } from './console/MetricPanel';
+import { ContextDock, type DockTab } from './console/ContextDock';
+import { metrics, type MetricKey } from './console/metrics';
+import { Activity, ArrowUpRight, FileUp, Radio, ShieldCheck } from 'lucide-react';
 import { Review } from './components/Review';
 import { TimelineView } from './components/TimelineView';
 type Mission = {
@@ -16,6 +29,13 @@ type Mission = {
   key: number;
 };
 export default function App() {
+  const [selectedMetric, setSelectedMetric] = useState<MetricKey>('resting_hr_bpm');
+  const [dockTab, setDockTab] = useState<DockTab>('checkin');
+  const [dockOpen, setDockOpen] = useState(true);
+  function openDock(tab: DockTab) {
+    setDockTab(tab);
+    setDockOpen(true);
+  }
   const [scenarios, setScenarios] = useState<{ id: ScenarioId; label: string }[]>([]);
   const [scenario, setScenario] = useState<ScenarioId | ''>('');
   const [evidence, setEvidence] = useState<Evidence>();
@@ -104,8 +124,11 @@ export default function App() {
       if (!controller.signal.aborted && key === sequence.current)
         setMission({
           source: 'checkin',
-          snapshot: result, timeline: result.mission_timeline, key,
-          checkIn: result.check_in, decisionSupport: result.decision_support,
+          snapshot: result,
+          timeline: result.mission_timeline,
+          key,
+          checkIn: result.check_in,
+          decisionSupport: result.decision_support,
         });
     } catch (cause) {
       if (!controller.signal.aborted && key === sequence.current) setError(message(cause));
@@ -113,143 +136,235 @@ export default function App() {
       if (!controller.signal.aborted && key === sequence.current) setBusy(false);
     }
   }
+  const snapshot = mission?.snapshot;
+  const source =
+    mission?.source === 'csv'
+      ? 'Uploaded synthetic CSV'
+      : mission?.source === 'checkin'
+        ? 'Attested fictional crew check-in'
+        : 'Built-in synthetic scenario';
+  const blocked = snapshot?.assessment === 'DATA_QUALITY_BLOCKED';
+  const changed = snapshot?.assessment === 'CHANGE_FOR_REVIEW';
   return (
-    <main>
-      <header>
-        <p className="eyebrow">MISSION HEALTH CONSOLE / END-TO-END FICTIONAL DEMONSTRATION</p>
-        <h1>ARES Health AI v1.3</h1>
-        <p role="note">
-          <strong>SYNTHETIC DATA / NOT A MEDICAL DEVICE</strong>
-        </p>
-        <p>
-          Local fictional-data demonstration. No diagnosis, NASA telemetry, or clinical validation.
-          Do not enter real health data.
-        </p>
-      </header>
-      <section>
-        <p className="eyebrow">01 / SELECT SCENARIO</p>
-        <h2>Mission simulation</h2>
-        {catalogBusy && <p role="status">Loading scenarios…</p>}
-        {catalogError && <p role="alert">{catalogError}</p>}
-        {!catalogBusy && !catalogError && !scenarios.length && (
-          <p>No scenarios available from the API.</p>
-        )}
-        <label>
-          Demo scenario
-          <select
-            value={scenario}
-            disabled={!scenarios.length}
-            onChange={(e) => {
-              setScenario(e.target.value as ScenarioId);
+    <main className={`console-app ${!dockOpen ? 'dock-closed' : ''}`}>
+      <MissionCommandBar
+        scenarios={scenarios}
+        scenario={scenario}
+        snapshot={snapshot}
+        source={source}
+        busy={busy}
+        onScenario={(value) => {
+          setScenario(value);
+          setRevision((value) => value + 1);
+        }}
+        onReload={() => setRevision((value) => value + 1)}
+      />
+      <div className="console-title-row">
+        <div>
+          <p className="eyebrow">ARES / CREW SYSTEMS INTELLIGENCE</p>
+          <h1>
+            Biomedical mission control<span>01</span>
+          </h1>
+        </div>
+        <div className={`assessment-chip ${blocked ? 'blocked' : changed ? 'change' : ''}`}>
+          <Radio size={13} />
+          <strong>{snapshot?.assessment ?? (busy ? 'LOADING MISSION' : 'AWAITING DATA')}</strong>
+        </div>
+      </div>
+      {(catalogError || error) && (
+        <div className="console-error" role="alert">
+          {catalogError || error}
+          <button
+            onClick={() => {
+              setCatalogRetry((value) => value + 1);
               setRevision((value) => value + 1);
             }}
           >
-            <option value="" disabled>
-              Choose a scenario
-            </option>
-            {scenarios.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <p>Seed 2026 · 21 days · values and rules supplied by FastAPI.</p>
-        <button disabled={!scenario || busy} onClick={() => setRevision((value) => value + 1)}>
-          Reload selected scenario
-        </button>
-        {catalogError && (
-          <button onClick={() => setCatalogRetry((value) => value + 1)}>
             Retry API connection
           </button>
-        )}
-      </section>
-      {busy && <p role="status">Loading mission data…</p>}
-      {error && (
-        <p role="alert">{error} Retry with a scenario or upload a corrected fictional CSV.</p>
+        </div>
       )}
-      <FictionalCheckIn
-        scenario={scenario || undefined}
-        busy={busy}
-        onSubmit={submitCheckIn}
-      />
-            <CsvUpload onUpload={upload} busy={busy} />
-      {mission && (
-        <div key={mission.key}>
-          <p className="source-banner">
-            Active data source:{' '}
-            {mission.source === 'csv'
-              ? 'Uploaded synthetic CSV'
-              : mission.source === 'checkin'
-                ? 'Attested fictional crew check-in'
-                : 'Built-in synthetic scenario'}
-          </p>
-          {mission.checkIn && (
-            <section className="mission-card" aria-label="Check-in outcome">
-              <p className="eyebrow">03 / REVIEW CURRENT MISSION</p>
-              <h2>Check-in applied to fictional mission</h2>
-              <p>Evaluation date (UTC): {mission.checkIn.timestamp_utc}</p>
-              <p>{mission.checkIn.notice}</p>
-              {mission.decisionSupport && (
+      {catalogBusy && (
+        <span role="status" className="load-note">
+          Loading scenarios…
+        </span>
+      )}
+      {busy && (
+        <span role="status" className="load-note">
+          Loading mission data…
+        </span>
+      )}
+      {!catalogBusy && !catalogError && !scenarios.length && (
+        <p>No scenarios available from the API.</p>
+      )}
+      <div className="command-grid">
+        <aside className="telemetry-rail" aria-label="Mission telemetry">
+          <div className="rail-title">
+            <h2>{snapshot ? 'Mission overview' : 'Mission telemetry'}</h2>
+            <span>3 INDICATORS</span>
+          </div>
+          {snapshot ? (
+            <>
+              {metrics.map((metric) => (
+                <TelemetryCard
+                  key={metric.key}
+                  snapshot={snapshot}
+                  metric={metric}
+                  selected={selectedMetric === metric.key}
+                  onSelect={() => setSelectedMetric(metric.key)}
+                />
+              ))}
+              <div className="rail-integrity">
+                <ShieldCheck size={13} />
+                {snapshot.summary.completeness_pct}% COMPLETE{' '}
+                <span>{snapshot.summary.quality_findings} QUALITY FINDINGS</span>
+              </div>
+            </>
+          ) : (
+            <div className="awaiting-data">
+              <Activity size={30} />
+              <p>
+                {error || catalogError ? 'Mission data unavailable' : 'Awaiting API observations'}
+              </p>
+              <p>No substitute readings are generated.</p>
+            </div>
+          )}
+        </aside>
+        <BodyViewer selected={selectedMetric} onSelect={setSelectedMetric} crewId={snapshot?.summary.crew_id} />
+        {snapshot ? (
+          <MetricPanel
+            snapshot={snapshot}
+            selected={selectedMetric}
+            onSelect={setSelectedMetric}
+            onReview={() => openDock('review')}
+          />
+        ) : (
+          <section className="metric-panel awaiting-data">
+            <Activity size={30} />
+            <h2>Signal analysis</h2>
+            <p>{busy ? 'Loading actual API observations…' : 'No analysis available.'}</p>
+          </section>
+        )}
+      </div>
+      <ContextDock
+        active={dockTab}
+        open={dockOpen}
+        onSelect={openDock}
+        onToggle={() => setDockOpen((value) => !value)}
+        panels={{
+          checkin: (
+            <div className="drawer-split">
+              <div>
+                <FictionalCheckIn
+                  scenario={scenario || undefined}
+                  busy={busy}
+                  onSubmit={submitCheckIn}
+                  compact
+                />
+                {mission?.checkIn && (
+                  <div className="checkin-result" aria-label="Check-in outcome">
+                    <h3>Check-in applied to fictional mission</h3>
+                    <p>{mission.checkIn.notice}</p>
+                    <p>{mission.decisionSupport?.review_action}</p>
+                    <button onClick={() => openDock('timeline')}>
+                      Inspect updated timeline <ArrowUpRight size={13} />
+                    </button>
+                    <button onClick={() => openDock('review')}>Export updated review</button>
+                  </div>
+                )}
+              </div>
+              <CsvUpload onUpload={upload} busy={busy} />
+            </div>
+          ),
+          timeline: mission ? (
+            <TimelineView key={mission.key} timeline={mission.timeline} blocked={!!blocked} />
+          ) : (
+            <p>Load a mission to inspect its timeline.</p>
+          ),
+          review: mission ? (
+            <div className="review-drawer-layout">
+              <Review
+                key={mission.key}
+                scenario={mission.source === 'builtin' ? (scenario as ScenarioId) : undefined}
+                embedded={snapshot?.review_report}
+              />
+              <aside className="procedural-guidance">
+                <h3>{mission.snapshot.guidance.heading}</h3>
+                <p>{mission.snapshot.guidance.meaning}</p>
+                <ol>
+                  {mission.snapshot.guidance.review_steps.map((step) => (
+                    <li key={step}>{step}</li>
+                  ))}
+                </ol>
+                {mission.decisionSupport && (
+                  <>
+                    <p>{mission.decisionSupport.concerns_notice}</p>
+                    <p>{mission.decisionSupport.mission_procedures}</p>
+                  </>
+                )}
+              </aside>
+            </div>
+          ) : (
+            <p>Load a mission to create a review.</p>
+          ),
+          risks: <SpaceRiskExplorer />,
+          sources: (
+            <section id="scientific-evidence">
+              <h2>Scientific context</h2>
+              <p>
+                Research references are background, not NASA/CSA telemetry or clinical validation of
+                this prototype.
+              </p>
+              {evidenceError ? (
                 <>
-                  <h3>Procedure-oriented review</h3>
-                  <p>{mission.decisionSupport.review_action}</p>
-                  <p>{mission.decisionSupport.concerns_notice}</p>
-                  <p className="notice-neutral">{mission.decisionSupport.mission_procedures}</p>
+                  <p role="alert">{evidenceError}</p>
+                  <button onClick={() => setCatalogRetry((value) => value + 1)}>
+                    Retry scientific references
+                  </button>
+                </>
+              ) : !evidence ? (
+                <p role="status">Loading scientific references…</p>
+              ) : (
+                <>
+                  <p>{evidence.usage}</p>
+                  {!evidence.references.length ? (
+                    <p>No references available.</p>
+                  ) : (
+                    <ul className="evidence-grid">
+                      {evidence.references.map((item) => (
+                        <li key={item.url}>
+                          <a href={item.url} target="_blank" rel="noreferrer">
+                            {item.title} <ArrowUpRight size={12} />
+                          </a>
+                          <small>{item.organization}</small>
+                          <p>{item.summary}</p>
+                          <p>{item.limitation}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </>
               )}
             </section>
-          )}
-          <Overview snapshot={mission.snapshot} />
-          <TimelineView
-            timeline={mission.timeline}
-            blocked={mission.snapshot.assessment === 'DATA_QUALITY_BLOCKED'}
-          />
-          <Review
-            scenario={mission.source === 'builtin' ? (scenario as ScenarioId) : undefined}
-            embedded={mission.snapshot.review_report}
-          />
+          ),
+        }}
+      />
+      <footer className="console-footer">
+        <span>
+          <span className="live-dot" /> SYNTHETIC DATA / NOT A MEDICAL DEVICE
+        </span>
+        <span>Active data source: {source}</span>
+        <span>PYTHON DOMAIN ENGINE · v1.4 UI</span>
+      </footer>
+      {blocked && (
+        <div className="quality-banner" role="alert">
+          <strong>Data quality blocks interpretation.</strong>
+          {snapshot?.quality_issues.map((issue) => (
+            <span key={issue}>{issue}</span>
+          ))}
+          <button onClick={() => openDock('timeline')}>Inspect quality events</button>
         </div>
       )}
-      <SpaceRiskExplorer />
-      <section id="scientific-evidence">
-        <p className="eyebrow">05 / SCIENTIFIC REFERENCES</p>
-        <h2>Scientific context</h2>
-        <p>
-          Research references are background, not NASA/CSA telemetry or clinical validation of this
-          prototype.
-        </p>
-        {evidenceError ? (
-          <>
-            <p role="alert">{evidenceError}</p>
-            <button onClick={() => setCatalogRetry((value) => value + 1)}>
-              Retry scientific references
-            </button>
-          </>
-        ) : !evidence ? (
-          <p role="status">Loading scientific references…</p>
-        ) : (
-          <>
-            <p>{evidence.usage}</p>
-            {!evidence.references.length ? (
-              <p>No references available.</p>
-            ) : (
-              <ul>
-                {evidence.references.map((item) => (
-                  <li key={item.url}>
-                    <a href={item.url} target="_blank" rel="noreferrer">
-                      {item.title}
-                    </a>{' '}
-                    — {item.organization}
-                    <p>{item.summary}</p>
-                    <p>{item.limitation}</p>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </>
-        )}
-      </section>
     </main>
   );
 }

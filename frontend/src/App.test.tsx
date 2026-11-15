@@ -21,7 +21,12 @@ it('loads real API shapes, all scenario states, physiological charts and scienti
   const user = userEvent.setup();
   await ready();
   expect(screen.getByText('SYNTHETIC DATA / NOT A MEDICAL DEVICE')).toBeVisible();
-  expect(screen.getAllByRole('img')).toHaveLength(3);
+  expect(
+    screen.getAllByRole('button', {
+      name: /^(Resting heart rate|Sleep duration|Daily activity)/,
+    }),
+  ).toHaveLength(3);
+  await user.click(screen.getByRole('tab', { name: 'Research Sources' }));
   expect(screen.getByRole('link', { name: fixtures.evidence.references[0].title })).toHaveAttribute(
     'href',
     fixtures.evidence.references[0].url,
@@ -58,6 +63,7 @@ it('shows incomplete observations as missing values, not zero or reconstructed s
   await user.click(screen.getByText('Observation values and UTC dates'));
   expect(screen.getAllByText('Missing')).toHaveLength(5);
   expect(screen.queryByText('API descriptive statistics')).not.toBeInTheDocument();
+  await user.click(screen.getByRole('tab', { name: 'Mission Timeline' }));
   expect(screen.getAllByText(/All trend interpretations are withheld/)[0]).toBeVisible();
 });
 it('filters timeline types while retaining IDs and explains repeated windows', async () => {
@@ -86,6 +92,7 @@ it('handles loading, empty scenario/evidence lists and API errors without fallba
   render(<App />);
   expect(screen.getByText('Loading scenarios…')).toBeVisible();
   expect(await screen.findByText('No scenarios available from the API.')).toBeVisible();
+  await userEvent.setup().click(screen.getByRole('tab', { name: 'Research Sources' }));
   expect(screen.getByText('No references available.')).toBeVisible();
   expect(screen.queryByRole('heading', { name: 'Mission overview' })).not.toBeInTheDocument();
 });
@@ -177,9 +184,11 @@ it('uses the embedded CSV report for export without submitting a built-in review
   await user.click(screen.getByRole('checkbox', { name: /I attest/ }));
   await user.click(screen.getByRole('button', { name: 'Upload synthetic CSV' }));
   await screen.findByText('Active data source: Uploaded synthetic CSV');
+  await user.click(screen.getByRole('tab', { name: 'Mission Timeline' }));
   expect(screen.getByRole('heading', { name: 'Mission timeline' })).toBeVisible();
   expect(screen.getByText('event-000001')).toBeVisible();
   expect(screen.queryByRole('button', { name: 'Request review JSON' })).not.toBeInTheDocument();
+  await user.click(screen.getByRole('tab', { name: 'Review & Export' }));
   await user.click(screen.getByRole('button', { name: 'Download review JSON' }));
   expect(download).toHaveBeenCalledWith(
     expect.objectContaining({ scenario: 'uploaded_synthetic_csv' }),
@@ -190,9 +199,11 @@ it('exports the returned scenario review JSON and invalidates it after note edit
   const download = vi.spyOn(downloads, 'downloadReport').mockImplementation(() => {});
   const user = userEvent.setup();
   await ready();
+  await user.click(screen.getByRole('tab', { name: 'Review & Export' }));
   await user.selectOptions(screen.getByLabelText('Review state'), 'Reviewed in demo');
   await user.type(screen.getByLabelText('Reviewer note'), 'Fictional review only.');
   expect(screen.getByLabelText('Reviewer note')).toHaveAttribute('maxlength', '500');
+  await user.click(screen.getByRole('tab', { name: 'Review & Export' }));
   await user.click(screen.getByRole('button', { name: 'Request review JSON' }));
   await user.click(await screen.findByRole('button', { name: 'Download review JSON' }));
   expect(download).toHaveBeenCalledWith(
@@ -213,6 +224,7 @@ it('shows review API failures without enabling an export', async () => {
       ? Promise.resolve(respond({ detail: 'Review unavailable' }, 500))
       : normal(input, init),
   );
+  await user.click(screen.getByRole('tab', { name: 'Review & Export' }));
   await user.click(screen.getByRole('button', { name: 'Request review JSON' }));
   expect(await screen.findByRole('alert')).toHaveTextContent('Review unavailable');
   expect(screen.queryByRole('button', { name: 'Download review JSON' })).not.toBeInTheDocument();
@@ -229,6 +241,7 @@ it('cancels review requests when the mission changes', async () => {
     }
     return normal(input, init);
   });
+  await user.click(screen.getByRole('tab', { name: 'Review & Export' }));
   await user.click(screen.getByRole('button', { name: 'Request review JSON' }));
   await user.selectOptions(screen.getByLabelText('Demo scenario'), 'incomplete');
   await screen.findByText('Data quality blocks interpretation.');

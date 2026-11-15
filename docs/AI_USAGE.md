@@ -98,3 +98,17 @@ static compiled React asset serving through localhost FastAPI, strict
 file-path restrictions, production distribution smoke tests, and
 documentation for offline presentation. Compiled assets are produced
 locally; no third-party hosted API or cloud patient-data service is required.
+
+## Version 1.4 mission-control presentation
+
+OpenAI Codex assisted with the React console redesign, accessible tabbed workflows,
+API-connected telemetry/anatomical navigation, Recharts integration, regression and
+real Chromium tests, screenshot review and documentation. OpenAI image generation
+created an original clothed fictional anatomical-navigation illustration. It is
+not a patient image, NASA asset or clinically certified anatomical model; generated
+anatomy and decorative colors have no measurement or diagnostic meaning. No external
+anatomical model/license was represented as available. The task's referenced image
+attachments were not accessible, so Issue #13's written art direction was used.
+Python domain logic, biomedical benchmarks, source provenance, validations and
+report generation remain unchanged. Human visual/source review is required before
+merging this draft against the v1.3 branch. No merging or clinical claim is authorized.

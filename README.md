@@ -209,3 +209,16 @@ submission fallback. **The official PhysioNet run and source/license review are
 blocked by network access and are not claimed complete.** See
 [research protocol, provenance and preparation](docs/RESEARCH_LAB.md) for exact
 bounds, abstention behavior, citations, optional tooling and draft scope gate.
+
+## v1.4 mission-control redesign (draft against PR #12)
+
+The React console now has a compact three-column desktop layout: API telemetry,
+interactive original anatomical illustration, and dated signal analysis. Check-in,
+CSV, timeline, reports, NASA risks and sources live in a contextual tabbed workspace.
+MIT-BIH and NASA OSDR remain separate research modes. All Python functionality and
+source provenance are preserved. No new medical logic is implemented in React.
+
+After checkout, run `cd frontend`, `npm ci`, `cd ..`, then `start-ares.cmd` on Windows.
+The one-server app remains on 127.0.0.1:8000. See [design, asset provenance, tests and
+real browser captures](docs/CONSOLE_V14.md). The anatomical art is an original
+AI-generated navigation illustration, not a clinically certified anatomy model.

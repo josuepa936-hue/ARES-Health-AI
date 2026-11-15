@@ -20,23 +20,38 @@ it('lets a fictional astronaut submit one check-in and see backend report plus t
   await user.clear(hr);
   await user.type(hr, '140');
   await user.click(screen.getByRole('checkbox', { name: 'Fatigue (hypothetical)' }));
-  await user.click(screen.getByRole('checkbox', { name: /I confirm this check-in contains fictional/ }));
+  await user.click(
+    screen.getByRole('checkbox', { name: /I confirm this check-in contains fictional/ }),
+  );
   await user.click(send);
 
-  expect(await screen.findByText('Active data source: Attested fictional crew check-in')).toBeVisible();
-  expect(screen.getByRole('heading', { name: 'Check-in applied to fictional mission' })).toBeVisible();
+  expect(
+    await screen.findByText('Active data source: Attested fictional crew check-in'),
+  ).toBeVisible();
+  expect(
+    screen.getByRole('heading', { name: 'Check-in applied to fictional mission' }),
+  ).toBeVisible();
   expect(screen.getByText('Only the latest fictional observation was replaced.')).toBeVisible();
+  await user.click(screen.getByRole('tab', { name: 'Mission Timeline' }));
   expect(screen.getByRole('heading', { name: 'Mission timeline' })).toBeVisible();
   expect(screen.getByText('event-000001')).toBeVisible();
   expect(screen.queryByRole('button', { name: 'Request review JSON' })).not.toBeInTheDocument();
+  await user.click(screen.getByRole('tab', { name: 'Review & Export' }));
   expect(screen.getByRole('button', { name: 'Download review JSON' })).toBeVisible();
 
-  const entry = fetch.mock.calls.find(([url]) => String(url).includes('/mission/fictional-check-in'));
+  const entry = fetch.mock.calls.find(([url]) =>
+    String(url).includes('/mission/fictional-check-in'),
+  );
   expect(entry).toBeTruthy();
   const input = JSON.parse(String(entry![1]?.body));
   expect(input).toEqual({
-    fictional_attestation: true, scenario: 'stable', seed: 2026, days: 21,
-    resting_hr_bpm: 140, sleep_hours: 7.5, activity_minutes: 42,
+    fictional_attestation: true,
+    scenario: 'stable',
+    seed: 2026,
+    days: 21,
+    resting_hr_bpm: 140,
+    sleep_hours: 7.5,
+    activity_minutes: 42,
     concerns: ['fatigue'],
   });
 });
@@ -58,7 +73,10 @@ it('loads official NASA hazard context and lets users explore each category', as
   vi.stubGlobal('fetch', fetch);
   const user = userEvent.setup();
   render(<App />);
-  expect(await screen.findByRole('heading', { name: 'Five hazards of human spaceflight' })).toBeVisible();
+  await user.click(screen.getByRole('tab', { name: 'Spaceflight Risks' }));
+  expect(
+    await screen.findByRole('heading', { name: 'Five hazards of human spaceflight' }),
+  ).toBeVisible();
   const risk = screen.getByRole('region', { name: 'NASA spaceflight risk explorer' });
   const radiation = screen.getByRole('button', { name: 'Space radiation' });
   expect(radiation).toHaveAttribute('aria-pressed', 'false');
