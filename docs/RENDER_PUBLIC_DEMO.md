@@ -3,7 +3,10 @@
 Deployment branch: `feat/render-public-demo`, based on main `aadd798`.
 This work does not duplicate or modify `docs/issue-26-delivery-audit` / `8235188`.
 No biomedical algorithms, thresholds, evaluation rules or existing history change.
-No Render service has been created or published by this change.
+This agent did not create or publish the service. The owner now reports the
+public deployment at https://ares-health-ai.onrender.com/ and successful incognito
+access; see [the public acceptance record](RENDER_VALIDATION.md) for provenance
+and verification limits. The setup steps below remain reproduction instructions.
 
 ## Deployment contract
 
@@ -159,9 +162,11 @@ then manually verify a browser outside the cloud environment:
 - Requests stay local to the app origin except explicit user navigation to cited
   literature. No real health data is used to test this demonstration.
 
-An external HTTPS deployment/browser check cannot be performed before an owner
-creates and supplies the public service URL. Local container success is not proof
-of Render availability. See RENDER_VALIDATION.md for the actual run evidence.
+The owner has now supplied the HTTPS URL and reported public functional/incognito
+acceptance. This agent's current request was blocked by the environment proxy;
+independent live security/TLS/mobile verification remains unperformed. Local
+container success and owner acceptance are distinct evidence. See
+[RENDER_VALIDATION.md](RENDER_VALIDATION.md) for their separate records.
 
 ## Release boundaries
 

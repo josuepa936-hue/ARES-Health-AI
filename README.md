@@ -8,7 +8,9 @@ a cached Render browser tab is not an offline implementation.
 > Public interactive deployment is available only through the opt-in, bounded
 > `ARES_PUBLIC_DEMO=1` configuration in [the Render guide](docs/RENDER_PUBLIC_DEMO.md).
 > The default development server remains local-only. Do not expose development
-> mode directly. No public Render URL has been deployed or verified here.
+> mode directly. The owner reports the demo at https://ares-health-ai.onrender.com/
+> and successful incognito access; see [public acceptance and its limits](docs/RENDER_VALIDATION.md).
+> The hosted URL requires Internet; offline use requires the local server.
 
 
 **Astronaut Risk Evaluation System**  

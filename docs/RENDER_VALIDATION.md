@@ -3,9 +3,10 @@
 Validated locally on November 15, 2026, from `feat/render-public-demo`, based on
 main `aadd7981eb3e6a91f06d7dec43906b56a1b41a73`. This is an independent deployment
 branch. The documentation audit ref remains `8235188`; its changes are not copied
-here. No deployment, credential change, history rewrite or automatic merge occurred.
+here. During that local preparation, this agent did not deploy, change credentials,
+rewrite history or merge. The separate owner-reported deployment is recorded below.
 
-## Completed checks
+## Preserved prior local checks
 
 | Check | Result |
 |---|---|
@@ -22,7 +23,7 @@ here. No deployment, credential change, history rewrite or automatic merge occur
 | Port configuration | Default test with PORT=10000; separate successful run with **PORT=10007** and RENDER_EXTERNAL_URL fallback |
 | Fail-closed deployment image | ARES_PUBLIC_DEMO=0 rejected at entrypoint; missing/invalid HTTPS origin covered by configuration checks |
 | Files / output | Git, .env, data, research artifacts and node_modules absent from runtime /app; session CA mount absent; application output log empty after probes |
-| Configuration / diff | YAML parsed by local Prettier; git diff --check passed. Render's own Blueprint validation has not run |
+| Configuration / diff | YAML parsed by local Prettier; git diff --check passed. Render's Blueprint validation was not independently observed |
 
 Desktop/mobile checks exercise scenarios, fictional check-in, telemetry, charts,
 timeline, deterministic question/explanation, NASA-linked Wellness, manual review
@@ -47,8 +48,9 @@ certificate verification; the corrected build used a temporary Dockerfile that
 mounts the existing combined trust bundle as a BuildKit secret and sets
 NODE_EXTRA_CA_CERTS / PIP_CERT only in dependency-install RUN steps. TLS and npm
 integrity checks stayed enabled; no CA, proxy setting or credential was baked into
-the runtime. The checked-in Dockerfile targets ordinary trusted Render builds.
-It has not yet been executed by Render itself.
+the runtime. The checked-in Dockerfile targets ordinary trusted Render builds. At the time of
+that local test, Render execution was unverified. The owner now reports Render
+deployment success below; this update did not independently inspect build logs.
 
 The container was run read-only with capabilities dropped and no-new-privileges.
 `--memory 512m --cpus 2` were requested, but this environment's rootless Docker
@@ -58,25 +60,55 @@ maximum-workload smoke, but this is not a proven 512 MiB container budget or a
 production capacity measurement. Verify plan resources and health on Render;
 inspect current costs before creating the Starter service.
 
-The workflow now includes Docker/public checks but has not been pushed or run
-remotely in this task. Do not equate local results with GitHub Actions success
-for this branch. Python 3.13, the entire existing visual-browser suite and optional
+The recorded local checks did not establish a remote CI result. The deployment
+branch was subsequently published; no fresh GitHub Actions result was inspected
+for this documentation update. Do not equate local results with remote CI success.
+Python 3.13, the entire existing visual-browser suite and optional
 research-library benchmarks were not newly executed locally; required baseline
 Python/frontend suites and the new public workflows did execute.
 
-## Outstanding external acceptance
+## Public Render acceptance — owner report, November 15, 2026
 
-**No public HTTPS Render URL exists or was provided for this task.** The owner
-explicitly requested no automatic publication. Therefore an external Internet
-browser, real Render TLS, proxy headers, deployed resource limits and evaluator
-access cannot yet be verified. This is a concrete deployment prerequisite, not
-an application test claimed as passed.
+Public demo URL: **https://ares-health-ai.onrender.com/**.
+Evidence source: [owner-provided report](evidence/OWNER_OFFLINE_REPORT_2026-11-15.md),
+section 4, plus the owner's statement in this conversation.
 
-Follow [the Render guide](RENDER_PUBLIC_DEMO.md): review and push the feature branch,
-connect the repository, inspect costs/configuration, manually deploy, then run
-public tests against the actual HTTPS origin and repeat desktop/mobile acceptance
-from outside this cloud environment. Only then announce availability. Official
-Space Apps submission and licensing/asset-rights decisions remain owner actions.
+| Acceptance item | Recorded status | Provenance / limit |
+|---|---|---|
+| Deployment dashboard | Deploy succeeded / Live — owner reported | Report identifies source e7e3a7c on feat/render-public-demo; dashboard/build logs not independently inspected |
+| Public HTTPS interface | Accessible — owner reported | URL supplied by owner; no independent TLS certificate assessment in this update |
+| Incognito access without sign-in | PASS — owner reported | Does not by itself establish all endpoints, browsers or security properties |
+| Scenarios, deterministic Copilot and Wellness | PASS — owner reported | Public functional checks described by owner; separate from earlier local container tests |
+| Fictional check-in and report export | PASS — owner reported | No new deployed-service export artifact independently inspected |
+| Physical mobile device | Not reported / unverified | Earlier 390 px Chromium emulation remains separate local evidence |
+| Deployed security settings / resource limits | Not independently audited | Local boundary tests do not prove every live host setting or production capacity |
+
+### Current agent verification limit
+
+A normal HTTPS request to `/api/status` from this managed environment failed at
+its outbound proxy: **curl (56), CONNECT tunnel failed, response 403**, with no
+HTTP response from the application (curl status 000). This is a network-policy
+restriction on the checking environment, not evidence that Render is unavailable.
+No allowlist, credential or Render configuration was changed to bypass it.
+The public site is therefore recorded as **owner-accepted**, not independently
+revalidated here. Do not describe the prior local counts as new live Render tests.
+
+### Modes and remaining owner actions
+
+Render is an **ONLINE** demonstration. Loss of Internet to Render does not invoke
+a browser-only offline engine. The independently prepared local server is the
+**OFFLINE** modality, with owner-reported Windows acceptance and preserved Linux
+isolation evidence in [OFFLINE_VALIDATION.md](OFFLINE_VALIDATION.md).
+
+The deployment guide remains the reproduction/configuration reference, not a
+claim that this agent created a service. Existing protected public-mode code and
+configuration are unchanged. User-entered content must remain fictional; origin
+and rate limits are not authentication or a clinical data service.
+
+Official Space Apps submission, final public project/demo links, asset/AI credits,
+eligibility, licensing and platform confirmation remain owner-controlled actions.
+This acceptance record does not establish submission, NASA authorization or
+medical/flight validation. See [the handoff matrix](TECHNICAL_ACCEPTANCE_MATRIX.md).
 
 ## Reviewable changes
 

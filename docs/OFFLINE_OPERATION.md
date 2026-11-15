@@ -40,7 +40,9 @@ installing Python requirements and running `npm ci` / `npm run build` in fronten
 `.\start-ares.cmd --skip-build` serves the prepared UI without rebuilding or
 installing. Confirm there is no remote VITE_API_BASE_URL in environment or local
 Vite configuration before building. These Windows instructions follow the
-existing launcher; the new isolated execution was tested on Linux, not Windows.
+existing launcher. Six Windows manual checks are now reported as passed by the
+owner; the independent isolated execution was on Linux. See
+[the separate acceptance records](OFFLINE_VALIDATION.md).
 
 ## Run after disconnecting
 

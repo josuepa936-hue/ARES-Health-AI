@@ -7,6 +7,68 @@ biomedical algorithms, thresholds, evaluation engine, production Dockerfile,
 Render configuration and public-mode boundary are unchanged. Main and the
 separate audit branch are not modified.
 
+## Consolidated acceptance record — November 15, 2026
+
+Two separate evidence tracks are retained here:
+
+1. **Prior agent-executed Linux automation:** the disconnected-container HTTP and
+   functional Chromium checks below, with actual artifacts inspected at that time.
+2. **Owner-reported Windows manual acceptance:** the supplied report documents
+   six checks as passed. This update transcribes that evidence; it is not a new
+   independent Windows audit or a rerun of the earlier automated tests.
+
+Source: [owner-provided report and provenance](evidence/OWNER_OFFLINE_REPORT_2026-11-15.md).
+The exact Windows version, browser/version, Python/Node versions and local source
+commit were not specified. Do not infer the local Windows commit from the separately
+reported Render deployment commit. No Windows network trace, independent witness
+or Windows-generated JSON file was supplied for inspection. Screenshots mentioned
+in the report were not reattached or independently inspected in this update.
+These limits do not erase the separate, already-executed Linux isolation evidence.
+
+### Windows manual acceptance — reported by the owner
+
+Reported date: **November 15, 2026**. Environment: **Windows / PowerShell**,
+preinstalled Python dependencies and compiled React/Vite. The owner reports
+`npm.cmd ci` and `npm.cmd run build` completed online, then launched
+`start-ares.cmd --skip-build` at **http://127.0.0.1:8000/**. Internet was disconnected
+and the local interface loaded/reloaded while the FastAPI process remained running.
+The report mentions a build screenshot with 2,005 transformed modules; this is a
+reported preparation detail, not newly inspected build evidence.
+
+| ID | Offline manual check described in the supplied report | Recorded result | Evidence class |
+|---|---|---|---|
+| OFF-01 | Switch stable / heart-rate-shift synthetic scenarios; inspect visualizations | PASS — owner reported | Manual, Windows |
+| OFF-02 | Load incomplete records; withhold interpretation and show DATA_QUALITY_BLOCKED | PASS — owner reported | Manual, Windows |
+| OFF-03 | Use deterministic Copilot to explain the selected scenario | PASS — owner reported | Manual, Windows |
+| OFF-04 | Review Mission Wellness educational/explanatory content | PASS — owner reported | Manual, Windows |
+| OFF-05 | Submit fictional check-in and generate a review report | PASS — owner reported | Manual, Windows |
+| OFF-06 | Download JSON and inspect observation and review/audit content | PASS — owner reported | Manual, Windows |
+
+**Owner-reported outcome: 6/6 passed.** This supports acceptance of the described
+core local demonstration workflow, not every feature or every possible failure.
+The owner report alone does not establish absence of attempted external requests;
+the network-isolated automation below is a separate Linux evidence track.
+
+### Two modalities and scoped closure
+
+- **OFFLINE:** prepared local React + FastAPI/Python, loopback only, local server
+  running. Dependency installation/builds happen beforehand. Manual Windows
+  acceptance is owner reported; automated Linux isolation was actually executed.
+- **ONLINE:** https://ares-health-ai.onrender.com/ is the separate Render demo.
+  Owner reports deployment Live from e7e3a7c and anonymous/incognito access and
+  core functions. See [public acceptance record](RENDER_VALIDATION.md). The hosted
+  URL still requires Internet; no PWA/browser-only offline backend is implemented.
+
+Documentation now records technical acceptance **within this demonstration scope**.
+It does not certify medical efficacy, security completeness, arbitrary platforms,
+flight readiness or official Space Apps submission. See the
+[compliance and handoff matrix](TECHNICAL_ACCEPTANCE_MATRIX.md).
+
+## Preserved prior automated evidence
+
+The following sections retain the previously executed results; they were not
+reclassified as Windows tests or rerun merely to document the owner's report.
+
 ## Actual isolation and preparation
 
 Python dependencies, Node/npm packages, compiled React and system Chromium/fonts
@@ -112,8 +174,9 @@ or benchmarked here. The optional NASA/MIT research failures do not block the
 fictional mission workflow or authorize fabricated research data.
 
 Local server availability, power, hardware, OS/browser compatibility and dependency
-integrity remain prerequisites. Windows and physical phones were not independently
-tested. Session state remains transient; only user-initiated exports are saved.
+integrity remain prerequisites. Windows now has the separate owner-reported manual
+acceptance above; Windows and physical phones were not independently tested by
+this agent. Session state remains transient; only user-initiated exports are saved.
 No clinical validation, actual communications-to-Earth experiment, live astronaut
 monitoring, flight qualification, NASA endorsement or official submission is claimed.
 
