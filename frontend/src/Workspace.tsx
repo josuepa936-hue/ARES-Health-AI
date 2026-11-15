@@ -7,8 +7,15 @@ const NasaResearch = lazy(() => import('./components/NasaResearch'));
 export default function Workspace() {
   const [mode, setMode] = useState<'mission' | 'research' | 'nasa'>('mission');
   return (
-    <>
-      <nav aria-label="Workspace mode">
+    <div className="mission-shell">
+      <div className="global-header">
+        <div className="brand-lockup">
+          <span className="brand-mark">ARES</span>
+          <span className="brand-subtitle">HEALTH AI / MISSION SYSTEMS</span>
+        </div>
+        <span className="global-status">INDEPENDENT DEMONSTRATION</span>
+      </div>
+      <nav className="workspace-nav" aria-label="Workspace mode">
         <button aria-pressed={mode === 'mission'} onClick={() => setMode('mission')}>
           Synthetic mission demo
         </button>
@@ -32,6 +39,6 @@ export default function Workspace() {
           <NasaResearch />
         </Suspense>
       )}
-    </>
+    </div>
   );
 }

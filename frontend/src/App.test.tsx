@@ -21,7 +21,12 @@ it('loads real API shapes, all scenario states, physiological charts and scienti
   const user = userEvent.setup();
   await ready();
   expect(screen.getByText('SYNTHETIC DATA / NOT A MEDICAL DEVICE')).toBeVisible();
-  expect(screen.getAllByRole('img')).toHaveLength(3);
+  expect(
+    screen.getAllByRole('button', {
+      name: /^(Resting heart rate|Sleep duration|Daily activity)/,
+    }),
+  ).toHaveLength(3);
+  await user.click(screen.getByRole('tab', { name: 'Research Sources' }));
   expect(screen.getByRole('link', { name: fixtures.evidence.references[0].title })).toHaveAttribute(
     'href',
     fixtures.evidence.references[0].url,
@@ -29,7 +34,9 @@ it('loads real API shapes, all scenario states, physiological charts and scienti
   for (const id of ['heart_rate_shift', 'sleep_shift', 'incomplete', 'stable'] as const) {
     await user.selectOptions(screen.getByLabelText('Demo scenario'), id);
     await screen.findByRole('heading', { name: 'Mission overview' });
-    expect(screen.getByText(fixtures[id].demo.assessment, { selector: 'strong' })).toBeVisible();
+    expect(
+      screen.getByText(fixtures[id].demo.assessment, { selector: '.assessment-chip strong' }),
+    ).toBeVisible();
   }
   expect(
     fetchMock.mock.calls.some(([url]) =>
@@ -58,6 +65,7 @@ it('shows incomplete observations as missing values, not zero or reconstructed s
   await user.click(screen.getByText('Observation values and UTC dates'));
   expect(screen.getAllByText('Missing')).toHaveLength(5);
   expect(screen.queryByText('API descriptive statistics')).not.toBeInTheDocument();
+  await user.click(screen.getByRole('tab', { name: 'Mission Timeline' }));
   expect(screen.getAllByText(/All trend interpretations are withheld/)[0]).toBeVisible();
 });
 it('filters timeline types while retaining IDs and explains repeated windows', async () => {
@@ -86,11 +94,22 @@ it('handles loading, empty scenario/evidence lists and API errors without fallba
   render(<App />);
   expect(screen.getByText('Loading scenarios…')).toBeVisible();
   expect(await screen.findByText('No scenarios available from the API.')).toBeVisible();
+  await userEvent.setup().click(screen.getByRole('tab', { name: 'Research Sources' }));
   expect(screen.getByText('No references available.')).toBeVisible();
   expect(screen.queryByRole('heading', { name: 'Mission overview' })).not.toBeInTheDocument();
 });
 it('can retry a failed API connection', async () => {
-  fetchMock.mockRejectedValueOnce(new TypeError('Offline'));
+  // The NASA risk explorer also fetches on mount. Fail the scenario
+  // request by path rather than relying on incidental effect ordering.
+  const normal = mockApi();
+  let failedScenarioOnce = false;
+  fetchMock.mockImplementation((input, init) => {
+    if (!failedScenarioOnce && String(input).endsWith('/api/scenarios')) {
+      failedScenarioOnce = true;
+      return Promise.reject(new TypeError('Offline'));
+    }
+    return normal(input, init);
+  });
   const user = userEvent.setup();
   render(<App />);
   expect(await screen.findByRole('alert')).toHaveTextContent('Cannot reach the local API');
@@ -167,44 +186,76 @@ it('uses the embedded CSV report for export without submitting a built-in review
   await user.click(screen.getByRole('checkbox', { name: /I attest/ }));
   await user.click(screen.getByRole('button', { name: 'Upload synthetic CSV' }));
   await screen.findByText('Active data source: Uploaded synthetic CSV');
-  expect(screen.getByText(/API does not provide timelines for CSV/)).toBeVisible();
+  await user.click(screen.getByRole('tab', { name: 'Mission Timeline' }));
+  expect(screen.getByRole('heading', { name: 'Mission timeline' })).toBeVisible();
+  expect(screen.getByText('event-000001')).toBeVisible();
   expect(screen.queryByRole('button', { name: 'Request review JSON' })).not.toBeInTheDocument();
-  await user.click(screen.getByRole('button', { name: 'Download review JSON' }));
+  await user.click(screen.getByRole('tab', { name: 'Review & Export' }));
+  await user.click(screen.getByRole('checkbox', { name: /I confirm these review actions/ }));
+  await user.click(screen.getByRole('button', { name: 'Build comprehensive JSON report' }));
+  await user.click(await screen.findByRole('button', { name: 'Download comprehensive JSON' }));
   expect(download).toHaveBeenCalledWith(
-    expect.objectContaining({ scenario: 'uploaded_synthetic_csv' }),
+    expect.objectContaining({
+      scenario: 'uploaded_synthetic_csv',
+      copilot_schema_version: '1.5-demo',
+    }),
   );
   expect(fetchMock.mock.calls.some(([url]) => String(url).endsWith('/review'))).toBe(false);
 });
-it('exports the returned scenario review JSON and invalidates it after note edits', async () => {
+it('exports a manually documented comprehensive review and invalidates it after note edits', async () => {
   const download = vi.spyOn(downloads, 'downloadReport').mockImplementation(() => {});
   const user = userEvent.setup();
   await ready();
-  await user.selectOptions(screen.getByLabelText('Review state'), 'Reviewed in demo');
-  await user.type(screen.getByLabelText('Reviewer note'), 'Fictional review only.');
-  expect(screen.getByLabelText('Reviewer note')).toHaveAttribute('maxlength', '500');
-  await user.click(screen.getByRole('button', { name: 'Request review JSON' }));
-  await user.click(await screen.findByRole('button', { name: 'Download review JSON' }));
+  await user.click(screen.getByRole('tab', { name: 'Review & Export' }));
+  await user.selectOptions(screen.getByLabelText('Fictional review state'), 'DOCUMENTED');
+  await user.type(screen.getByLabelText('Fictional review note'), 'Fictional review only.');
+  expect(screen.getByLabelText('Fictional review note')).toHaveAttribute('maxlength', '500');
+  await user.click(screen.getByRole('button', { name: 'Record fictional note' }));
+  await user.click(screen.getByRole('checkbox', { name: /I confirm these review actions/ }));
+  await user.click(screen.getByRole('button', { name: 'Build comprehensive JSON report' }));
+  await user.click(await screen.findByRole('button', { name: 'Download comprehensive JSON' }));
   expect(download).toHaveBeenCalledWith(
     expect.objectContaining({
-      review_state: 'Reviewed in demo',
-      reviewer_note: 'Fictional review only.',
+      copilot_schema_version: '1.5-demo',
+      fictional_review: expect.objectContaining({
+        review_state: 'DOCUMENTED',
+        clinical_authorization: false,
+      }),
     }),
   );
-  await user.type(screen.getByLabelText('Reviewer note'), ' Updated.');
-  expect(screen.queryByRole('button', { name: 'Download review JSON' })).not.toBeInTheDocument();
+  const request = fetchMock.mock.calls.find(([url]) =>
+    String(url).endsWith('/comprehensive-report'),
+  );
+  expect(JSON.parse(String(request![1]!.body)).audit_log).toContainEqual(
+    expect.objectContaining({
+      sequence: 2,
+      action: 'note',
+      note: 'Fictional review only.',
+      // New Issue #21 provenance: UTC browser click-time is retained.
+      recorded_at_utc: expect.stringMatching(
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/,
+      ),
+    }),
+  );
+  await user.type(screen.getByLabelText('Fictional review note'), ' Updated.');
+  expect(screen.getByRole('button', { name: 'Download comprehensive JSON' })).toBeDisabled();
 });
-it('shows review API failures without enabling an export', async () => {
+it('shows comprehensive report API failures without enabling an export', async () => {
   const user = userEvent.setup();
   await ready();
   const normal = mockApi();
   fetchMock.mockImplementation((input, init) =>
-    String(input).endsWith('/review')
+    String(input).endsWith('/comprehensive-report')
       ? Promise.resolve(respond({ detail: 'Review unavailable' }, 500))
       : normal(input, init),
   );
-  await user.click(screen.getByRole('button', { name: 'Request review JSON' }));
+  await user.click(screen.getByRole('tab', { name: 'Review & Export' }));
+  await user.click(screen.getByRole('checkbox', { name: /I confirm these review actions/ }));
+  await user.click(screen.getByRole('button', { name: 'Build comprehensive JSON report' }));
   expect(await screen.findByRole('alert')).toHaveTextContent('Review unavailable');
-  expect(screen.queryByRole('button', { name: 'Download review JSON' })).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole('button', { name: 'Download comprehensive JSON' }),
+  ).not.toBeInTheDocument();
 });
 it('cancels review requests when the mission changes', async () => {
   const user = userEvent.setup();
@@ -212,13 +263,15 @@ it('cancels review requests when the mission changes', async () => {
   const normal = mockApi();
   let signal: AbortSignal | undefined;
   fetchMock.mockImplementation((input, init) => {
-    if (String(input).endsWith('/review')) {
+    if (String(input).endsWith('/comprehensive-report')) {
       signal = init!.signal as AbortSignal;
       return new Promise(() => {});
     }
     return normal(input, init);
   });
-  await user.click(screen.getByRole('button', { name: 'Request review JSON' }));
+  await user.click(screen.getByRole('tab', { name: 'Review & Export' }));
+  await user.click(screen.getByRole('checkbox', { name: /I confirm these review actions/ }));
+  await user.click(screen.getByRole('button', { name: 'Build comprehensive JSON report' }));
   await user.selectOptions(screen.getByLabelText('Demo scenario'), 'incomplete');
   await screen.findByText('Data quality blocks interpretation.');
   expect(signal?.aborted).toBe(true);

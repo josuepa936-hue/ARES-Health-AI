@@ -11,6 +11,7 @@ import pandas as pd
 
 from src.ares_health.analysis import ReviewFlag, review_changes
 from src.ares_health.validation import parse_timestamps, quality_issues
+from src.ares_health.version import APP_VERSION
 
 VALID_STATES = frozenset({"Pending review", "Reviewed in demo"})
 DISCLAIMER = (
@@ -61,7 +62,7 @@ def build_review_report(
 
     return {
         "schema_version": "1.0-demo",
-        "application_version": "0.9-dev",
+        "application_version": APP_VERSION,
         "application": "ARES Health AI",
         "project": "NASA Space Apps Challenge 2026 — prototype",
         "scenario": scenario,

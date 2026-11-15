@@ -1,4 +1,12 @@
 import { z } from 'zod';
+import {
+  responseSchema,
+  wellnessSchema,
+  comprehensiveSchema,
+  type CopilotContext,
+  type Question,
+  type AuditEvent,
+} from './copilot-contract';
 import { researchSchema } from './research-contract';
 import { nasaStudySchema, nasaSamplesSchema } from './nasa-contract';
 import {
@@ -8,6 +16,9 @@ import {
   scenariosSchema,
   snapshotSchema,
   timelineSchema,
+  checkInSchema,
+  riskGuideSchema,
+  type FictionalCheckInInput,
   type ScenarioId,
   type ReviewReport,
 } from './contracts';
@@ -74,14 +85,60 @@ export function createApi(baseUrl = import.meta.env.VITE_API_BASE_URL ?? '') {
   const query = (scenario: ScenarioId) =>
     `?scenario=${encodeURIComponent(scenario)}&seed=2026&days=21`;
   return {
-    nasaStudy: (signal: AbortSignal) =>
-      request('/research/nasa/study', nasaStudySchema, signal),
+    copilot: (
+      context: CopilotContext,
+      question: string,
+      turn: number,
+      expected_context_ref: string | undefined,
+      signal: AbortSignal,
+    ) =>
+      request('/mission/copilot', responseSchema, signal, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ context, question, turn, expected_context_ref }),
+      }),
+    wellness: (
+      context: CopilotContext,
+      expected_context_ref: string,
+      signal: AbortSignal,
+    ) =>
+      request('/mission/wellness', wellnessSchema, signal, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ context, expected_context_ref }),
+      }),
+    comprehensiveReport: (
+      context: CopilotContext,
+      expected_context_ref: string,
+      questions: Question[],
+      audit_log: AuditEvent[],
+      signal: AbortSignal,
+    ) =>
+      request('/mission/comprehensive-report', comprehensiveSchema, signal, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          context,
+          expected_context_ref,
+          questions,
+          audit_log,
+          fictional_attestation: true,
+        }),
+      }),
+    nasaStudy: (signal: AbortSignal) => request('/research/nasa/study', nasaStudySchema, signal),
     nasaSamples: (signal: AbortSignal) =>
       request('/research/nasa/sample-table', nasaSamplesSchema, signal),
     research: (signal: AbortSignal) =>
       request('/research/ecg/demo?record=100', researchSchema, signal),
     scenarios: (signal: AbortSignal) => request('/scenarios', scenariosSchema, signal),
     evidence: (signal: AbortSignal) => request('/evidence', evidenceSchema, signal),
+    riskGuide: (signal: AbortSignal) => request('/mission/risk-guide', riskGuideSchema, signal),
+    fictionalCheckIn: (payload: FictionalCheckInInput, signal: AbortSignal) =>
+      request('/mission/fictional-check-in', checkInSchema, signal, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      }),
     demo: (scenario: ScenarioId, signal: AbortSignal) =>
       request(`/demo${query(scenario)}`, snapshotSchema, signal),
     timeline: (scenario: ScenarioId, signal: AbortSignal) =>

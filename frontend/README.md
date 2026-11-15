@@ -1,10 +1,34 @@
-# ARES Health AI v1.1 — functional React integration
+# ARES Health AI — integrated mission console
+
+The v1.5 copilot now supports a focused reading dialog, response-start navigation
+and progressive scientific evidence. Escape restores the same dock conversation
+and draft. Startup commands below are unchanged; no dependency or backend API was
+added. See [Issue #17 behavior, browser captures and current verification](../docs/COPILOT_READING.md).
+
+Issue #19 preserves useful cockpit panel heights while docking Copilot. The page
+may scroll vertically; **Full cockpit** collapses the workspace without resetting
+its state. Focus mode keeps the single conversation scroll surface. See
+[current layout, tradeoffs and browser verification](../docs/COCKPIT_BALANCE.md).
 
 This standalone Vite + React + TypeScript client consumes the existing FastAPI
 v1.0 API. Python remains the only source of physiological values, validation,
-trend rules, statistics, assessments, guidance and reports. The basic accessible
-layout is a functional integration surface, **not the final Figma design**.
+trend rules, statistics, assessments, guidance and reports. The integrated high-contrast operations console is a usable demonstration
+interface, **not the final Figma anatomical or 3D design**.
 There is no anatomical model, 3D, authentication, database or external telemetry.
+
+## Single-server production demonstration
+
+From the repository root, **after installing Python requirements**, run:
+
+```powershell
+.\\start-ares.ps1
+```
+
+The launcher compiles React and serves the UI, `/api/*`, static assets
+and the fictional CSV template from FastAPI on **127.0.0.1:8000**.
+Open http://127.0.0.1:8000/ in one browser window. The two-terminal
+Vite workflow below remains available for developers; it is **not** required
+for the presentation. Do not expose the unauthenticated service publicly.
 
 ## Start on Windows (PowerShell)
 
@@ -54,6 +78,18 @@ TypeScript and creates static files; it does not package or start FastAPI. The
 development proxy belongs to Vite dev mode, not an arbitrary static web host.
 Do not publish this unauthenticated fictional-data demo as a medical service.
 
+## Integrated v1.3 workflow
+
+The default mission tab now includes the **Fictional astronaut check-in**
+to replace only the most recent fictional day, followed by the actual Python
+assessment, matching timeline, procedure-oriented explanations and embedded
+review JSON. It accepts **only** explicitly attested fictional data.
+The **Five hazards of human spaceflight** navigator gives source-linked NASA
+context, measurement coverage and limitations without inventing hazard scores.
+MIT ECG and NASA space biology remain separate, opt-in research modes.
+
+See [complete end-to-end demonstration](../docs/INTEGRATED_MISSION_CONSOLE.md).
+
 ## Functional walkthrough
 
 1. The permanent synthetic-only disclosure stays visible. Scenarios and NASA/CSA
@@ -76,9 +112,9 @@ Do not publish this unauthenticated fictional-data demo as a medical service.
    attestation header; files over **1,000,000 bytes** are blocked before sending.
    Python performs all schema/provenance/measurement validation and its rejection
    messages are displayed. Never upload real health information.
-6. CSV analysis replaces the built-in dataset and timeline. The backend has no
-   CSV timeline HTTP route, so the client explicitly marks it unavailable and
-   exports the embedded CSV report. It never submits CSV as a built-in scenario.
+6. CSV analysis replaces the built-in dataset and includes its own backend
+   `mission_timeline` plus embedded review report. Both are derived from the
+   uploaded, strictly validated synthetic rows. It never submits CSV as a built-in scenario.
    To return to a built-in scenario, choose one or reload the selected scenario.
 7. For built-in scenarios, submit the allowed review state and an optional
    fictional note (max 500 characters) to `/api/review`, then download the returned

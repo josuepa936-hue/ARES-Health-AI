@@ -266,3 +266,87 @@ not permit arbitrary file names/URLs, inaccessible human datasets, bulk raw omic
 data or open access from outside loopback. Connectivity, file changes and
 unverified data yield HTTP 503 with no invented results. See
 [docs/MIT_NASA_RESEARCH.md](MIT_NASA_RESEARCH.md).
+
+
+## Integrated mission console — v1.3
+
+The new capabilities remain **local, stateless, fictional and non-clinical**.
+All assessment, validation, statistical and trend functions continue to use
+the existing Python domain engine, never a React approximation.
+
+- `GET /api/mission/risk-guide` — five NASA Human Research Program hazards,
+  candidate research indicators, actual ARES coverage limitations, approved
+  procedure-review context and official research link. There are **no hazard
+  probability, severity or astronaut medical risk scores**.
+- `POST /api/mission/fictional-check-in` — explicitly attested fictional
+  last-day measurement override of a deterministic scenario, in memory.
+  Request JSON requires `fictional_attestation:true`, allowed scenario ID,
+  `seed`, `days`, `resting_hr_bpm`, `sleep_hours`,
+  `activity_minutes`, and optional `concerns` from the four hypothetical
+  labels `fatigue`, `headache`, `dizziness`, `sleepiness`.
+  Refuses extra patient identifiers, duplicate labels, nonfinite values,
+  unsupported ranges and missing attestation with HTTP 422.
+  Reply includes the canonical snapshot and `review_report` plus
+  `mission_timeline`, `check_in` and `decision_support`.
+  Concerns only influence a conservative procedure-review explanation;
+  no treatment/triage or new numeric medical thresholds are implemented.
+- `POST /api/synthetic-csv` — the previous strict raw CSV upload now
+  **also includes its dataset-specific `mission_timeline`**, consistent with
+  `assessment` and the embedded `review_report`. All existing validation
+  and 1MB restrictions stay unchanged.
+
+These additions replace the earlier limitation that imported CSV timelines
+were unavailable in the v1.1 client. A compatible v1.3 React client is required
+to display the new nested `mission_timeline`.
+
+See [integrated mission demo](INTEGRATED_MISSION_CONSOLE.md).
+
+## v1.5 deterministic mission copilot and comprehensive review
+
+Two stateless offline POST routes extend the existing API without changing its
+analysis, CSV, research or legacy report endpoints:
+
+- `/api/mission/copilot`: controlled scenario/check-in or revalidated attested
+  synthetic CSV context, bounded question/turn and optional expected context hash.
+  Returns a deterministic briefing/answer with canonical assessment, exact
+  observation/rule/timeline references, official hazard citations, limitations,
+  suggestions and explicit `generative_model=false` identification.
+- `/api/mission/comprehensive-report`: recalculates the same context, checks its
+  expected hash, replays bounded user audit events and recomputes appropriate
+  transcript answers. Adds integrated observations/comparisons, timeline, rules,
+  citations, conversation and fictional review log to legacy report fields.
+
+Manual states `PENDING_REVIEW`, `IN_PROGRESS`, `AWAITING_AUTHORIZED_REVIEW`,
+`DOCUMENTED` do not change the analysis or authorize medical action. Their exact
+state is in `fictional_review`; the legacy two-state field retains compatibility.
+No review session is persisted. Source replacement/page reload resets browser
+state. No arbitrary client assessment or assistant answer is accepted.
+
+New route bounds: 1,300,000 body bytes, 1 MB CSV, 20 turns, 240-character questions,
+64 contiguous audit events and 500-character notes. Finite JSON and explicit
+boolean source/review attestations are enforced; errors are sanitized. 409 means
+context mismatch, 413 body too large, 415 media type, 422 validation/source failure.
+See `COPILOT_V15.md` for exact schemas, input examples, evidence semantics, audit
+payloads, state mapping, offline guarantees, abstention and reproducible tests.
+
+
+### v1.5 comprehensive export compatibility and timestamps (Issue #21)
+
+`POST /api/mission/comprehensive-report` now emits canonical
+`review_state` (four values) equal to
+`fictional_review.review_state`. It also includes
+`legacy_review_state` and `legacy_review_state_semantics` as an explicitly
+labeled compatibility-only projection to the old two-state format. The
+standalone `POST /api/review` route still uses its original binary values.
+
+New `audit_log[*].recorded_at_utc` is a user-device UTC ISO-8601 string
+ending in `Z`, strictly validated and nondecreasing. The field is optional
+only for older clients; its absence is indicated by
+`fictional_review.audit_timestamps_complete: false`. The timestamp source
+is **the browser clock, not a trusted server or flight authority**.
+
+The software version `application_version`,
+`copilot_application_version`, `mission_timeline.application_version`
+and the FastAPI version are `1.5`; schema identifiers `1.0-demo`,
+`1.5-demo`, `1.0-timeline` are maintained independently. See
+[release audit details](ISSUE21_RELEASE_AUDIT.md).

@@ -76,3 +76,107 @@ retina study, not human mission monitoring. The team must independently
 verify scientific and data license claims before publication.
 
 A subsequent integration change added an explicit public AWS source for MIT-BIH that PhysioNet documents on its official dataset page. Acquisition remains opt-in and subject to the same SHA-256 manifest and waveform checks; no public-record benchmark score is claimed without a successful verified run.
+
+
+## Version 1.3 integrated mission workflow
+
+OpenAI ChatGPT assisted with the complete fictional end-to-end check-in
+workflow, Python-controlled risk/context guidance, combined dataset-specific
+timeline/report for CSV and manual input, typed React API integration, NASA
+human spaceflight five-hazards navigator, high-contrast operational layout,
+regression and real HTTP integration tests, and the final demo documentation.
+All new user-entered values are expressly fictional, not real health records.
+No autonomous medical triage, disease diagnosis, treatment recommendations,
+real astronaut telemetry, clinical validations, or NASA endorsement were
+implemented. The planned Figma-designed anatomical 3D asset remains separate
+and must not be represented as complete. Human review and actual CI validation
+remain necessary before merging or submitting.
+
+
+The final v1.3 integration also added a PowerShell one-command launcher,
+static compiled React asset serving through localhost FastAPI, strict
+file-path restrictions, production distribution smoke tests, and
+documentation for offline presentation. Compiled assets are produced
+locally; no third-party hosted API or cloud patient-data service is required.
+
+## Version 1.4 mission-control presentation
+
+OpenAI Codex assisted with the React console redesign, accessible tabbed workflows,
+API-connected telemetry/anatomical navigation, Recharts integration, regression and
+real Chromium tests, screenshot review and documentation. OpenAI image generation
+created an original clothed fictional anatomical-navigation illustration. It is
+not a patient image, NASA asset or clinically certified anatomical model; generated
+anatomy and decorative colors have no measurement or diagnostic meaning. No external
+anatomical model/license was represented as available. The task's referenced image
+attachments were not accessible, so Issue #13's written art direction was used.
+Python domain logic, biomedical benchmarks, source provenance, validations and
+report generation remain unchanged. Human visual/source review is required before
+merging this draft against the v1.3 branch. No merging or clinical claim is authorized.
+
+## Version 1.5 deterministic mission copilot and fictional review
+
+OpenAI Codex assisted with implementing the bounded Python explanatory service,
+strict canonical-context API schemas, evidence references, manual four-state
+review/audit workflow, integrated JSON export, React dock integration and tests.
+The runtime copilot is **deterministic and offline, not an LLM or generative AI**.
+No generative model plugin, remote inference, diagnosis, medical triage, treatment,
+clinical authorization or validation claim was added. Existing anatomy artwork
+provenance and biomedical/research modules are preserved. Questions and notes are
+fictional-only, transient user text; notes cannot instruct the analysis engine.
+Codex implementation assistance must not be confused with a generative runtime
+model. Human review remains required before merging this draft against v1.4.
+
+## Issue #17 copilot reading and evidence presentation
+
+OpenAI Codex assisted with inspecting the reported clipping/scroll defects,
+implementing a native React dialog that preserves the conversation and draft,
+response-start focus/announcements, responsive readable typography, progressive
+evidence disclosure, unit/browser regression tests and documentation. Evidence
+values are displayed from the existing Python API; no biomedical calculation,
+threshold, clinical claim or runtime generative model was introduced. The existing
+anatomical image and public research provenance were preserved. Before/after
+screenshots are actual local Chromium renders of synthetic scenarios, not generated
+mockups. Browser checks run on Linux at the requested desktop/mobile viewports;
+they do not establish Windows execution, physical-device coverage or clinical
+validation. Human review is required before merging against the v1.5 branch.
+
+## Issue #19 cockpit and conversation balance
+
+OpenAI Codex assisted with reproducing the Issue #17 layout regression, measuring
+actual browser geometry, removing viewport-dependent telemetry compression,
+introducing explicit full-cockpit navigation and document-flow docked reading,
+preserving modal reading position, and implementing regression tests/documentation.
+Actual local Chromium screenshots compare the Issue #17 base against this change
+at three desktop sizes and one mobile viewport. No new generated image, biomedical
+calculation, threshold, diagnosis, runtime generative model or research-data claim
+was introduced. The existing anatomical illustration and its attribution remain
+unchanged. Code assistance and software checks do not establish clinical validity;
+human review is required before merging this draft against the Issue #17 branch.
+
+
+## Issue #21 — Integrity and audit metadata
+
+ChatGPT implemented an auditable comprehensive report adjustment directly in
+GitHub: canonical root/nested four-state review statuses, legacy two-state
+compatibility labeling, a shared `APP_VERSION` constant, UTC device-clock action
+timestamps, strict backend timestamp validation, typed React contracts, and
+additional tests. This does **not** change the biomedical domain rules or
+constitute flight-qualified audit timestamps; existing user records remain
+fictional and ephemeral. Changes require CI and human review before merging.
+
+
+## Mission Wellness & Procedures (post-v1.5, optional hackathon scope)
+
+ChatGPT assisted with the design and GitHub branch implementation of a small
+educational wellness extension using the existing deterministic Python engine.
+A bounded `POST /api/mission/wellness` endpoint recreates the active synthetic
+scenario, exposes only NASA-referenced research context, and abstains when
+quality gates block comparisons. React renders a collapsible guide integrated
+into the existing Copilot, with user-controlled navigation to Review & Export.
+
+NASA published pages were checked for sleep/circadian schedules and exercise
+countermeasures; the new module does not infer treatment, risk scores, wellness
+fitness or medical clearance, nor claim NASA tested or endorsed ARES. The module
+does not implement scheduled reminders or gamification. A review branch/PR is
+required before integration; local test runs and visual verification are
+required and must not be reported as passed until executed.

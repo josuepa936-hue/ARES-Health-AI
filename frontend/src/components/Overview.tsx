@@ -4,7 +4,7 @@ export function Overview({ snapshot }: { snapshot: Snapshot }) {
   const blocked = snapshot.assessment === 'DATA_QUALITY_BLOCKED';
   const available = !blocked && snapshot.assessment !== 'INSUFFICIENT_DATA';
   return (
-    <section>
+    <section id="mission-results">
       <h2>Mission overview</h2>
       <p>
         API assessment: <strong>{snapshot.assessment}</strong>

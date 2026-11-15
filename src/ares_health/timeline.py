@@ -14,6 +14,7 @@ from src.ares_health.analysis import METRICS, review_changes
 from src.ares_health.review import DISCLAIMER, build_review_report
 from src.ares_health.service import MEASUREMENT_COLUMNS, serialize_records
 from src.ares_health.validation import REQUIRED, parse_timestamps, quality_issues
+from src.ares_health.version import APP_VERSION
 
 
 def _observations(frame: pd.DataFrame) -> list[dict[str, Any]]:
@@ -100,7 +101,7 @@ def build_timeline(frame: pd.DataFrame, *, scenario: str) -> dict[str, Any]:
     return {
         "schema_version": "1.0-timeline",
         "application": "ARES Health AI",
-        "application_version": "1.0",
+        "application_version": APP_VERSION,
         "scenario": scenario,
         "data_provenance": "synthetic",
         "simulation_only": True,
