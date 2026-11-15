@@ -161,6 +161,12 @@ def test_excessive_catalog_response_is_rejected_before_processing(monkeypatch):
     ("https://nasa-osdr.s3.amazonaws.com/OSD-87/version-1/" + nasa_osdr.SAMPLE_FILENAME, True, True),
     ("https://s3.us-west-2.amazonaws.com/nasa-osdr/OSD-87/version-1/" + nasa_osdr.SAMPLE_FILENAME, True, True),
     ("https://nasa-osdr.s3.us-west-2.amazonaws.com/OSD-87/version-1/" + nasa_osdr.SAMPLE_FILENAME, False, False),
+    ("https://genelab-repo-prod.s3.amazonaws.com/genelab-data/GLDS-87/array/" + nasa_osdr.SAMPLE_FILENAME, True, True),
+    ("https://genelab-repo-prod.s3.amazonaws.com/genelab-data/GLDS-87/array/" + nasa_osdr.SAMPLE_FILENAME, False, False),
+    ("https://genelab-repo-prod.s3.amazonaws.com/genelab-data/GLDS-87/array/unapproved.csv", True, False),
+    ("https://genelab-repo-prod.s3.amazonaws.com/genelab-data/GLDS-88/array/" + nasa_osdr.SAMPLE_FILENAME, True, False),
+    ("https://genelab-repo-prod.s3.amazonaws.com.evil.example/genelab-data/GLDS-87/array/" + nasa_osdr.SAMPLE_FILENAME, True, False),
+    ("http://genelab-repo-prod.s3.amazonaws.com/genelab-data/GLDS-87/array/" + nasa_osdr.SAMPLE_FILENAME, True, False),
     ("https://evil.example/OSD-87/" + nasa_osdr.SAMPLE_FILENAME, True, False),
     ("http://nasa-osdr.s3.us-west-2.amazonaws.com/OSD-87/" + nasa_osdr.SAMPLE_FILENAME, True, False),
     ("https://nasa-osdr.s3.us-west-2.amazonaws.com/OSD-999/" + nasa_osdr.SAMPLE_FILENAME, True, False),
@@ -193,3 +199,20 @@ def test_nasa_http_rejection_is_transparent_but_not_a_fake_study(monkeypatch):
     assert reply.status_code == 503
     assert "HTTP 403" in reply.json()["detail"]
     assert reply.json().get("study") is None
+
+
+def test_gene_lab_redirect_is_exact_single_file_not_a_bucket_allowance():
+    source = (
+        "https://genelab-repo-prod.s3.amazonaws.com"
+        "/genelab-data/GLDS-87/array/"
+        "GLDS-87_array_SampleTable_GLmicroarray.csv"
+    )
+    assert nasa_osdr._approved_research_url(source, sample=True)
+    assert not nasa_osdr._approved_research_url(
+        source.replace("GLDS-87_array_SampleTable_GLmicroarray.csv", "secret.txt"),
+        sample=True,
+    )
+    assert not nasa_osdr._approved_research_url(
+        source.replace("genelab-repo-prod.s3.amazonaws.com", "genelab-repo-prod.s3.amazonaws.com.evil.test"),
+        sample=True,
+    )
