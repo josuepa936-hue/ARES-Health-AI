@@ -1,6 +1,7 @@
 import { vi } from 'vitest';
 import fixtures from './fixtures.json';
 import copilotFixtures from './copilot-fixtures.json';
+import type { WorkflowState } from '../copilot-contract';
 export { fixtures };
 export function respond(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -41,7 +42,7 @@ export function mockApi() {
         const state = ([...body.audit_log]
           .reverse()
           .find((event) => event.action === 'review_state')?.review_state ??
-          'PENDING_REVIEW') as 'PENDING_REVIEW';
+          'PENDING_REVIEW') as WorkflowState;
         const fixture = { ...copilotFixtures[key].report, ...copilotFixtures[key].reports[state] };
         return respond({
           ...fixture,
