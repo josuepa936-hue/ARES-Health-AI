@@ -226,11 +226,17 @@ it('exports a manually documented comprehensive review and invalidates it after 
   const request = fetchMock.mock.calls.find(([url]) =>
     String(url).endsWith('/comprehensive-report'),
   );
-  expect(JSON.parse(String(request![1]!.body)).audit_log).toContainEqual({
-    sequence: 2,
-    action: 'note',
-    note: 'Fictional review only.',
-  });
+  expect(JSON.parse(String(request![1]!.body)).audit_log).toContainEqual(
+    expect.objectContaining({
+      sequence: 2,
+      action: 'note',
+      note: 'Fictional review only.',
+      // New Issue #21 provenance: UTC browser click-time is retained.
+      recorded_at_utc: expect.stringMatching(
+        /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$/,
+      ),
+    }),
+  );
   await user.type(screen.getByLabelText('Fictional review note'), ' Updated.');
   expect(screen.getByRole('button', { name: 'Download comprehensive JSON' })).toBeDisabled();
 });
