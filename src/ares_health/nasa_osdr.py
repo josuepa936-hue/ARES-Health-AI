@@ -11,7 +11,7 @@ import io
 import json
 from collections import Counter
 from urllib.parse import parse_qs, urlsplit
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 STUDY = "OSD-87"
 STUDY_ID = 87
@@ -38,7 +38,12 @@ def _bounded_download(url: str, limit: int) -> bytes:
     if parsed.scheme != "https" or parsed.hostname != "osdr.nasa.gov" or parsed.port:
         raise ValueError("The research adapter only accesses official NASA OSDR HTTPS.")
     req = Request(url, headers={"User-Agent": "ARES-Research-Prototype/1.2", "Accept": "application/json,text/csv"})
-    with urlopen(req, timeout=12) as response:
+    class NoExternalRedirect(HTTPRedirectHandler):
+        def redirect_request(self, req, fp, code, msg, headers, newurl):
+            # Refuse redirects altogether: a NASA URL must not SSRF via another host.
+            return None
+    opener = build_opener(NoExternalRedirect)
+    with opener.open(req, timeout=12) as response:
         final = urlsplit(response.geturl())
         if final.scheme != "https" or final.hostname != "osdr.nasa.gov" or final.port:
             raise ValueError("Unexpected redirect outside NASA OSDR.")
