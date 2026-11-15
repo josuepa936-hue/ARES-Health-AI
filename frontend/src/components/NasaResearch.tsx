@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { api, message } from '../api';
 import type { NasaSamples, NasaStudy } from '../nasa-contract';
 
@@ -11,6 +11,7 @@ export default function NasaResearch() {
   const [loading, setLoading] = useState(true);
   const [sampleLoading, setSampleLoading] = useState(false);
   const [retry, setRetry] = useState(0);
+  const sampleController = useRef<AbortController | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -34,14 +35,13 @@ export default function NasaResearch() {
 
   useEffect(() => {
     // This aborts a pending sample request when leaving NASA mode.
-    return () => sampleController?.abort();
+    return () => sampleController.current?.abort();
   }, []);
-  const [sampleController, setSampleController] = useState<AbortController | null>(null);
 
   async function showSamples() {
-    sampleController?.abort();
+    sampleController.current?.abort();
     const controller = new AbortController();
-    setSampleController(controller);
+    sampleController.current = controller;
     setSampleLoading(true);
     setSamples(undefined);
     setSampleError('');
