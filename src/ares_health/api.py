@@ -6,9 +6,12 @@ This service is NOT a medical API, an astronaut data feed, or a cloud service.
 from __future__ import annotations
 
 from typing import Literal
+import json
+import math
 
 from fastapi import FastAPI, Header, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field, ConfigDict
 
 from src.ares_health.evidence import EVIDENCE
@@ -45,6 +48,40 @@ app.add_middleware(
     allow_methods=["GET", "POST"],
     allow_headers=["Content-Type", "X-Synthetic-Attestation"],
 )
+
+
+def _finite_json_float(text: str) -> float:
+    parsed = float(text)
+    if not math.isfinite(parsed):
+        raise ValueError("Nonfinite JSON number.")
+    return parsed
+
+
+def _reject_json_constant(_text: str) -> None:
+    raise ValueError("Nonfinite JSON constant.")
+
+
+@app.middleware("http")
+async def checkin_json_guard(request: Request, call_next):
+    """Reject nonstandard/nonfinite JSON before FastAPI error serialization.
+
+    FastAPI's own 422 error may otherwise include Infinity in the rejected
+    input, which cannot be encoded in strict JSON. This applies only to the
+    tiny, expressly fictional check-in route. Other API behavior is unchanged.
+    """
+    if request.method == "POST" and request.url.path == "/api/mission/fictional-check-in":
+        body = await request.body()
+        if len(body) > 4096:
+            return JSONResponse(status_code=413, content={"detail": "Fictional check-in exceeds 4 KB."})
+        try:
+            json.loads(body, parse_float=_finite_json_float,
+                       parse_constant=_reject_json_constant)
+        except (ValueError, UnicodeError, json.JSONDecodeError):
+            return JSONResponse(
+                status_code=422,
+                content={"detail": "Invalid or nonfinite JSON for fictional check-in."},
+            )
+    return await call_next(request)
 
 
 class ReviewRequest(BaseModel):
