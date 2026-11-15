@@ -328,3 +328,25 @@ boolean source/review attestations are enforced; errors are sanitized. 409 means
 context mismatch, 413 body too large, 415 media type, 422 validation/source failure.
 See `COPILOT_V15.md` for exact schemas, input examples, evidence semantics, audit
 payloads, state mapping, offline guarantees, abstention and reproducible tests.
+
+
+### v1.5 comprehensive export compatibility and timestamps (Issue #21)
+
+`POST /api/mission/comprehensive-report` now emits canonical
+`review_state` (four values) equal to
+`fictional_review.review_state`. It also includes
+`legacy_review_state` and `legacy_review_state_semantics` as an explicitly
+labeled compatibility-only projection to the old two-state format. The
+standalone `POST /api/review` route still uses its original binary values.
+
+New `audit_log[*].recorded_at_utc` is a user-device UTC ISO-8601 string
+ending in `Z`, strictly validated and nondecreasing. The field is optional
+only for older clients; its absence is indicated by
+`fictional_review.audit_timestamps_complete: false`. The timestamp source
+is **the browser clock, not a trusted server or flight authority**.
+
+The software version `application_version`,
+`copilot_application_version`, `mission_timeline.application_version`
+and the FastAPI version are `1.5`; schema identifiers `1.0-demo`,
+`1.5-demo`, `1.0-timeline` are maintained independently. See
+[release audit details](ISSUE21_RELEASE_AUDIT.md).
