@@ -10,7 +10,7 @@ export function TimelineView({
   const [filters, setFilters] = useState<EventType[]>([...eventTypes]);
   if (!timeline)
     return (
-      <section>
+      <section id="mission-timeline">
         <h2>Mission timeline</h2>
         <p>
           The API does not provide timelines for CSV uploads. No built-in scenario timeline is shown
@@ -24,7 +24,7 @@ export function TimelineView({
       !(blocked && (event.type === 'trend_change' || event.type === 'analysis_status')),
   );
   return (
-    <section>
+    <section id="mission-timeline">
       <h2>Mission timeline</h2>
       <p>
         Repeated trends are overlapping window evaluations, not onset of a medical event. Event IDs
