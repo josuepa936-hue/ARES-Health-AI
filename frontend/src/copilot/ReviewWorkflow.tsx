@@ -117,6 +117,11 @@ export function ReviewWorkflow({ session }: { session: CopilotSession }) {
                   #{event.sequence} {event.action}
                 </code>
                 <span>
+                  {event.recorded_at_utc && (
+                    <time dateTime={event.recorded_at_utc}>
+                      {event.recorded_at_utc} ·{' '}
+                    </time>
+                  )}
                   {'checked' in event
                     ? event.checked
                       ? 'Confirmed by user'
