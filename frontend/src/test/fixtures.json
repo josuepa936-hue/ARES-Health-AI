@@ -1,0 +1,2728 @@
+{
+  "scenarios": {
+    "scenarios": [
+      {
+        "id": "stable",
+        "label": "Stable observations"
+      },
+      {
+        "id": "heart_rate_shift",
+        "label": "Resting heart rate shift"
+      },
+      {
+        "id": "sleep_shift",
+        "label": "Shortened sleep"
+      },
+      {
+        "id": "incomplete",
+        "label": "Incomplete records"
+      }
+    ],
+    "data_provenance": "synthetic",
+    "simulation_only": true
+  },
+  "evidence": {
+    "references": [
+      {
+        "indicator": "resting_hr_bpm",
+        "title": "Risk of Cardiovascular Adaptations",
+        "organization": "NASA Human Research Program",
+        "url": "https://www.nasa.gov/reference/risk-of-cardiovascular-adaptations/",
+        "summary": "Spaceflight stressors can change the cardiovascular system. The prototype displays a simulated resting heart-rate trend as one illustrative measurement.",
+        "limitation": "Heart-rate trends alone cannot identify cardiovascular disease or the need for treatment."
+      },
+      {
+        "indicator": "sleep_hours",
+        "title": "Risk from Inadequate Sleep and Irregular Schedules",
+        "organization": "NASA Human Research Program",
+        "url": "https://www.nasa.gov/reference/risk-from-inadequate-sleep-and-irregular-schedules/",
+        "summary": "Sleep loss and irregular schedules are studied as human-spaceflight performance risks. ARES displays fictional sleep duration over time.",
+        "limitation": "Sleep duration alone does not measure sleep quality, circadian alignment or mental health."
+      },
+      {
+        "indicator": "activity_minutes",
+        "title": "Risk of Reduced Cardiorespiratory and Musculoskeletal Fitness",
+        "organization": "NASA Human Research Program",
+        "url": "https://www.nasa.gov/reference/risk-of-reduced-cardiorespiratory-and-musculoskeletal-fitness/",
+        "summary": "NASA studies exercise and fitness in microgravity. ARES displays illustrative daily activity minutes to help users inspect a trend.",
+        "limitation": "Activity minutes alone cannot establish fitness, prescribed exercise adherence or injury risk."
+      },
+      {
+        "indicator": "context_only",
+        "title": "Five Hazards of Human Spaceflight",
+        "organization": "NASA Human Research Program",
+        "url": "https://www.nasa.gov/hrp/hazards/",
+        "summary": "NASA describes radiation, isolation and confinement, distance from Earth, altered gravity, and hostile or closed environments as major spaceflight hazards.",
+        "limitation": "ARES does not measure these hazards or estimate exposure-related health risks."
+      },
+      {
+        "indicator": "context_only",
+        "title": "Monitoring Radiation for Astronaut Health",
+        "organization": "Canadian Space Agency",
+        "url": "https://www.asc-csa.gc.ca/eng/news/articles/2026/2026-02-26-monitoring-radiation-astronaut-health.asp",
+        "summary": "The Canadian Space Agency describes technology for monitoring astronaut radiation exposure.",
+        "limitation": "ARES has no radiation sensor, dosimeter, or radiation-exposure input. This is background only."
+      }
+    ],
+    "usage": "Background research links only, not imported NASA/CSA health data."
+  },
+  "stable": {
+    "demo": {
+      "schema_version": "1.0-demo",
+      "application": "ARES Health AI",
+      "scenario": "stable",
+      "data_provenance": "synthetic",
+      "simulation_only": true,
+      "assessment": "NO_DEMO_RULE_TRIGGERED",
+      "summary": {
+        "recorded_days": 21,
+        "completeness_pct": 100.0,
+        "quality_findings": 0,
+        "review_flags": 0,
+        "crew_id": "SIM-001"
+      },
+      "observations": [
+        {
+          "timestamp_utc": "2026-11-01T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 62.6,
+          "sleep_hours": 7.66,
+          "activity_minutes": 38.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-02T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 64.4,
+          "sleep_hours": 7.44,
+          "activity_minutes": 49.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-03T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 60.6,
+          "sleep_hours": 7.46,
+          "activity_minutes": 45.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-04T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 66.5,
+          "sleep_hours": 7.66,
+          "activity_minutes": 46.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-05T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 65.1,
+          "sleep_hours": 7.96,
+          "activity_minutes": 53.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-06T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.5,
+          "sleep_hours": 7.32,
+          "activity_minutes": 38.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-07T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.4,
+          "sleep_hours": 7.84,
+          "activity_minutes": 55.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-08T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 64.5,
+          "sleep_hours": 7.19,
+          "activity_minutes": 58.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-09T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.5,
+          "sleep_hours": 7.54,
+          "activity_minutes": 50.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-10T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.6,
+          "sleep_hours": 7.21,
+          "activity_minutes": 46.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-11T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 65.3,
+          "sleep_hours": 7.84,
+          "activity_minutes": 39.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-12T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 64.9,
+          "sleep_hours": 7.71,
+          "activity_minutes": 47.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-13T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.9,
+          "sleep_hours": 7.78,
+          "activity_minutes": 40.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-14T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.8,
+          "sleep_hours": 7.28,
+          "activity_minutes": 42.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-15T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 64.3,
+          "sleep_hours": 7.67,
+          "activity_minutes": 41.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-16T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 62.9,
+          "sleep_hours": 7.37,
+          "activity_minutes": 43.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-17T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.3,
+          "sleep_hours": 7.39,
+          "activity_minutes": 48.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-18T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 65.0,
+          "sleep_hours": 7.63,
+          "activity_minutes": 39.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-19T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.8,
+          "sleep_hours": 7.72,
+          "activity_minutes": 37.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-20T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 61.5,
+          "sleep_hours": 7.55,
+          "activity_minutes": 37.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-21T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.1,
+          "sleep_hours": 7.34,
+          "activity_minutes": 37.0,
+          "source_type": "synthetic"
+        }
+      ],
+      "quality_issues": [],
+      "analysis_limitations": [],
+      "review_flags": [],
+      "descriptive_signals": [
+        {
+          "metric": "resting_hr_bpm",
+          "label": "Resting heart rate",
+          "unit": "bpm",
+          "system": "Cardiovascular",
+          "color": "#37C7F4",
+          "baseline_mean": 63.72857142857142,
+          "recent_mean": 63.35,
+          "delta": -0.37857142857141923,
+          "full_median": 63.8,
+          "robust_variability": 1.037821552953915,
+          "theil_sen_slope_per_day": -0.030952380952381096,
+          "n": 21
+        },
+        {
+          "metric": "sleep_hours",
+          "label": "Sleep duration",
+          "unit": "hours",
+          "system": "Sleep & Recovery",
+          "color": "#A9A0FF",
+          "baseline_mean": 7.62,
+          "recent_mean": 7.56,
+          "delta": -0.0600000000000005,
+          "full_median": 7.55,
+          "robust_variability": 0.25204237714595223,
+          "theil_sen_slope_per_day": -0.00500000000000002,
+          "n": 21
+        },
+        {
+          "metric": "activity_minutes",
+          "label": "Daily activity",
+          "unit": "min/day",
+          "system": "Musculoskeletal",
+          "color": "#5BE5B2",
+          "baseline_mean": 46.285714285714285,
+          "recent_mean": 37.5,
+          "delta": -8.785714285714285,
+          "full_median": 43.0,
+          "robust_variability": 7.41301109252801,
+          "theil_sen_slope_per_day": -0.5147058823529411,
+          "n": 21
+        }
+      ],
+      "descriptive_statistics_notice": "Exploratory statistics only; not clinically validated, not a medical alert, and never computed when data quality blocks interpretation.",
+      "guidance": {
+        "state": "NO_DEMO_RULE_TRIGGERED",
+        "heading": "No illustrative change rule triggered",
+        "meaning": "The fictional values did not meet ARES demonstration rules. This does not demonstrate that a person is medically safe or healthy.",
+        "review_steps": [
+          "Review the sample data and any relevant trends.",
+          "Confirm the observed measurements and limitations of the simulation.",
+          "Do not use the absence of a flag as a medical clearance."
+        ]
+      },
+      "methodology": {
+        "reference_days": 7,
+        "recent_days": 4,
+        "illustrative_rules": {
+          "resting_hr_bpm": {
+            "absolute_difference": 12.0,
+            "unit": "bpm"
+          },
+          "sleep_hours": {
+            "absolute_difference": 1.5,
+            "unit": "hours"
+          }
+        },
+        "note": "Engineering demonstration settings, not NASA clinical thresholds. Intermediate days do not participate in the two means."
+      },
+      "disclaimer": "Synthetic engineering demonstration only. No astronaut measurements, medical diagnosis, NASA-approved thresholds, or clinical validation."
+    },
+    "timeline": {
+      "schema_version": "1.0-timeline",
+      "application": "ARES Health AI",
+      "application_version": "1.0",
+      "scenario": "stable",
+      "data_provenance": "synthetic",
+      "simulation_only": true,
+      "assessment": "NO_DEMO_RULE_TRIGGERED",
+      "observation_count": 21,
+      "events": [
+        {
+          "id": "event-000001",
+          "type": "observation",
+          "timestamp_utc": "2026-11-01T00:00:00Z",
+          "observation_index": 0,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-01T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 62.6,
+            "sleep_hours": 7.66,
+            "activity_minutes": 38.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000002",
+          "type": "analysis_status",
+          "timestamp_utc": "2026-11-01T00:00:00Z",
+          "observation_index": 0,
+          "explanation": "Insufficient records: 7 baseline and 4 recent days required.",
+          "details": {
+            "state": "INSUFFICIENT_DATA"
+          }
+        },
+        {
+          "id": "event-000003",
+          "type": "observation",
+          "timestamp_utc": "2026-11-02T00:00:00Z",
+          "observation_index": 1,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-02T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 64.4,
+            "sleep_hours": 7.44,
+            "activity_minutes": 49.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000004",
+          "type": "observation",
+          "timestamp_utc": "2026-11-03T00:00:00Z",
+          "observation_index": 2,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-03T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 60.6,
+            "sleep_hours": 7.46,
+            "activity_minutes": 45.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000005",
+          "type": "observation",
+          "timestamp_utc": "2026-11-04T00:00:00Z",
+          "observation_index": 3,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-04T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 66.5,
+            "sleep_hours": 7.66,
+            "activity_minutes": 46.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000006",
+          "type": "observation",
+          "timestamp_utc": "2026-11-05T00:00:00Z",
+          "observation_index": 4,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-05T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 65.1,
+            "sleep_hours": 7.96,
+            "activity_minutes": 53.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000007",
+          "type": "observation",
+          "timestamp_utc": "2026-11-06T00:00:00Z",
+          "observation_index": 5,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-06T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.5,
+            "sleep_hours": 7.32,
+            "activity_minutes": 38.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000008",
+          "type": "observation",
+          "timestamp_utc": "2026-11-07T00:00:00Z",
+          "observation_index": 6,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-07T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.4,
+            "sleep_hours": 7.84,
+            "activity_minutes": 55.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000009",
+          "type": "observation",
+          "timestamp_utc": "2026-11-08T00:00:00Z",
+          "observation_index": 7,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-08T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 64.5,
+            "sleep_hours": 7.19,
+            "activity_minutes": 58.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000010",
+          "type": "observation",
+          "timestamp_utc": "2026-11-09T00:00:00Z",
+          "observation_index": 8,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-09T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.5,
+            "sleep_hours": 7.54,
+            "activity_minutes": 50.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000011",
+          "type": "observation",
+          "timestamp_utc": "2026-11-10T00:00:00Z",
+          "observation_index": 9,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-10T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.6,
+            "sleep_hours": 7.21,
+            "activity_minutes": 46.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000012",
+          "type": "observation",
+          "timestamp_utc": "2026-11-11T00:00:00Z",
+          "observation_index": 10,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-11T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 65.3,
+            "sleep_hours": 7.84,
+            "activity_minutes": 39.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000013",
+          "type": "analysis_status",
+          "timestamp_utc": "2026-11-11T00:00:00Z",
+          "observation_index": 10,
+          "explanation": "Seven reference days and four recent days are available for illustrative comparisons.",
+          "details": {
+            "state": "COMPARISON_AVAILABLE"
+          }
+        },
+        {
+          "id": "event-000014",
+          "type": "observation",
+          "timestamp_utc": "2026-11-12T00:00:00Z",
+          "observation_index": 11,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-12T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 64.9,
+            "sleep_hours": 7.71,
+            "activity_minutes": 47.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000015",
+          "type": "observation",
+          "timestamp_utc": "2026-11-13T00:00:00Z",
+          "observation_index": 12,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-13T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.9,
+            "sleep_hours": 7.78,
+            "activity_minutes": 40.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000016",
+          "type": "observation",
+          "timestamp_utc": "2026-11-14T00:00:00Z",
+          "observation_index": 13,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-14T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.8,
+            "sleep_hours": 7.28,
+            "activity_minutes": 42.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000017",
+          "type": "observation",
+          "timestamp_utc": "2026-11-15T00:00:00Z",
+          "observation_index": 14,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-15T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 64.3,
+            "sleep_hours": 7.67,
+            "activity_minutes": 41.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000018",
+          "type": "observation",
+          "timestamp_utc": "2026-11-16T00:00:00Z",
+          "observation_index": 15,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-16T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 62.9,
+            "sleep_hours": 7.37,
+            "activity_minutes": 43.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000019",
+          "type": "observation",
+          "timestamp_utc": "2026-11-17T00:00:00Z",
+          "observation_index": 16,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-17T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.3,
+            "sleep_hours": 7.39,
+            "activity_minutes": 48.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000020",
+          "type": "observation",
+          "timestamp_utc": "2026-11-18T00:00:00Z",
+          "observation_index": 17,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-18T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 65.0,
+            "sleep_hours": 7.63,
+            "activity_minutes": 39.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000021",
+          "type": "observation",
+          "timestamp_utc": "2026-11-19T00:00:00Z",
+          "observation_index": 18,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-19T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.8,
+            "sleep_hours": 7.72,
+            "activity_minutes": 37.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000022",
+          "type": "observation",
+          "timestamp_utc": "2026-11-20T00:00:00Z",
+          "observation_index": 19,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-20T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 61.5,
+            "sleep_hours": 7.55,
+            "activity_minutes": 37.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000023",
+          "type": "observation",
+          "timestamp_utc": "2026-11-21T00:00:00Z",
+          "observation_index": 20,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-21T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.1,
+            "sleep_hours": 7.34,
+            "activity_minutes": 37.0,
+            "source_type": "synthetic"
+          }
+        }
+      ],
+      "quality_issues": [],
+      "analysis_limitations": [],
+      "methodology": {
+        "reference_days": 7,
+        "recent_days": 4,
+        "illustrative_rules": {
+          "resting_hr_bpm": {
+            "absolute_difference": 12.0,
+            "unit": "bpm"
+          },
+          "sleep_hours": {
+            "absolute_difference": 1.5,
+            "unit": "hours"
+          }
+        },
+        "note": "Trend events evaluate each available prefix, not onset or diagnosis. Repeated flags describe overlapping comparison windows. The assessment describes the final dataset. Any quality failure suppresses every trend event, including earlier prefixes."
+      },
+      "disclaimer": "Synthetic engineering demonstration only. No astronaut measurements, medical diagnosis, NASA-approved thresholds, or clinical validation."
+    },
+    "report": {
+      "schema_version": "1.0-demo",
+      "application_version": "0.9-dev",
+      "application": "ARES Health AI",
+      "project": "NASA Space Apps Challenge 2026 \u2014 prototype",
+      "scenario": "stable",
+      "data_provenance": "synthetic",
+      "observation_count": 21,
+      "last_observation_utc": "2026-11-21T00:00:00+00:00",
+      "assessment": "NO_DEMO_RULE_TRIGGERED",
+      "data_quality_issues": [],
+      "analysis_limitations": [],
+      "review_flags": [],
+      "review_state": "Pending review",
+      "reviewer_note": "",
+      "suggested_demonstration_workflow": [
+        "Inspect source, units and missing values",
+        "Review displayed individual reference and recent observations",
+        "Document the finding; in a real mission, use approved procedures and qualified personnel"
+      ],
+      "methodology": "First 7 synthetic days compared with last 4; illustrative absolute-mean-difference rules.",
+      "disclaimer": "Synthetic engineering demonstration only. No astronaut measurements, medical diagnosis, NASA-approved thresholds, or clinical validation."
+    }
+  },
+  "heart_rate_shift": {
+    "demo": {
+      "schema_version": "1.0-demo",
+      "application": "ARES Health AI",
+      "scenario": "heart_rate_shift",
+      "data_provenance": "synthetic",
+      "simulation_only": true,
+      "assessment": "CHANGE_FOR_REVIEW",
+      "summary": {
+        "recorded_days": 21,
+        "completeness_pct": 100.0,
+        "quality_findings": 0,
+        "review_flags": 1,
+        "crew_id": "SIM-001"
+      },
+      "observations": [
+        {
+          "timestamp_utc": "2026-11-01T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 62.6,
+          "sleep_hours": 7.66,
+          "activity_minutes": 38.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-02T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 64.4,
+          "sleep_hours": 7.44,
+          "activity_minutes": 49.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-03T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 60.6,
+          "sleep_hours": 7.46,
+          "activity_minutes": 45.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-04T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 66.5,
+          "sleep_hours": 7.66,
+          "activity_minutes": 46.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-05T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 65.1,
+          "sleep_hours": 7.96,
+          "activity_minutes": 53.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-06T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.5,
+          "sleep_hours": 7.32,
+          "activity_minutes": 38.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-07T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.4,
+          "sleep_hours": 7.84,
+          "activity_minutes": 55.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-08T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 64.5,
+          "sleep_hours": 7.19,
+          "activity_minutes": 58.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-09T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.5,
+          "sleep_hours": 7.54,
+          "activity_minutes": 50.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-10T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.6,
+          "sleep_hours": 7.21,
+          "activity_minutes": 46.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-11T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 65.3,
+          "sleep_hours": 7.84,
+          "activity_minutes": 39.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-12T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 64.9,
+          "sleep_hours": 7.71,
+          "activity_minutes": 47.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-13T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.9,
+          "sleep_hours": 7.78,
+          "activity_minutes": 40.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-14T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.8,
+          "sleep_hours": 7.28,
+          "activity_minutes": 42.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-15T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 64.3,
+          "sleep_hours": 7.67,
+          "activity_minutes": 41.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-16T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 62.9,
+          "sleep_hours": 7.37,
+          "activity_minutes": 43.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-17T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.3,
+          "sleep_hours": 7.39,
+          "activity_minutes": 48.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-18T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 81.0,
+          "sleep_hours": 7.63,
+          "activity_minutes": 39.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-19T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 79.8,
+          "sleep_hours": 7.72,
+          "activity_minutes": 37.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-20T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 77.5,
+          "sleep_hours": 7.55,
+          "activity_minutes": 37.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-21T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 79.1,
+          "sleep_hours": 7.34,
+          "activity_minutes": 37.0,
+          "source_type": "synthetic"
+        }
+      ],
+      "quality_issues": [],
+      "analysis_limitations": [],
+      "review_flags": [
+        {
+          "metric": "resting_hr_bpm",
+          "baseline_mean": 63.729,
+          "recent_mean": 79.35,
+          "difference": 15.621,
+          "unit": "bpm",
+          "explanation": "Resting heart rate: recent 4-day mean is 15.6 bpm higher than the first 7-day reference (63.7 \u2192 79.3 bpm). Reference interval: 2026-11-01T00:00:00+00:00 to 2026-11-07T00:00:00+00:00; recent interval: 2026-11-18T00:00:00+00:00 to 2026-11-21T00:00:00+00:00. Review the underlying observations. This is not a diagnosis. Illustrative rule: \u226512 bpm change."
+        }
+      ],
+      "descriptive_signals": [
+        {
+          "metric": "resting_hr_bpm",
+          "label": "Resting heart rate",
+          "unit": "bpm",
+          "system": "Cardiovascular",
+          "color": "#37C7F4",
+          "baseline_mean": 63.72857142857142,
+          "recent_mean": 79.35,
+          "delta": 15.621428571428574,
+          "full_median": 64.3,
+          "robust_variability": 1.3343419966550396,
+          "theil_sen_slope_per_day": 0.17846153846153823,
+          "n": 21
+        },
+        {
+          "metric": "sleep_hours",
+          "label": "Sleep duration",
+          "unit": "hours",
+          "system": "Sleep & Recovery",
+          "color": "#A9A0FF",
+          "baseline_mean": 7.62,
+          "recent_mean": 7.56,
+          "delta": -0.0600000000000005,
+          "full_median": 7.55,
+          "robust_variability": 0.25204237714595223,
+          "theil_sen_slope_per_day": -0.00500000000000002,
+          "n": 21
+        },
+        {
+          "metric": "activity_minutes",
+          "label": "Daily activity",
+          "unit": "min/day",
+          "system": "Musculoskeletal",
+          "color": "#5BE5B2",
+          "baseline_mean": 46.285714285714285,
+          "recent_mean": 37.5,
+          "delta": -8.785714285714285,
+          "full_median": 43.0,
+          "robust_variability": 7.41301109252801,
+          "theil_sen_slope_per_day": -0.5147058823529411,
+          "n": 21
+        }
+      ],
+      "descriptive_statistics_notice": "Exploratory statistics only; not clinically validated, not a medical alert, and never computed when data quality blocks interpretation.",
+      "guidance": {
+        "state": "CHANGE_FOR_REVIEW",
+        "heading": "An illustrative trend changed",
+        "meaning": "One or more simulated means differ from the initial reference by a demonstration-only setting; this is not a medical risk estimate.",
+        "review_steps": [
+          "Read the flagged measurement, unit, baseline and recent window.",
+          "Inspect the underlying observations and verify measurement context.",
+          "For any real mission, follow approved flight-medical procedures and consult authorized personnel rather than relying on this prototype."
+        ]
+      },
+      "methodology": {
+        "reference_days": 7,
+        "recent_days": 4,
+        "illustrative_rules": {
+          "resting_hr_bpm": {
+            "absolute_difference": 12.0,
+            "unit": "bpm"
+          },
+          "sleep_hours": {
+            "absolute_difference": 1.5,
+            "unit": "hours"
+          }
+        },
+        "note": "Engineering demonstration settings, not NASA clinical thresholds. Intermediate days do not participate in the two means."
+      },
+      "disclaimer": "Synthetic engineering demonstration only. No astronaut measurements, medical diagnosis, NASA-approved thresholds, or clinical validation."
+    },
+    "timeline": {
+      "schema_version": "1.0-timeline",
+      "application": "ARES Health AI",
+      "application_version": "1.0",
+      "scenario": "heart_rate_shift",
+      "data_provenance": "synthetic",
+      "simulation_only": true,
+      "assessment": "CHANGE_FOR_REVIEW",
+      "observation_count": 21,
+      "events": [
+        {
+          "id": "event-000001",
+          "type": "observation",
+          "timestamp_utc": "2026-11-01T00:00:00Z",
+          "observation_index": 0,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-01T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 62.6,
+            "sleep_hours": 7.66,
+            "activity_minutes": 38.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000002",
+          "type": "analysis_status",
+          "timestamp_utc": "2026-11-01T00:00:00Z",
+          "observation_index": 0,
+          "explanation": "Insufficient records: 7 baseline and 4 recent days required.",
+          "details": {
+            "state": "INSUFFICIENT_DATA"
+          }
+        },
+        {
+          "id": "event-000003",
+          "type": "observation",
+          "timestamp_utc": "2026-11-02T00:00:00Z",
+          "observation_index": 1,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-02T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 64.4,
+            "sleep_hours": 7.44,
+            "activity_minutes": 49.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000004",
+          "type": "observation",
+          "timestamp_utc": "2026-11-03T00:00:00Z",
+          "observation_index": 2,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-03T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 60.6,
+            "sleep_hours": 7.46,
+            "activity_minutes": 45.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000005",
+          "type": "observation",
+          "timestamp_utc": "2026-11-04T00:00:00Z",
+          "observation_index": 3,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-04T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 66.5,
+            "sleep_hours": 7.66,
+            "activity_minutes": 46.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000006",
+          "type": "observation",
+          "timestamp_utc": "2026-11-05T00:00:00Z",
+          "observation_index": 4,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-05T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 65.1,
+            "sleep_hours": 7.96,
+            "activity_minutes": 53.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000007",
+          "type": "observation",
+          "timestamp_utc": "2026-11-06T00:00:00Z",
+          "observation_index": 5,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-06T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.5,
+            "sleep_hours": 7.32,
+            "activity_minutes": 38.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000008",
+          "type": "observation",
+          "timestamp_utc": "2026-11-07T00:00:00Z",
+          "observation_index": 6,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-07T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.4,
+            "sleep_hours": 7.84,
+            "activity_minutes": 55.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000009",
+          "type": "observation",
+          "timestamp_utc": "2026-11-08T00:00:00Z",
+          "observation_index": 7,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-08T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 64.5,
+            "sleep_hours": 7.19,
+            "activity_minutes": 58.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000010",
+          "type": "observation",
+          "timestamp_utc": "2026-11-09T00:00:00Z",
+          "observation_index": 8,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-09T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.5,
+            "sleep_hours": 7.54,
+            "activity_minutes": 50.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000011",
+          "type": "observation",
+          "timestamp_utc": "2026-11-10T00:00:00Z",
+          "observation_index": 9,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-10T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.6,
+            "sleep_hours": 7.21,
+            "activity_minutes": 46.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000012",
+          "type": "observation",
+          "timestamp_utc": "2026-11-11T00:00:00Z",
+          "observation_index": 10,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-11T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 65.3,
+            "sleep_hours": 7.84,
+            "activity_minutes": 39.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000013",
+          "type": "analysis_status",
+          "timestamp_utc": "2026-11-11T00:00:00Z",
+          "observation_index": 10,
+          "explanation": "Seven reference days and four recent days are available for illustrative comparisons.",
+          "details": {
+            "state": "COMPARISON_AVAILABLE"
+          }
+        },
+        {
+          "id": "event-000014",
+          "type": "observation",
+          "timestamp_utc": "2026-11-12T00:00:00Z",
+          "observation_index": 11,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-12T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 64.9,
+            "sleep_hours": 7.71,
+            "activity_minutes": 47.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000015",
+          "type": "observation",
+          "timestamp_utc": "2026-11-13T00:00:00Z",
+          "observation_index": 12,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-13T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.9,
+            "sleep_hours": 7.78,
+            "activity_minutes": 40.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000016",
+          "type": "observation",
+          "timestamp_utc": "2026-11-14T00:00:00Z",
+          "observation_index": 13,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-14T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.8,
+            "sleep_hours": 7.28,
+            "activity_minutes": 42.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000017",
+          "type": "observation",
+          "timestamp_utc": "2026-11-15T00:00:00Z",
+          "observation_index": 14,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-15T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 64.3,
+            "sleep_hours": 7.67,
+            "activity_minutes": 41.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000018",
+          "type": "observation",
+          "timestamp_utc": "2026-11-16T00:00:00Z",
+          "observation_index": 15,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-16T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 62.9,
+            "sleep_hours": 7.37,
+            "activity_minutes": 43.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000019",
+          "type": "observation",
+          "timestamp_utc": "2026-11-17T00:00:00Z",
+          "observation_index": 16,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-17T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.3,
+            "sleep_hours": 7.39,
+            "activity_minutes": 48.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000020",
+          "type": "observation",
+          "timestamp_utc": "2026-11-18T00:00:00Z",
+          "observation_index": 17,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-18T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 81.0,
+            "sleep_hours": 7.63,
+            "activity_minutes": 39.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000021",
+          "type": "observation",
+          "timestamp_utc": "2026-11-19T00:00:00Z",
+          "observation_index": 18,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-19T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 79.8,
+            "sleep_hours": 7.72,
+            "activity_minutes": 37.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000022",
+          "type": "observation",
+          "timestamp_utc": "2026-11-20T00:00:00Z",
+          "observation_index": 19,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-20T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 77.5,
+            "sleep_hours": 7.55,
+            "activity_minutes": 37.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000023",
+          "type": "observation",
+          "timestamp_utc": "2026-11-21T00:00:00Z",
+          "observation_index": 20,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-21T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 79.1,
+            "sleep_hours": 7.34,
+            "activity_minutes": 37.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000024",
+          "type": "trend_change",
+          "timestamp_utc": "2026-11-21T00:00:00Z",
+          "observation_index": 20,
+          "explanation": "Resting heart rate: recent 4-day mean is 15.6 bpm higher than the first 7-day reference (63.7 \u2192 79.3 bpm). Reference interval: 2026-11-01T00:00:00+00:00 to 2026-11-07T00:00:00+00:00; recent interval: 2026-11-18T00:00:00+00:00 to 2026-11-21T00:00:00+00:00. Review the underlying observations. This is not a diagnosis. Illustrative rule: \u226512 bpm change.",
+          "details": {
+            "metric": "resting_hr_bpm",
+            "baseline_mean": 63.72857142857142,
+            "recent_mean": 79.35,
+            "difference": 15.621428571428574,
+            "unit": "bpm",
+            "illustrative_threshold": 12.0,
+            "reference_start_utc": "2026-11-01T00:00:00Z",
+            "reference_end_utc": "2026-11-07T00:00:00Z",
+            "recent_start_utc": "2026-11-18T00:00:00Z",
+            "recent_end_utc": "2026-11-21T00:00:00Z"
+          }
+        }
+      ],
+      "quality_issues": [],
+      "analysis_limitations": [],
+      "methodology": {
+        "reference_days": 7,
+        "recent_days": 4,
+        "illustrative_rules": {
+          "resting_hr_bpm": {
+            "absolute_difference": 12.0,
+            "unit": "bpm"
+          },
+          "sleep_hours": {
+            "absolute_difference": 1.5,
+            "unit": "hours"
+          }
+        },
+        "note": "Trend events evaluate each available prefix, not onset or diagnosis. Repeated flags describe overlapping comparison windows. The assessment describes the final dataset. Any quality failure suppresses every trend event, including earlier prefixes."
+      },
+      "disclaimer": "Synthetic engineering demonstration only. No astronaut measurements, medical diagnosis, NASA-approved thresholds, or clinical validation."
+    },
+    "report": {
+      "schema_version": "1.0-demo",
+      "application_version": "0.9-dev",
+      "application": "ARES Health AI",
+      "project": "NASA Space Apps Challenge 2026 \u2014 prototype",
+      "scenario": "heart_rate_shift",
+      "data_provenance": "synthetic",
+      "observation_count": 21,
+      "last_observation_utc": "2026-11-21T00:00:00+00:00",
+      "assessment": "CHANGE_FOR_REVIEW",
+      "data_quality_issues": [],
+      "analysis_limitations": [],
+      "review_flags": [
+        {
+          "metric": "resting_hr_bpm",
+          "baseline_mean": 63.729,
+          "recent_mean": 79.35,
+          "difference": 15.621,
+          "unit": "bpm",
+          "explanation": "Resting heart rate: recent 4-day mean is 15.6 bpm higher than the first 7-day reference (63.7 \u2192 79.3 bpm). Reference interval: 2026-11-01T00:00:00+00:00 to 2026-11-07T00:00:00+00:00; recent interval: 2026-11-18T00:00:00+00:00 to 2026-11-21T00:00:00+00:00. Review the underlying observations. This is not a diagnosis. Illustrative rule: \u226512 bpm change."
+        }
+      ],
+      "review_state": "Pending review",
+      "reviewer_note": "",
+      "suggested_demonstration_workflow": [
+        "Inspect source, units and missing values",
+        "Review displayed individual reference and recent observations",
+        "Document the finding; in a real mission, use approved procedures and qualified personnel"
+      ],
+      "methodology": "First 7 synthetic days compared with last 4; illustrative absolute-mean-difference rules.",
+      "disclaimer": "Synthetic engineering demonstration only. No astronaut measurements, medical diagnosis, NASA-approved thresholds, or clinical validation."
+    }
+  },
+  "sleep_shift": {
+    "demo": {
+      "schema_version": "1.0-demo",
+      "application": "ARES Health AI",
+      "scenario": "sleep_shift",
+      "data_provenance": "synthetic",
+      "simulation_only": true,
+      "assessment": "CHANGE_FOR_REVIEW",
+      "summary": {
+        "recorded_days": 21,
+        "completeness_pct": 100.0,
+        "quality_findings": 0,
+        "review_flags": 1,
+        "crew_id": "SIM-001"
+      },
+      "observations": [
+        {
+          "timestamp_utc": "2026-11-01T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 62.6,
+          "sleep_hours": 7.66,
+          "activity_minutes": 38.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-02T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 64.4,
+          "sleep_hours": 7.44,
+          "activity_minutes": 49.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-03T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 60.6,
+          "sleep_hours": 7.46,
+          "activity_minutes": 45.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-04T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 66.5,
+          "sleep_hours": 7.66,
+          "activity_minutes": 46.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-05T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 65.1,
+          "sleep_hours": 7.96,
+          "activity_minutes": 53.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-06T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.5,
+          "sleep_hours": 7.32,
+          "activity_minutes": 38.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-07T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.4,
+          "sleep_hours": 7.84,
+          "activity_minutes": 55.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-08T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 64.5,
+          "sleep_hours": 7.19,
+          "activity_minutes": 58.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-09T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.5,
+          "sleep_hours": 7.54,
+          "activity_minutes": 50.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-10T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.6,
+          "sleep_hours": 7.21,
+          "activity_minutes": 46.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-11T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 65.3,
+          "sleep_hours": 7.84,
+          "activity_minutes": 39.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-12T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 64.9,
+          "sleep_hours": 7.71,
+          "activity_minutes": 47.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-13T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.9,
+          "sleep_hours": 7.78,
+          "activity_minutes": 40.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-14T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.8,
+          "sleep_hours": 7.28,
+          "activity_minutes": 42.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-15T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 64.3,
+          "sleep_hours": 7.67,
+          "activity_minutes": 41.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-16T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 62.9,
+          "sleep_hours": 7.37,
+          "activity_minutes": 43.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-17T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.3,
+          "sleep_hours": 7.39,
+          "activity_minutes": 48.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-18T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 65.0,
+          "sleep_hours": 5.13,
+          "activity_minutes": 39.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-19T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.8,
+          "sleep_hours": 5.22,
+          "activity_minutes": 37.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-20T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 61.5,
+          "sleep_hours": 5.05,
+          "activity_minutes": 37.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-21T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.1,
+          "sleep_hours": 4.84,
+          "activity_minutes": 37.0,
+          "source_type": "synthetic"
+        }
+      ],
+      "quality_issues": [],
+      "analysis_limitations": [],
+      "review_flags": [
+        {
+          "metric": "sleep_hours",
+          "baseline_mean": 7.62,
+          "recent_mean": 5.06,
+          "difference": -2.56,
+          "unit": "hours",
+          "explanation": "Sleep duration: recent 4-day mean is 2.6 hours lower than the first 7-day reference (7.6 \u2192 5.1 hours). Reference interval: 2026-11-01T00:00:00+00:00 to 2026-11-07T00:00:00+00:00; recent interval: 2026-11-18T00:00:00+00:00 to 2026-11-21T00:00:00+00:00. Review the underlying observations. This is not a diagnosis. Illustrative rule: \u22651.5 hours change."
+        }
+      ],
+      "descriptive_signals": [
+        {
+          "metric": "resting_hr_bpm",
+          "label": "Resting heart rate",
+          "unit": "bpm",
+          "system": "Cardiovascular",
+          "color": "#37C7F4",
+          "baseline_mean": 63.72857142857142,
+          "recent_mean": 63.35,
+          "delta": -0.37857142857141923,
+          "full_median": 63.8,
+          "robust_variability": 1.037821552953915,
+          "theil_sen_slope_per_day": -0.030952380952381096,
+          "n": 21
+        },
+        {
+          "metric": "sleep_hours",
+          "label": "Sleep duration",
+          "unit": "hours",
+          "system": "Sleep & Recovery",
+          "color": "#A9A0FF",
+          "baseline_mean": 7.62,
+          "recent_mean": 5.06,
+          "delta": -2.5600000000000005,
+          "full_median": 7.44,
+          "robust_variability": 0.3409985102562891,
+          "theil_sen_slope_per_day": -0.053818181818181765,
+          "n": 21
+        },
+        {
+          "metric": "activity_minutes",
+          "label": "Daily activity",
+          "unit": "min/day",
+          "system": "Musculoskeletal",
+          "color": "#5BE5B2",
+          "baseline_mean": 46.285714285714285,
+          "recent_mean": 37.5,
+          "delta": -8.785714285714285,
+          "full_median": 43.0,
+          "robust_variability": 7.41301109252801,
+          "theil_sen_slope_per_day": -0.5147058823529411,
+          "n": 21
+        }
+      ],
+      "descriptive_statistics_notice": "Exploratory statistics only; not clinically validated, not a medical alert, and never computed when data quality blocks interpretation.",
+      "guidance": {
+        "state": "CHANGE_FOR_REVIEW",
+        "heading": "An illustrative trend changed",
+        "meaning": "One or more simulated means differ from the initial reference by a demonstration-only setting; this is not a medical risk estimate.",
+        "review_steps": [
+          "Read the flagged measurement, unit, baseline and recent window.",
+          "Inspect the underlying observations and verify measurement context.",
+          "For any real mission, follow approved flight-medical procedures and consult authorized personnel rather than relying on this prototype."
+        ]
+      },
+      "methodology": {
+        "reference_days": 7,
+        "recent_days": 4,
+        "illustrative_rules": {
+          "resting_hr_bpm": {
+            "absolute_difference": 12.0,
+            "unit": "bpm"
+          },
+          "sleep_hours": {
+            "absolute_difference": 1.5,
+            "unit": "hours"
+          }
+        },
+        "note": "Engineering demonstration settings, not NASA clinical thresholds. Intermediate days do not participate in the two means."
+      },
+      "disclaimer": "Synthetic engineering demonstration only. No astronaut measurements, medical diagnosis, NASA-approved thresholds, or clinical validation."
+    },
+    "timeline": {
+      "schema_version": "1.0-timeline",
+      "application": "ARES Health AI",
+      "application_version": "1.0",
+      "scenario": "sleep_shift",
+      "data_provenance": "synthetic",
+      "simulation_only": true,
+      "assessment": "CHANGE_FOR_REVIEW",
+      "observation_count": 21,
+      "events": [
+        {
+          "id": "event-000001",
+          "type": "observation",
+          "timestamp_utc": "2026-11-01T00:00:00Z",
+          "observation_index": 0,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-01T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 62.6,
+            "sleep_hours": 7.66,
+            "activity_minutes": 38.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000002",
+          "type": "analysis_status",
+          "timestamp_utc": "2026-11-01T00:00:00Z",
+          "observation_index": 0,
+          "explanation": "Insufficient records: 7 baseline and 4 recent days required.",
+          "details": {
+            "state": "INSUFFICIENT_DATA"
+          }
+        },
+        {
+          "id": "event-000003",
+          "type": "observation",
+          "timestamp_utc": "2026-11-02T00:00:00Z",
+          "observation_index": 1,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-02T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 64.4,
+            "sleep_hours": 7.44,
+            "activity_minutes": 49.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000004",
+          "type": "observation",
+          "timestamp_utc": "2026-11-03T00:00:00Z",
+          "observation_index": 2,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-03T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 60.6,
+            "sleep_hours": 7.46,
+            "activity_minutes": 45.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000005",
+          "type": "observation",
+          "timestamp_utc": "2026-11-04T00:00:00Z",
+          "observation_index": 3,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-04T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 66.5,
+            "sleep_hours": 7.66,
+            "activity_minutes": 46.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000006",
+          "type": "observation",
+          "timestamp_utc": "2026-11-05T00:00:00Z",
+          "observation_index": 4,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-05T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 65.1,
+            "sleep_hours": 7.96,
+            "activity_minutes": 53.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000007",
+          "type": "observation",
+          "timestamp_utc": "2026-11-06T00:00:00Z",
+          "observation_index": 5,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-06T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.5,
+            "sleep_hours": 7.32,
+            "activity_minutes": 38.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000008",
+          "type": "observation",
+          "timestamp_utc": "2026-11-07T00:00:00Z",
+          "observation_index": 6,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-07T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.4,
+            "sleep_hours": 7.84,
+            "activity_minutes": 55.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000009",
+          "type": "observation",
+          "timestamp_utc": "2026-11-08T00:00:00Z",
+          "observation_index": 7,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-08T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 64.5,
+            "sleep_hours": 7.19,
+            "activity_minutes": 58.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000010",
+          "type": "observation",
+          "timestamp_utc": "2026-11-09T00:00:00Z",
+          "observation_index": 8,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-09T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.5,
+            "sleep_hours": 7.54,
+            "activity_minutes": 50.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000011",
+          "type": "observation",
+          "timestamp_utc": "2026-11-10T00:00:00Z",
+          "observation_index": 9,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-10T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.6,
+            "sleep_hours": 7.21,
+            "activity_minutes": 46.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000012",
+          "type": "observation",
+          "timestamp_utc": "2026-11-11T00:00:00Z",
+          "observation_index": 10,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-11T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 65.3,
+            "sleep_hours": 7.84,
+            "activity_minutes": 39.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000013",
+          "type": "analysis_status",
+          "timestamp_utc": "2026-11-11T00:00:00Z",
+          "observation_index": 10,
+          "explanation": "Seven reference days and four recent days are available for illustrative comparisons.",
+          "details": {
+            "state": "COMPARISON_AVAILABLE"
+          }
+        },
+        {
+          "id": "event-000014",
+          "type": "observation",
+          "timestamp_utc": "2026-11-12T00:00:00Z",
+          "observation_index": 11,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-12T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 64.9,
+            "sleep_hours": 7.71,
+            "activity_minutes": 47.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000015",
+          "type": "observation",
+          "timestamp_utc": "2026-11-13T00:00:00Z",
+          "observation_index": 12,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-13T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.9,
+            "sleep_hours": 7.78,
+            "activity_minutes": 40.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000016",
+          "type": "observation",
+          "timestamp_utc": "2026-11-14T00:00:00Z",
+          "observation_index": 13,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-14T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.8,
+            "sleep_hours": 7.28,
+            "activity_minutes": 42.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000017",
+          "type": "observation",
+          "timestamp_utc": "2026-11-15T00:00:00Z",
+          "observation_index": 14,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-15T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 64.3,
+            "sleep_hours": 7.67,
+            "activity_minutes": 41.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000018",
+          "type": "observation",
+          "timestamp_utc": "2026-11-16T00:00:00Z",
+          "observation_index": 15,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-16T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 62.9,
+            "sleep_hours": 7.37,
+            "activity_minutes": 43.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000019",
+          "type": "observation",
+          "timestamp_utc": "2026-11-17T00:00:00Z",
+          "observation_index": 16,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-17T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.3,
+            "sleep_hours": 7.39,
+            "activity_minutes": 48.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000020",
+          "type": "observation",
+          "timestamp_utc": "2026-11-18T00:00:00Z",
+          "observation_index": 17,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-18T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 65.0,
+            "sleep_hours": 5.13,
+            "activity_minutes": 39.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000021",
+          "type": "observation",
+          "timestamp_utc": "2026-11-19T00:00:00Z",
+          "observation_index": 18,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-19T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.8,
+            "sleep_hours": 5.22,
+            "activity_minutes": 37.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000022",
+          "type": "observation",
+          "timestamp_utc": "2026-11-20T00:00:00Z",
+          "observation_index": 19,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-20T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 61.5,
+            "sleep_hours": 5.05,
+            "activity_minutes": 37.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000023",
+          "type": "trend_change",
+          "timestamp_utc": "2026-11-20T00:00:00Z",
+          "observation_index": 19,
+          "explanation": "Sleep duration: recent 4-day mean is 1.9 hours lower than the first 7-day reference (7.6 \u2192 5.7 hours). Reference interval: 2026-11-01T00:00:00+00:00 to 2026-11-07T00:00:00+00:00; recent interval: 2026-11-17T00:00:00+00:00 to 2026-11-20T00:00:00+00:00. Review the underlying observations. This is not a diagnosis. Illustrative rule: \u22651.5 hours change.",
+          "details": {
+            "metric": "sleep_hours",
+            "baseline_mean": 7.62,
+            "recent_mean": 5.6975,
+            "difference": -1.9225000000000003,
+            "unit": "hours",
+            "illustrative_threshold": 1.5,
+            "reference_start_utc": "2026-11-01T00:00:00Z",
+            "reference_end_utc": "2026-11-07T00:00:00Z",
+            "recent_start_utc": "2026-11-17T00:00:00Z",
+            "recent_end_utc": "2026-11-20T00:00:00Z"
+          }
+        },
+        {
+          "id": "event-000024",
+          "type": "observation",
+          "timestamp_utc": "2026-11-21T00:00:00Z",
+          "observation_index": 20,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-21T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.1,
+            "sleep_hours": 4.84,
+            "activity_minutes": 37.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000025",
+          "type": "trend_change",
+          "timestamp_utc": "2026-11-21T00:00:00Z",
+          "observation_index": 20,
+          "explanation": "Sleep duration: recent 4-day mean is 2.6 hours lower than the first 7-day reference (7.6 \u2192 5.1 hours). Reference interval: 2026-11-01T00:00:00+00:00 to 2026-11-07T00:00:00+00:00; recent interval: 2026-11-18T00:00:00+00:00 to 2026-11-21T00:00:00+00:00. Review the underlying observations. This is not a diagnosis. Illustrative rule: \u22651.5 hours change.",
+          "details": {
+            "metric": "sleep_hours",
+            "baseline_mean": 7.62,
+            "recent_mean": 5.06,
+            "difference": -2.5600000000000005,
+            "unit": "hours",
+            "illustrative_threshold": 1.5,
+            "reference_start_utc": "2026-11-01T00:00:00Z",
+            "reference_end_utc": "2026-11-07T00:00:00Z",
+            "recent_start_utc": "2026-11-18T00:00:00Z",
+            "recent_end_utc": "2026-11-21T00:00:00Z"
+          }
+        }
+      ],
+      "quality_issues": [],
+      "analysis_limitations": [],
+      "methodology": {
+        "reference_days": 7,
+        "recent_days": 4,
+        "illustrative_rules": {
+          "resting_hr_bpm": {
+            "absolute_difference": 12.0,
+            "unit": "bpm"
+          },
+          "sleep_hours": {
+            "absolute_difference": 1.5,
+            "unit": "hours"
+          }
+        },
+        "note": "Trend events evaluate each available prefix, not onset or diagnosis. Repeated flags describe overlapping comparison windows. The assessment describes the final dataset. Any quality failure suppresses every trend event, including earlier prefixes."
+      },
+      "disclaimer": "Synthetic engineering demonstration only. No astronaut measurements, medical diagnosis, NASA-approved thresholds, or clinical validation."
+    },
+    "report": {
+      "schema_version": "1.0-demo",
+      "application_version": "0.9-dev",
+      "application": "ARES Health AI",
+      "project": "NASA Space Apps Challenge 2026 \u2014 prototype",
+      "scenario": "sleep_shift",
+      "data_provenance": "synthetic",
+      "observation_count": 21,
+      "last_observation_utc": "2026-11-21T00:00:00+00:00",
+      "assessment": "CHANGE_FOR_REVIEW",
+      "data_quality_issues": [],
+      "analysis_limitations": [],
+      "review_flags": [
+        {
+          "metric": "sleep_hours",
+          "baseline_mean": 7.62,
+          "recent_mean": 5.06,
+          "difference": -2.56,
+          "unit": "hours",
+          "explanation": "Sleep duration: recent 4-day mean is 2.6 hours lower than the first 7-day reference (7.6 \u2192 5.1 hours). Reference interval: 2026-11-01T00:00:00+00:00 to 2026-11-07T00:00:00+00:00; recent interval: 2026-11-18T00:00:00+00:00 to 2026-11-21T00:00:00+00:00. Review the underlying observations. This is not a diagnosis. Illustrative rule: \u22651.5 hours change."
+        }
+      ],
+      "review_state": "Pending review",
+      "reviewer_note": "",
+      "suggested_demonstration_workflow": [
+        "Inspect source, units and missing values",
+        "Review displayed individual reference and recent observations",
+        "Document the finding; in a real mission, use approved procedures and qualified personnel"
+      ],
+      "methodology": "First 7 synthetic days compared with last 4; illustrative absolute-mean-difference rules.",
+      "disclaimer": "Synthetic engineering demonstration only. No astronaut measurements, medical diagnosis, NASA-approved thresholds, or clinical validation."
+    }
+  },
+  "incomplete": {
+    "demo": {
+      "schema_version": "1.0-demo",
+      "application": "ARES Health AI",
+      "scenario": "incomplete",
+      "data_provenance": "synthetic",
+      "simulation_only": true,
+      "assessment": "DATA_QUALITY_BLOCKED",
+      "summary": {
+        "recorded_days": 21,
+        "completeness_pct": 92.06,
+        "quality_findings": 2,
+        "review_flags": 0,
+        "crew_id": "SIM-001"
+      },
+      "observations": [
+        {
+          "timestamp_utc": "2026-11-01T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 62.6,
+          "sleep_hours": 7.66,
+          "activity_minutes": 38.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-02T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 64.4,
+          "sleep_hours": 7.44,
+          "activity_minutes": 49.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-03T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 60.6,
+          "sleep_hours": 7.46,
+          "activity_minutes": 45.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-04T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 66.5,
+          "sleep_hours": 7.66,
+          "activity_minutes": 46.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-05T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 65.1,
+          "sleep_hours": 7.96,
+          "activity_minutes": 53.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-06T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.5,
+          "sleep_hours": 7.32,
+          "activity_minutes": 38.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-07T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.4,
+          "sleep_hours": 7.84,
+          "activity_minutes": 55.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-08T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 64.5,
+          "sleep_hours": 7.19,
+          "activity_minutes": 58.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-09T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.5,
+          "sleep_hours": 7.54,
+          "activity_minutes": 50.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-10T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.6,
+          "sleep_hours": 7.21,
+          "activity_minutes": 46.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-11T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 65.3,
+          "sleep_hours": 7.84,
+          "activity_minutes": 39.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-12T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 64.9,
+          "sleep_hours": 7.71,
+          "activity_minutes": 47.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-13T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.9,
+          "sleep_hours": 7.78,
+          "activity_minutes": 40.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-14T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.8,
+          "sleep_hours": 7.28,
+          "activity_minutes": 42.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-15T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 64.3,
+          "sleep_hours": 7.67,
+          "activity_minutes": 41.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-16T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 62.9,
+          "sleep_hours": 7.37,
+          "activity_minutes": 43.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-17T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 63.3,
+          "sleep_hours": 7.39,
+          "activity_minutes": 48.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-18T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": 65.0,
+          "sleep_hours": 7.63,
+          "activity_minutes": 39.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-19T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": null,
+          "sleep_hours": 7.72,
+          "activity_minutes": 37.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-20T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": null,
+          "sleep_hours": null,
+          "activity_minutes": 37.0,
+          "source_type": "synthetic"
+        },
+        {
+          "timestamp_utc": "2026-11-21T00:00:00Z",
+          "crew_id": "SIM-001",
+          "resting_hr_bpm": null,
+          "sleep_hours": null,
+          "activity_minutes": 37.0,
+          "source_type": "synthetic"
+        }
+      ],
+      "quality_issues": [
+        "Missing or nonnumeric resting_hr_bpm: 3 rows.",
+        "Missing or nonnumeric sleep_hours: 2 rows."
+      ],
+      "analysis_limitations": [],
+      "review_flags": [],
+      "descriptive_signals": [],
+      "descriptive_statistics_notice": "Exploratory statistics only; not clinically validated, not a medical alert, and never computed when data quality blocks interpretation.",
+      "guidance": {
+        "state": "DATA_QUALITY_BLOCKED",
+        "heading": "Measurements need verification",
+        "meaning": "One or more required simulated observations are missing or invalid. ARES has intentionally withheld trend interpretation.",
+        "review_steps": [
+          "Inspect which fields and timestamps have a quality problem.",
+          "Verify the source record and correct it outside ARES before retrying.",
+          "Do not treat a blocked analysis as a healthy or unhealthy finding."
+        ]
+      },
+      "methodology": {
+        "reference_days": 7,
+        "recent_days": 4,
+        "illustrative_rules": {
+          "resting_hr_bpm": {
+            "absolute_difference": 12.0,
+            "unit": "bpm"
+          },
+          "sleep_hours": {
+            "absolute_difference": 1.5,
+            "unit": "hours"
+          }
+        },
+        "note": "Engineering demonstration settings, not NASA clinical thresholds. Intermediate days do not participate in the two means."
+      },
+      "disclaimer": "Synthetic engineering demonstration only. No astronaut measurements, medical diagnosis, NASA-approved thresholds, or clinical validation."
+    },
+    "timeline": {
+      "schema_version": "1.0-timeline",
+      "application": "ARES Health AI",
+      "application_version": "1.0",
+      "scenario": "incomplete",
+      "data_provenance": "synthetic",
+      "simulation_only": true,
+      "assessment": "DATA_QUALITY_BLOCKED",
+      "observation_count": 21,
+      "events": [
+        {
+          "id": "event-000001",
+          "type": "observation",
+          "timestamp_utc": "2026-11-01T00:00:00Z",
+          "observation_index": 0,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-01T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 62.6,
+            "sleep_hours": 7.66,
+            "activity_minutes": 38.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000002",
+          "type": "observation",
+          "timestamp_utc": "2026-11-02T00:00:00Z",
+          "observation_index": 1,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-02T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 64.4,
+            "sleep_hours": 7.44,
+            "activity_minutes": 49.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000003",
+          "type": "observation",
+          "timestamp_utc": "2026-11-03T00:00:00Z",
+          "observation_index": 2,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-03T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 60.6,
+            "sleep_hours": 7.46,
+            "activity_minutes": 45.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000004",
+          "type": "observation",
+          "timestamp_utc": "2026-11-04T00:00:00Z",
+          "observation_index": 3,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-04T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 66.5,
+            "sleep_hours": 7.66,
+            "activity_minutes": 46.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000005",
+          "type": "observation",
+          "timestamp_utc": "2026-11-05T00:00:00Z",
+          "observation_index": 4,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-05T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 65.1,
+            "sleep_hours": 7.96,
+            "activity_minutes": 53.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000006",
+          "type": "observation",
+          "timestamp_utc": "2026-11-06T00:00:00Z",
+          "observation_index": 5,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-06T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.5,
+            "sleep_hours": 7.32,
+            "activity_minutes": 38.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000007",
+          "type": "observation",
+          "timestamp_utc": "2026-11-07T00:00:00Z",
+          "observation_index": 6,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-07T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.4,
+            "sleep_hours": 7.84,
+            "activity_minutes": 55.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000008",
+          "type": "observation",
+          "timestamp_utc": "2026-11-08T00:00:00Z",
+          "observation_index": 7,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-08T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 64.5,
+            "sleep_hours": 7.19,
+            "activity_minutes": 58.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000009",
+          "type": "observation",
+          "timestamp_utc": "2026-11-09T00:00:00Z",
+          "observation_index": 8,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-09T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.5,
+            "sleep_hours": 7.54,
+            "activity_minutes": 50.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000010",
+          "type": "observation",
+          "timestamp_utc": "2026-11-10T00:00:00Z",
+          "observation_index": 9,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-10T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.6,
+            "sleep_hours": 7.21,
+            "activity_minutes": 46.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000011",
+          "type": "observation",
+          "timestamp_utc": "2026-11-11T00:00:00Z",
+          "observation_index": 10,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-11T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 65.3,
+            "sleep_hours": 7.84,
+            "activity_minutes": 39.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000012",
+          "type": "observation",
+          "timestamp_utc": "2026-11-12T00:00:00Z",
+          "observation_index": 11,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-12T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 64.9,
+            "sleep_hours": 7.71,
+            "activity_minutes": 47.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000013",
+          "type": "observation",
+          "timestamp_utc": "2026-11-13T00:00:00Z",
+          "observation_index": 12,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-13T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.9,
+            "sleep_hours": 7.78,
+            "activity_minutes": 40.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000014",
+          "type": "observation",
+          "timestamp_utc": "2026-11-14T00:00:00Z",
+          "observation_index": 13,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-14T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.8,
+            "sleep_hours": 7.28,
+            "activity_minutes": 42.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000015",
+          "type": "observation",
+          "timestamp_utc": "2026-11-15T00:00:00Z",
+          "observation_index": 14,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-15T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 64.3,
+            "sleep_hours": 7.67,
+            "activity_minutes": 41.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000016",
+          "type": "observation",
+          "timestamp_utc": "2026-11-16T00:00:00Z",
+          "observation_index": 15,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-16T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 62.9,
+            "sleep_hours": 7.37,
+            "activity_minutes": 43.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000017",
+          "type": "observation",
+          "timestamp_utc": "2026-11-17T00:00:00Z",
+          "observation_index": 16,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-17T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 63.3,
+            "sleep_hours": 7.39,
+            "activity_minutes": 48.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000018",
+          "type": "observation",
+          "timestamp_utc": "2026-11-18T00:00:00Z",
+          "observation_index": 17,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-18T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": 65.0,
+            "sleep_hours": 7.63,
+            "activity_minutes": 39.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000019",
+          "type": "observation",
+          "timestamp_utc": "2026-11-19T00:00:00Z",
+          "observation_index": 18,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-19T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": null,
+            "sleep_hours": 7.72,
+            "activity_minutes": 37.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000020",
+          "type": "observation",
+          "timestamp_utc": "2026-11-20T00:00:00Z",
+          "observation_index": 19,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-20T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": null,
+            "sleep_hours": null,
+            "activity_minutes": 37.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000021",
+          "type": "observation",
+          "timestamp_utc": "2026-11-21T00:00:00Z",
+          "observation_index": 20,
+          "explanation": "Fictional daily observation; values are not a medical assessment.",
+          "details": {
+            "timestamp_utc": "2026-11-21T00:00:00Z",
+            "crew_id": "SIM-001",
+            "resting_hr_bpm": null,
+            "sleep_hours": null,
+            "activity_minutes": 37.0,
+            "source_type": "synthetic"
+          }
+        },
+        {
+          "id": "event-000022",
+          "type": "data_quality",
+          "timestamp_utc": null,
+          "observation_index": null,
+          "explanation": "Missing or nonnumeric resting_hr_bpm: 3 rows.",
+          "details": {
+            "scope": "dataset",
+            "state": "DATA_QUALITY_BLOCKED",
+            "effect": "All trend interpretations are withheld for this dataset."
+          }
+        },
+        {
+          "id": "event-000023",
+          "type": "data_quality",
+          "timestamp_utc": null,
+          "observation_index": null,
+          "explanation": "Missing or nonnumeric sleep_hours: 2 rows.",
+          "details": {
+            "scope": "dataset",
+            "state": "DATA_QUALITY_BLOCKED",
+            "effect": "All trend interpretations are withheld for this dataset."
+          }
+        }
+      ],
+      "quality_issues": [
+        "Missing or nonnumeric resting_hr_bpm: 3 rows.",
+        "Missing or nonnumeric sleep_hours: 2 rows."
+      ],
+      "analysis_limitations": [],
+      "methodology": {
+        "reference_days": 7,
+        "recent_days": 4,
+        "illustrative_rules": {
+          "resting_hr_bpm": {
+            "absolute_difference": 12.0,
+            "unit": "bpm"
+          },
+          "sleep_hours": {
+            "absolute_difference": 1.5,
+            "unit": "hours"
+          }
+        },
+        "note": "Trend events evaluate each available prefix, not onset or diagnosis. Repeated flags describe overlapping comparison windows. The assessment describes the final dataset. Any quality failure suppresses every trend event, including earlier prefixes."
+      },
+      "disclaimer": "Synthetic engineering demonstration only. No astronaut measurements, medical diagnosis, NASA-approved thresholds, or clinical validation."
+    },
+    "report": {
+      "schema_version": "1.0-demo",
+      "application_version": "0.9-dev",
+      "application": "ARES Health AI",
+      "project": "NASA Space Apps Challenge 2026 \u2014 prototype",
+      "scenario": "incomplete",
+      "data_provenance": "synthetic",
+      "observation_count": 21,
+      "last_observation_utc": "2026-11-21T00:00:00+00:00",
+      "assessment": "DATA_QUALITY_BLOCKED",
+      "data_quality_issues": [
+        "Missing or nonnumeric resting_hr_bpm: 3 rows.",
+        "Missing or nonnumeric sleep_hours: 2 rows."
+      ],
+      "analysis_limitations": [],
+      "review_flags": [],
+      "review_state": "Pending review",
+      "reviewer_note": "",
+      "suggested_demonstration_workflow": [
+        "Inspect source, units and missing values",
+        "Review displayed individual reference and recent observations",
+        "Document the finding; in a real mission, use approved procedures and qualified personnel"
+      ],
+      "methodology": "First 7 synthetic days compared with last 4; illustrative absolute-mean-difference rules.",
+      "disclaimer": "Synthetic engineering demonstration only. No astronaut measurements, medical diagnosis, NASA-approved thresholds, or clinical validation."
+    }
+  }
+}

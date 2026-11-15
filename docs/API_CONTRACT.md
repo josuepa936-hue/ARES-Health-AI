@@ -1,6 +1,6 @@
 # ARES Health AI — Local API Contract (v1.0)
 
-**Purpose:** Expose the existing synthetic, explainable Python domain engine to a later React/Figma-driven user interface without changing the stable Streamlit app.
+**Purpose:** Expose the existing synthetic, explainable Python domain engine to the functional React client and future Figma-designed interface without changing the stable Streamlit app.
 
 **Not production-ready medical infrastructure.** This is a laptop-local, fictional-data-only service. It has no authorization, rate limiter, persistent data store, clinical validation, onboard sensor integrations, NASA telemetry, or medical treatment recommendations. **Never expose Uvicorn to a public network**.
 
@@ -80,9 +80,9 @@ HTTP failures:
 ### Frontend workflow
 
 ```text
-Figma-approved interface (future)
+Figma visual design (future, not integrated)
         |
-     React UI    ← only controlled synthetic files and demo scenarios
+     React v1.1 functional UI    ← only controlled synthetic files and demo scenarios
         |
   local FastAPI /api/* (v1.0)
         |
@@ -195,3 +195,22 @@ insufficient baselines, invalid/missing/nonfinite input, structural failures,
 chronology and blocking. `tests/test_api.py` covers all scenarios, parameter
 limits, strict JSON, OpenAPI route registration and HTTP/domain parity. Run the
 full existing suite with `python -m pytest -q`, including CSV and dashboard tests.
+
+## v1.1 React consumer (backend routes unchanged)
+
+`frontend/` consumes scenarios, demo snapshots, timelines, evidence and review
+reports with a typed fetch adapter and runtime Zod validation. Vite's loopback
+port 5173 proxies `/api/*` to the existing loopback API on port 8000. Requests
+for scenario demo/timeline are cancelled together when the source changes; late
+responses cannot overwrite the current dataset. React never reimplements rules,
+CSV schema validation or statistics. HTTP and contract failures clear stale results.
+
+CSV files are sent as raw bytes after explicit synthetic attestation and a client
+byte-size guard. The backend remains responsible for strict acceptance. Accepted
+CSV responses use their embedded `review_report` for download; they are never
+submitted to `/api/review` as a built-in scenario. Because `/api/timeline` only
+supports generated scenarios, CSV timeline display is explicitly unavailable.
+The UI clears the prior scenario timeline rather than inventing CSV events.
+Review notes and returned reports remain in memory only. No endpoint or existing
+Python report schema changes were required. See `frontend/README.md` for startup,
+proxy configuration, errors, regression tests and limitations.

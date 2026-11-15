@@ -1,4 +1,4 @@
-# ARES Health AI Architecture — 0.9 API foundation
+# ARES Health AI Architecture — v1.1 functional integration
 
 ## Mission
 
@@ -10,7 +10,7 @@ ARES is an **independent, synthetic, non-clinical prototype** developed for the 
 flowchart LR
   subgraph Presentations
     A[Streamlit v0.7: tested fallback]
-    B[Future React + Figma UI]
+    B[React v1.1 functional client]
   end
   A --> E[Shared domain modules]
   B --> C[Local FastAPI: api.py]
@@ -34,7 +34,7 @@ flowchart LR
 5. `advanced_stats.describe_signals()` computes optional descriptive medians, MAD and Theil–Sen slope using SciPy for **valid synthetic data only**. These statistics never generate alerts and are omitted for blocked data.
 6. `build_review_report()` revalidates at the export boundary; incomplete/invalid observations prevent clinical-sounding interpretations and suppress demo flags. `get_crew_guidance()` provides explanatory verification steps, not medical action or prescriptions.
 7. `build_snapshot()` assembles canonical JSON using these functions: missing values as `null`, UTC ISO 8601 strings, and explicit source and limitation labels.
-8. The Streamlit app or a future React interface presents these results without making up new health readings.
+8. The Streamlit app or functional React client presents these results without making up new health readings.
 
 ## Security and privacy scope
 
@@ -61,3 +61,21 @@ interpretations; source rows remain unchanged. `GET /api/timeline` generates a
 bounded fictional scenario and invokes this projection. No UI, CSV ingestion,
 review, persistence or scientific-rule behavior is changed. See `API_CONTRACT.md`
 for historical evaluation semantics, event ordering and strict JSON guarantees.
+
+## v1.1 functional React frontend
+
+`frontend/` is a separate Vite/React/TypeScript client of the existing API. Its
+modules separate runtime-checked contracts, HTTP adaptation, mission-source state,
+raw-value charts, timeline filtering, CSV attestation and review/export controls.
+The backend is the sole owner of simulation, validation, thresholds, mean/window
+comparisons, descriptive statistics, guidance and report generation. SVG chart
+coordinates are presentation transforms only and retain gaps for missing cells.
+API findings and references are rendered as text, without HTML injection.
+
+Mission-source changes abort active requests, clear old snapshots/reports and
+ignore late results. Blocked analyses expose quality findings without advanced
+metrics or reassuring trend statements. CSV analysis uses the accepted snapshot
+and embedded report; no timeline HTTP route exists for CSV. No browser storage,
+backend persistence or new Python functionality is introduced. This basic UI is
+a functional integration milestone; final Figma styling, anatomy and 3D remain
+out of scope. CI runs component/adapter tests plus live HTTP checks through Vite.
