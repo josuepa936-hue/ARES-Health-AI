@@ -16,6 +16,8 @@ from src.ares_health.import_csv import MAX_CSV_BYTES, load_synthetic_csv
 from src.ares_health.service import build_snapshot
 from src.ares_health.synthetic import SCENARIOS, generate_scenario
 from src.ares_health.timeline import build_timeline
+from src.ares_health.research_api import router as research_router
+from src.ares_health.nasa_api import router as nasa_router
 
 ScenarioId = Literal["stable", "heart_rate_shift", "sleep_shift", "incomplete"]
 ReviewState = Literal["Pending review", "Reviewed in demo"]
@@ -170,3 +172,8 @@ async def analyze_synthetic_csv(
     return build_snapshot(
         records, scenario="uploaded_synthetic_csv", include_report=True
     )
+
+
+# Optional, read-only research namespace. Existing synthetic routes are unchanged.
+app.include_router(research_router)
+app.include_router(nasa_router)

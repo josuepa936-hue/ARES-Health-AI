@@ -50,6 +50,23 @@ Start the loopback backend as above, then run `cd frontend`, `npm install`, and
 127.0.0.1:8000. See [frontend startup and functional walkthrough](frontend/README.md)
 for exact PowerShell steps, test commands, configuration and limitations.
 
+## Research integrations — MIT + NASA (experimental v1.2 branch)
+
+Two **independent, optional** research views are now prepared:
+
+- **MIT-BIH ECG Lab:** WFDB/NeuroKit beat-detection benchmark against expert-reviewed
+  terrestrial ECG annotations. The official record-100 acquisition remains
+  blocked by HTTP 403 in Codex's environment; **no public-record performance
+  metric is claimed**.
+- **NASA OSDR Research:** public study OSD-87, a mouse retina spaceflight study
+  from STS-135. NASA's file catalog and a small public sample CSV are loaded
+  on demand with strict limits. **This is not astronaut health monitoring**.
+
+The original synthetic mission app stays fully separate. See
+[MIT + NASA research documentation](docs/MIT_NASA_RESEARCH.md) and
+[MIT benchmark protocol](docs/RESEARCH_LAB.md). The entire feature remains
+in a research branch until source access, CI and presentation checks pass.
+
 ## Mission
 
 Design a local-first, explainable astronaut health-monitoring prototype that supports the collection of wellness indicators, visualizes time trends, checks data quality, and helps crew members review meaningful changes and consult relevant procedures. It does **not** diagnose disease or replace flight surgeons, medical protocols, or mission operations.
@@ -146,3 +163,14 @@ The team owns its decisions and must confirm contributor permission before addin
 - Event schedule: https://www.spaceappschallenge.org/2026/
 - NASA Human Research Roadmap: https://humanresearchroadmap.nasa.gov/risks/
 - NASA OSDR: https://science.nasa.gov/biological-physical/data/osdr/
+
+## Optional Biomedical Research Lab (v1.2 draft, future work)
+
+An isolated opt-in research view and offline WFDB/NeuroKit pipeline benchmark
+heartbeat detection for an allowlisted public terrestrial ECG case, separately
+from synthetic mission data. No diagnosis, classification, HRV inference or risk
+scoring is added. Existing mission/CSV/timeline routes and Streamlit remain the
+submission fallback. **The official PhysioNet run and source/license review are
+blocked by network access and are not claimed complete.** See
+[research protocol, provenance and preparation](docs/RESEARCH_LAB.md) for exact
+bounds, abstention behavior, citations, optional tooling and draft scope gate.

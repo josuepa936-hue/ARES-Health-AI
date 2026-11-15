@@ -145,3 +145,33 @@ TypeScript/production build passed. Python emits one existing Starlette/httpx
 deprecation warning. CI configuration is included; these results describe local
 runs, not a completed GitHub Actions run. Final visual design and full browser
 visual testing remain outside this integration milestone.
+
+## Optional v1.2 research tab (future research)
+
+The default mission app and its state remain unchanged. **Optional research lab**
+lazily loads a separate view labelled PUBLIC TERRESTRIAL RESEARCH ECG. It reads
+only `/api/research/ecg/demo?record=100`; it never uploads or generates ECG data.
+The backend must be explicitly enabled and have a prepared artifact. Disabled,
+unavailable and abstained results show no scores. The view displays backend
+metrics, source/citation, versions, raw display waveform, exact peak/reference
+markers and a discrepancy table. It does no beat detection or scoring in React.
+
+See `docs/RESEARCH_LAB.md` from the repository root for separate optional install,
+official-file acquisition, license review, quality protocol and enablement. The
+public-case benchmark is currently blocked, so this work stays future research;
+the synthetic mission app remains the hackathon fallback. No final Figma/anatomy/
+3D design is part of this view.
+
+
+## Experimental NASA OSDR view (research branch only)
+
+The third workspace mode, **NASA space biology**, provides a separate
+on-demand read-only explorer of the public OSD-87 (STS-135 mouse retina)
+NASA study catalog and the explicitly authorized small sample table.
+Research needs `$env:ARES_RESEARCH_ENABLED="1"` in the backend terminal.
+The backend may return HTTP 503 when NASA cannot be contacted; no
+data are invented. No astronauts' medical data are acquired.
+
+The MIT ECG lab remains a distinct opt-in view; it does not merge MIT
+observations with spaceflight mouse study data. This is **not** the Figma
+interface redesign. See [study sources and caveats](../docs/MIT_NASA_RESEARCH.md).

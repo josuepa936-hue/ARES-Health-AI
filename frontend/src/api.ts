@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { researchSchema } from './research-contract';
+import { nasaStudySchema, nasaSamplesSchema } from './nasa-contract';
 import {
   evidenceSchema,
   csvSnapshotSchema,
@@ -72,6 +74,12 @@ export function createApi(baseUrl = import.meta.env.VITE_API_BASE_URL ?? '') {
   const query = (scenario: ScenarioId) =>
     `?scenario=${encodeURIComponent(scenario)}&seed=2026&days=21`;
   return {
+    nasaStudy: (signal: AbortSignal) =>
+      request('/research/nasa/study', nasaStudySchema, signal),
+    nasaSamples: (signal: AbortSignal) =>
+      request('/research/nasa/sample-table', nasaSamplesSchema, signal),
+    research: (signal: AbortSignal) =>
+      request('/research/ecg/demo?record=100', researchSchema, signal),
     scenarios: (signal: AbortSignal) => request('/scenarios', scenariosSchema, signal),
     evidence: (signal: AbortSignal) => request('/evidence', evidenceSchema, signal),
     demo: (scenario: ScenarioId, signal: AbortSignal) =>
