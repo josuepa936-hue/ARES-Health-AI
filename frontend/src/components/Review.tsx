@@ -35,7 +35,7 @@ export function Review({ scenario, embedded }: { scenario?: ScenarioId; embedded
     }
   }
   return (
-    <section>
+    <section id="mission-review">
       <h2>Mission Review Center</h2>
       <p>Fictional notes only. Do not enter personal or medical information.</p>
       {scenario ? (
@@ -69,8 +69,8 @@ export function Review({ scenario, embedded }: { scenario?: ScenarioId; embedded
         </form>
       ) : (
         <p>
-          CSV export uses the API's embedded review report. Built-in scenario review submission is
-          unavailable for CSV data.
+          CSV uploads and fictional check-ins export the API's embedded review report. Built-in
+          scenario review submission is unavailable for these derived datasets.
         </p>
       )}
       {busy && <p role="status">Preparing review…</p>}
