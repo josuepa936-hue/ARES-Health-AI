@@ -76,3 +76,18 @@ retina study, not human mission monitoring. The team must independently
 verify scientific and data license claims before publication.
 
 A subsequent integration change added an explicit public AWS source for MIT-BIH that PhysioNet documents on its official dataset page. Acquisition remains opt-in and subject to the same SHA-256 manifest and waveform checks; no public-record benchmark score is claimed without a successful verified run.
+
+
+## Version 1.3 integrated mission workflow
+
+OpenAI ChatGPT assisted with the complete fictional end-to-end check-in
+workflow, Python-controlled risk/context guidance, combined dataset-specific
+timeline/report for CSV and manual input, typed React API integration, NASA
+human spaceflight five-hazards navigator, high-contrast operational layout,
+regression and real HTTP integration tests, and the final demo documentation.
+All new user-entered values are expressly fictional, not real health records.
+No autonomous medical triage, disease diagnosis, treatment recommendations,
+real astronaut telemetry, clinical validations, or NASA endorsement were
+implemented. The planned Figma-designed anatomical 3D asset remains separate
+and must not be represented as complete. Human review and actual CI validation
+remain necessary before merging or submitting.
