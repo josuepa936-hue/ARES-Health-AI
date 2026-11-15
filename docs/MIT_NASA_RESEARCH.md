@@ -86,6 +86,29 @@ other studies, non-HTTPS URLs and oversized/malformed responses remain blocked.
 That support is a compatibility measure, **not proof** of access to a particular
 version of the file.
 
+The official NASA OSDR file inventory is requested with a **12-second**
+network timeout. The separate, small, publicly linked sample file may take longer
+to establish an AWS connection and now has its own **30-second** network timeout.
+The 16,384-byte response-size limit and pinned study/file/redirect restrictions
+remain unchanged. A message distinguishing `NASA catalog request timed out` from
+`NASA public sample storage timed out after 30 seconds` is returned so a network
+blockage can be diagnosed without relaxing origin checks. Increasing the timeout
+does not guarantee the public AWS host is reachable.
+
+To verify reachability from the user's own Windows computer, with **no**
+unbounded download or redirects to arbitrary destinations:
+
+```powershell
+$u = 'https://genelab-repo-prod.s3.amazonaws.com/genelab-data/GLDS-87/array/GLDS-87_array_SampleTable_GLmicroarray.csv'
+curl.exe -I --connect-timeout 10 --max-time 35 "$u"
+```
+
+This is a HEAD-only check; certain servers reject HEAD even when GET works.
+If the request fails due to DNS, TLS, proxy or timeout, the remaining problem is
+network access to official public storage rather than a problem in the React
+client. Never disable certificate verification, allow arbitrary redirects, or
+misrepresent a placeholder CSV as official NASA study data.
+
 On connection, click `NASA space biology` → `Load NASA mouse sample table`.
 If it fails, the 503 response now identifies one of these categories: external
 HTTP status, timeout, network failure, unauthorized redirect or invalid CSV.
