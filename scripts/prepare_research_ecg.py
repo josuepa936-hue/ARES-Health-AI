@@ -14,13 +14,15 @@ import urllib.request
 from src.ares_health.research import ARTIFACT_PATH, analyze_segment, envelope, read_official_record
 
 SOURCE = 'https://physionet.org/files/mitdb/1.0.0/'
+# PhysioNet's official page lists this public, unsigned AWS distribution.
+SOURCE_AWS_PUBLIC = 'https://physionet-open.s3.amazonaws.com/mitdb/1.0.0/'
 FILES = {'100.hea': 10000, '100.dat': 2000000, '100.atr': 100000, 'SHA256SUMS.txt': 100000}
 
 
-def acquire(directory: Path) -> None:
+def acquire(directory: Path, source: str = SOURCE) -> None:
     directory.mkdir(parents=True, exist_ok=True)
     for name, limit in FILES.items():
-        with urllib.request.urlopen(SOURCE+name, timeout=30) as response:
+        with urllib.request.urlopen(source+name, timeout=30) as response:
             payload = response.read(limit+1)
         if len(payload) > limit:
             raise ValueError('Official input exceeds acquisition size bound.')
@@ -51,9 +53,18 @@ def prepare(directory: Path, acquisition: str) -> dict:
     hashes = verify(directory)
     signal, samples, symbols = read_official_record(directory)
     result = analyze_segment(signal, 360, samples, symbols)
-    result['acquisition'] = {'method': acquisition, 'source_url': SOURCE,
+    source = SOURCE_AWS_PUBLIC if acquisition == 'official-public-aws' else SOURCE
+    note = (
+        'Files and checksum manifest acquired over HTTPS from the public AWS '
+        'distribution linked by the official PhysioNet MIT-BIH page.'
+        if acquisition == 'official-public-aws' else
+        'Files and checksum manifest acquired over verified HTTPS from PhysioNet.'
+        if acquisition == 'official-https' else
+        'Local files and manifest are operator-supplied; matching hashes alone do not authenticate their origin.'
+    )
+    result['acquisition'] = {'method': acquisition, 'source_url': source,
                              'sha256': hashes, 'license_acknowledged': True,
-                             'note': 'Files and checksum manifest acquired over verified HTTPS from PhysioNet.' if acquisition == 'official-https' else 'Local files and manifest are operator-supplied; matching hashes alone do not authenticate their origin.'}
+                             'note': note}
     return result
 
 
@@ -61,6 +72,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--download', action='store_true')
+    group.add_argument('--aws-public', action='store_true',
+                       help='Use the public AWS distribution explicitly linked by PhysioNet.')
     group.add_argument('--official-files', type=Path)
     parser.add_argument('--acknowledge-license', action='store_true', required=True,
                         help='I reviewed the official source terms/citation and approve this public research use.')
@@ -70,7 +83,11 @@ def main() -> int:
             directory = args.official_files or Path(temp)
             if args.download:
                 acquire(directory)
-            result = prepare(directory, 'official-https' if args.download else 'official-local-files')
+            if args.aws_public:
+                acquire(directory, SOURCE_AWS_PUBLIC)
+            mode = ('official-public-aws' if args.aws_public else
+                    'official-https' if args.download else 'official-local-files')
+            result = prepare(directory, mode)
     except Exception as exc:
         # Invalidate old scores on failed preparation; never retain a stale success.
         result = envelope('abstained', [f'Preparation failed ({type(exc).__name__}); verify network, optional dependencies, official files/checksums and metadata.'])
