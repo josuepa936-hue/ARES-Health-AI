@@ -184,12 +184,26 @@ it('exports canonical check-in values and manual documented state without clinic
     briefing.context_ref,
     [{ turn: 1, question: 'What changed?' }],
     [
-      { sequence: 1, action: 'review_state', review_state: 'DOCUMENTED' },
-      { sequence: 2, action: 'source_units', checked: true },
+      {
+        sequence: 1, action: 'review_state', review_state: 'DOCUMENTED',
+        recorded_at_utc: '2026-11-15T07:00:00.000Z',
+      },
+      {
+        sequence: 2, action: 'source_units', checked: true,
+        recorded_at_utc: '2026-11-15T07:00:01.000Z',
+      },
     ],
     signal(),
   );
   expect(report.fictional_review.review_state).toBe('DOCUMENTED');
+  expect(report.review_state).toBe('DOCUMENTED');
+  expect(report.application_version).toBe('1.5');
+  expect(report.copilot_application_version).toBe(report.application_version);
+  expect(report.mission_timeline.application_version).toBe(report.application_version);
+  expect(report.fictional_review.audit_timestamps_complete).toBe(true);
+  expect(report.fictional_review.audit_log.map((entry) => entry.recorded_at_utc)).toEqual([
+    '2026-11-15T07:00:00.000Z', '2026-11-15T07:00:01.000Z',
+  ]);
   expect(report.fictional_review.clinical_authorization).toBe(false);
   expect(report.assessment).toBe(briefing.assessment);
   expect(report.copilot.transcript[0].response.context_ref).toBe(report.context_ref);
