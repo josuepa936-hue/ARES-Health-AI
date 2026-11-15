@@ -319,6 +319,7 @@ export default function App() {
               key={mission.key}
               session={copilot}
               snapshot={mission.snapshot}
+              context={mission.copilotContext}
               onReview={() => openDock('review')}
             />
           ) : (
