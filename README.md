@@ -306,3 +306,14 @@ scheduled reminder. This is not a treatment engine or an LLM.
 
 See [Mission Wellness & Procedures](docs/MISSION_WELLNESS.md) for scientific
 links, acceptance tests, provenance and limitations.
+
+## Related Research: NASA Crew Medical Officer Digital Assistant (CMO-DA)
+
+See the [independent literature comparison](docs/RELATED_RESEARCH_CMO_DA.md) and
+[short English presentation text](docs/CMO_DA_PRESENTATION_EN.md). The official
+Google source describes a research CDSS; its supplied text does not establish
+specific agent roles or orchestration. ARES does not use or connect to the
+original CMO-DA software, has no official NASA/Google collaboration and offers
+no medical diagnosis or treatment. This documentation adds no runtime network
+calls, model integration or dependency; local offline and protected online modes
+are unchanged.

@@ -32,6 +32,17 @@ labels, not clinical authorization.
   running. Render still requires Internet; no browser-only offline/PWA backend
   or automatic failover is implemented.
 
+## Related Research: NASA Crew Medical Officer Digital Assistant (CMO-DA)
+
+A [separate literature comparison](RELATED_RESEARCH_CMO_DA.md) summarizes the
+supplied official Google account of CMO-DA as experimental clinical decision
+support for exploration crews. It distinguishes that research goal from ARES's
+implemented deterministic synthetic-data workflow. The supplied text describes a
+multimodal interface without specifying software-agent roles/orchestration.
+ARES does not use or connect to original CMO-DA software, has no official
+collaboration with NASA or Google, and offers no medical diagnosis or treatment.
+This is documentation only, not an integration or a new runtime Internet dependency.
+
 ## Results and provenance
 
 Prior Linux automation recorded **410 Python tests**, **62 frontend tests** and
